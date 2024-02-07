@@ -25,7 +25,7 @@ function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" target="_blank" href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
+            <Link color="inherit" target="_blank" href="https://github.com/walimorris/opensquare">
                 OpenSquare
             </Link>{' '}
             {new Date().getFullYear()}
@@ -126,9 +126,9 @@ export default function SettingsModal(props) {
     const handleProfChange = (e) => setProf(e.target.value);
 
     let organizationsConfig = {
-        method: 'post',
+        method: 'get',
         maxBodyLength: Infinity,
-        url: 'http://localhost:8081/opensentop/api/dropdowns/organizations',
+        url: '/opensquare/api/dropdowns/organizations',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -136,9 +136,9 @@ export default function SettingsModal(props) {
     };
 
     let professionsConfig = {
-        method: 'post',
+        method: 'get',
         maxBodyLength: Infinity,
-        url: 'http://localhost:8081/opensentop/api/dropdowns/professions',
+        url: '/opensquare/api/dropdowns/professions',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -146,9 +146,9 @@ export default function SettingsModal(props) {
     }
 
     let agesConfig = {
-        method: 'post',
+        method: 'get',
         maxBodyLength: Infinity,
-        url: 'http://localhost:8081/opensentop/api/dropdowns/age_ranges',
+        url: '/opensquare/api/dropdowns/age_ranges',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -203,7 +203,7 @@ export default function SettingsModal(props) {
             await axios.request({
                 method: 'post',
                 maxBodyLength: Infinity,
-                url: 'http://localhost:8081/opensentop/api/actions/user_details/update',
+                url: '/opensentop/api/actions/user_details/update',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -258,8 +258,8 @@ export default function SettingsModal(props) {
         async function fetchOrganizations() {
             await axios.request(organizationsConfig)
                 .then((response) => {
-                    console.log(response.data.options);
-                    setOrganizations(response.data.options)
+                    console.log(response.data);
+                    setOrganizations(response.data);
                 })
                 .catch((error) => {
                     console.log(error)
@@ -272,8 +272,8 @@ export default function SettingsModal(props) {
         async function fetchProfessions() {
             await axios.request(professionsConfig)
                 .then((response) => {
-                    console.log(response.data.options);
-                    setProfessions(response.data.options)
+                    console.log(response.data);
+                    setProfessions(response.data);
                 })
                 .catch((error) => {
                     console.log(error)
@@ -286,8 +286,8 @@ export default function SettingsModal(props) {
         async function fetchAges() {
             await axios.request(agesConfig)
                 .then((response) => {
-                    console.log(response.data.options);
-                    setAges(response.data.options)
+                    console.log(response.data);
+                    setAges(response.data);
                 })
                 .catch((error) => {
                     console.log(error)
