@@ -1,0 +1,37 @@
+Domain Name: yahoo.com
+Registry Domain ID: 3643624_DOMAIN_COM-VRSN
+Registrar WHOIS Server: whois.markmonitor.com
+Registrar URL: http://www.markmonitor.com
+Updated Date: 2023-02-03T17:55:31+0000
+Creation Date: 1995-01-18T08:00:00+0000
+Registrar Registration Expiration Date: 2024-01-19T00:00:00+0000
+Registrar: MarkMonitor, Inc.
+Registrar IANA ID: 292
+Registrar Abuse Contact Email: abusecomplaints@markmonitor.com
+Registrar Abuse Contact Phone: +1.2086851750
+Domain Status: clientUpdateProhibited (https://www.icann.org/epp#clientUpdateProhibited)
+Domain Status: clientTransferProhibited (https://www.icann.org/epp#clientTransferProhibited)
+Domain Status: clientDeleteProhibited (https://www.icann.org/epp#clientDeleteProhibited)
+Domain Status: serverUpdateProhibited (https://www.icann.org/epp#serverUpdateProhibited)
+Domain Status: serverTransferProhibited (https://www.icann.org/epp#serverTransferProhibited)
+Domain Status: serverDeleteProhibited (https://www.icann.org/epp#serverDeleteProhibited)
+Registrant Organization: Yahoo Assets LLC
+Registrant State/Province: VA
+Registrant Country: US
+Registrant Email: Select Request Email Form at https://domains.markmonitor.com/whois/yahoo.com
+Admin Organization: Yahoo Assets LLC
+Admin State/Province: VA
+Admin Country: US
+Admin Email: Select Request Email Form at https://domains.markmonitor.com/whois/yahoo.com
+Tech Organization: Yahoo Assets LLC
+Tech State/Province: VA
+Tech Country: US
+Tech Email: Select Request Email Form at https://domains.markmonitor.com/whois/yahoo.com
+Name Server: ns2.yahoo.com
+Name Server: ns5.yahoo.com
+Name Server: ns1.yahoo.com
+Name Server: ns4.yahoo.com
+Name Server: ns3.yahoo.com
+DNSSEC: unsigned
+URL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/
+>>> Last update of WHOIS database: 2023-10-11T05:05:06+0000 <<<

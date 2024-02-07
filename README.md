@@ -1,0 +1,250 @@
+<a name="readme-top"></a>
+
+
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
+
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
+    <img src="backend/src/main/resources/images/social-media.jpeg" alt="Logo" width="400" height="140">
+  </a>
+
+<h3 align="center">OpenSquare</h3>
+
+  <p align="center">
+    Opensource social media intelligence and OSINT
+    <br />
+    <a href="https://james-armistead.atlassian.net/wiki/spaces/OD/pages"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/src/">View Demo</a>
+    ·
+    <a href="https://bitbucket.org/intelligence-opensent/opensentop/jira?site=830279d9-2199-4a48-ac06-b1a6fb805f24&statuses=new&statuses=indeterminate&sort=-updated&page=1">Report Bug</a>
+    ·
+    <a href="https://bitbucket.org/intelligence-opensent/opensentop/jira?site=830279d9-2199-4a48-ac06-b1a6fb805f24&statuses=new&statuses=indeterminate&sort=-updated&page=1">Request Feature</a>
+  </p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+There were 150 million new social media users between April 2022 and April 2023 - that's a 3.2% increase year-over-year from the current 
+4.8 billion social media users worldwide, representing 59.9% of the global population and 92.7% of all internet users. Businesses use 
+social media to gain insights about various topics: user sentiment around products, strong products and weak products, events, all things that cater to 
+their customer. For intelligence analysts and social science researchers, who are their customers? Policymakers, the everyday citizen, everyone in society. 
+This project's user, its customer, is the intelligence and social sciences analysts and researchers. As technology continues up the curve of
+innovation, and society continues to increasingly use social media as the public square, researchers can use this available data for good, to 
+draw insights, to slow down or stop harmful incidents, to help society, to develop plans based on public consensus, better inform policymakers of 
+what their constituents need and want (and better plan solutions that increase the satisfaction of their customer). As it becomes harder for governments
+to understand and execute solutions that better serve their constituents, the idea of adaptive governance, a focus on decentralized decision-making
+structures, becomes unavoidable. Not only can insights gained from social media assist policymakers, it can assist adaptive governance entities and groups
+to better serve their populations. This product is for the intelligence analyst, the social scientist, the data scientist and those interested in improving 
+the quality of our human existence through deep public analysis and data-driven solutions.
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+### Built With
+
+* [![Springboot][Springboot.com]][Springboot-url]
+* [![MongoDB][MongoDB.com]][MongoDB-url]
+* [![React][React.js]][React-url]
+* [![AWS][AWS.com]][AWS-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Features
+Along with other features, OpenSquare provides [Digit Footprint](https://en.wikipedia.org/wiki/Digital_footprint) targeting 
+tools, some using well-known OSINT methods such as [Backlinks](https://en.wikipedia.org/wiki/Backlink), [NSLookup](https://en.wikipedia.org/wiki/Nslookup), 
+and [Whois](https://en.wikipedia.org/wiki/WHOIS). Having a general suite of tools in a single place can increase user productivity. Easily navigate between
+dashboard workspaces and use output from one tool as input for another.
+
+<div align="center">
+  <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-backlinks.png" alt="Logo" width="500" height="450">
+  </a>
+</div>
+<div align="center">
+  <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-whois.png" alt="Logo" width="500" height="450">
+  </a>
+</div>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+* Linux
+* Java 17
+  ```sh
+  java --version
+  ```
+
+* Maven 3.9 or above
+  ```sh
+  mvn --version
+  ```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git git clone https://opensentop@bitbucket.org/intelligence-opensent/opensentop.git
+   ```
+2. Install dependencies (including NPM) default profile 
+   ```sh
+   mvn clean install
+   ```
+   
+3. Run webpack in development mode
+   ```sh
+   npm run watch
+   
+4. There are some configuration files you'll need - feel free to ping me for those.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+This project uses Eirik Sletteberg's [Frontend-Maven-Plugin](https://github.com/eirslett/frontend-maven-plugin) which allows our team to use a single plugin for both frontend and backend builds in a single repo.
+This plugin is capable of various configurations, but the configuration used in this project is minimum only using Webpack and few configurations to install Node and NPM. The meat of this usage is from the 
+creation of the project's bundle which is integrated using a `<script>` in root of React application (typical React fashion) exposed in the `index.html` file in the Springboot resources folder.
+```
+<body>
+<div id='root'>
+</div>
+<script src="built/bundle.js"></script>
+</body>
+```
+Webpack will create a build bundle that contains the source for the React application entry in `app.js` under the `js` package of this project.
+```
+entry: path.resolve(__dirname, "/src/main/js/app.js"),
+    devtool: 'inline-source-map',
+    cache: true,
+    mode: 'development',
+    output: {
+        path: __dirname,
+        filename: 'src/main/resources/static/built/bundle.js'
+    },
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [ ] YouTube Service & View
+- [ ] X (formerly Twitter) Service & View
+- [ ] Vkontakte Service & View
+
+See the [open issues](https://james-armistead.atlassian.net/jira/software/projects/OP/boards/1) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+[Contribution Documentation](https://james-armistead.atlassian.net/wiki/spaces/OD/pages/33111/Pull+Request+Guide)
+
+1. Create your Feature Branch (`git checkout -b feature/OP-1-feature-name`)
+2. Commit your Changes (`git commit -m 'OP-1 Add some feature'`)
+3. Push to the Branch (`git push origin feature/OP-1-feature-name`)
+4. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+
+<!-- CONTACT -->
+## Contacts
+
+Wali Morris - [@LinkedIn](https://www.linkedin.com/in/wali-m/) - walimmorris@gmail.com
+
+Project Link: [Bitbucket](https://bitbucket.org/intelligence-opensent/opensentop/src/master/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* [Material UI](https://mui.com/)
+* [webpack](https://webpack.js.org/)
+* [Babel](https://babeljs.io/)
+* [Eirik Sletteberg & Frontend-Maven-Plugin](https://github.com/eirslett/frontend-maven-plugin)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
+[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://www.linkedin.com/in/wali-m/
+[product-screenshot]: images/screenshot.png
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Springboot.com]: https://img.shields.io/badge/Springboot-4B6F44?style=for-the-badge&logo=springboot&logoColor=white
+[Springboot-url]: https://spring.io
+[AWS.com]: https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazon&logoColor=000000
+[AWS-url]: https://aws.amazon.com/
+[MongoDB.com]: https://img.shields.io/badge/MongoDB-4B6F44?style=for-the-badge&logo=mongodb&logoColor=white
+[MongoDB-url]: https://www.mongodb.com/

@@ -1,0 +1,7 @@
+{
+  "taskId": "123456789",
+  "taskName": "test-task-1",
+  "percentageComplete": 25.6,
+  "status": "STARTED",
+  "resultUrl": "http://localhost:8080/api/test-1"
+}

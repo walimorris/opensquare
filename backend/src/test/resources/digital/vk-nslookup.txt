@@ -1,0 +1,6 @@
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+Name:	vkontakte.com
+Address: 95.142.192.76

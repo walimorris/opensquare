@@ -1,0 +1,16 @@
+.sideNavigation {
+    background-color: #8594e4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.imageRoundSmall {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.imageRoundSmall img {
+    width: 100%;
+    right: 10px;
+    float: right;
+}

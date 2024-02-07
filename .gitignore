@@ -1,0 +1,49 @@
+HELP.md
+target/
+backend/src/main/resources/application.properties
+backend/src/main/resources/secrets.properties
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+## ninja ##
+*.conf
+*.properties
+*.jks
+*.crt
+*.der
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### JS ###
+node
+/node_modules
+package-lock.json
+/backend/src/main/resources/static/built/bundle.js
+/backend/src/main/resources/static/built/bundle.js.map

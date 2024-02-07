@@ -1,0 +1,461 @@
+[
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo | Mail, Weather, Search, Politics, News, Finance, Sports ...",
+      "htmlTitle": "\u003cb\u003eYahoo\u003c/b\u003e | \u003cb\u003eMail\u003c/b\u003e, Weather, Search, Politics, News, Finance, Sports ...",
+      "link": "https://www.yahoo.com/",
+      "displayLink": "www.yahoo.com",
+      "snippet": "Latest news coverage, email, free stock quotes, live scores and video are just the beginning. Discover more every day at Yahoo!",
+      "htmlSnippet": "Latest news coverage, email, free stock quotes, live scores and video are just the beginning. Discover more every day at \u003cb\u003eYahoo\u003c/b\u003e!",
+      "cacheId": "J2yZRwdfAwwJ",
+      "formattedUrl": "https://www.yahoo.com/",
+      "htmlFormattedUrl": "https://www.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSoCgoe2XIWK1wvQQnCXpvwGieiET3EZ89hNdiU356o8MB7kfJHy8vE4EBf",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png",
+            "full-screen": "yes",
+            "theme-color": "#fff",
+            "apple-mobile-web-app-title": "Yahoo",
+            "nightmode": "disable",
+            "msapplication-tileimage": "https://s.yimg.com/os/mit/media/p/presentation/images/icons/win8-tile-1484740.png",
+            "og:description": "Latest news coverage, email, free stock quotes, live scores and video are just the beginning. Discover more every day at Yahoo!",
+            "imagemode": "force",
+            "oath:guce:consent-host": "guce.yahoo.com",
+            "browsermode": "application",
+            "msapplication-tap-highlight": "no",
+            "screen-orientation": "portrait",
+            "application-name": "Yahoo",
+            "msapplication-tilecolor": "#fff",
+            "og:type": "website",
+            "layoutmode": "fitscreen",
+            "og:title": "Yahoo | Mail, Weather, Search, Politics, News, Finance, Sports & Videos",
+            "fb:pages": "7040724713, 37510781596, 128015890542670, 73756409831, 1273983622628492, 183227235893, 107952415910993, 828031943896361, 338028696036, 228108177528276, 126435880711, 8603738371, 357311694375173, 168824166370, 116789651713844, 116789651713844, 284428852938, 116789651713844, 169590426398017, 150897358265131, 115060728528067, 358130347547704, 167601473274275, 166721106679241, 1573791532894850, 141301389258994, 138207559575213, 112996545439734, 345185573000, 131747896861126, 345185573000, 81262596234, 107143776010250, 137657892926963, 118757131504803",
+            "msapplication-navbutton-color": "red",
+            "referrer": "unsafe-url",
+            "fb:app_id": "458584288257241",
+            "conf:cjs:locale": "en-US",
+            "apple-mobile-web-app-status-bar-style": "#fff",
+            "viewport": "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no",
+            "apple-mobile-web-app-capable": "yes",
+            "mobile-web-app-capable": "yes",
+            "og:url": "http://www.yahoo.com",
+            "format-detection": "telephone=no"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo Mail",
+      "htmlTitle": "\u003cb\u003eYahoo Mail\u003c/b\u003e",
+      "link": "https://mail.yahoo.com/",
+      "displayLink": "mail.yahoo.com",
+      "snippet": "Take a trip into an upgraded, more organized inbox. Sign in and start exploring all the free, organizational tools for your email. Check out new themes,...",
+      "htmlSnippet": "Take a trip into an upgraded, more organized inbox. Sign in and start exploring all the free, organizational tools for your email. Check out new themes,&nbsp;...",
+      "cacheId": "rVKshp3jSXMJ",
+      "formattedUrl": "https://mail.yahoo.com/",
+      "htmlFormattedUrl": "https://mail.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ1lB9ncumW-CUL0T_ZMU3YKOoVYvPioFOaLh_NDSIq8JYPwvPLW8QxWeqy",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/nq/nr/img/desktop_notification_icon_3x_hyeOa8eLuUarSAZ1BW1p6y52zCsA520yKCg6fgaOCXQ_v1.png",
+            "twitter:card": "summary",
+            "og:type": "website",
+            "twitter:site": "@yahoomail",
+            "viewport": "width=device-width, initial-scale=1",
+            "og:title": "Yahoo Mail. Organized Email",
+            "og:url": "https://mail.yahoo.com",
+            "og:description": "It's time to get stuff done with Yahoo Mail. Just add your Gmail, Outlook, AOL or Yahoo Mail to get going. We automatically organize all the things life throws at you, like receipts and attachments, so you can find what you need fast. Plus, we've got your back with other convenient features like one-tap unsubscribe, free trial expiration alerts and package tracking"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/nq/nr/img/desktop_notification_icon_3x_hyeOa8eLuUarSAZ1BW1p6y52zCsA520yKCg6fgaOCXQ_v1.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo News - Latest News Headlines",
+      "htmlTitle": "\u003cb\u003eYahoo\u003c/b\u003e News - Latest News &amp; Headlines",
+      "link": "https://news.yahoo.com/",
+      "displayLink": "news.yahoo.com",
+      "snippet": "The latest news and headlines from Yahoo! News. Get breaking news stories and in-depth coverage with videos and photos.",
+      "htmlSnippet": "The latest news and headlines from \u003cb\u003eYahoo\u003c/b\u003e! News. Get breaking news stories and in-depth coverage with videos and photos.",
+      "cacheId": "Wu5w14dhT9cJ",
+      "formattedUrl": "https://news.yahoo.com/",
+      "htmlFormattedUrl": "https://news.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSoCgoe2XIWK1wvQQnCXpvwGieiET3EZ89hNdiU356o8MB7kfJHy8vE4EBf",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png",
+            "full-screen": "yes",
+            "twitter:card": "summary",
+            "theme-color": "#fff",
+            "og:site_name": "Yahoo News - Latest News Headlines",
+            "apple-mobile-web-app-title": "Yahoo News - Latest News & Headlines",
+            "nightmode": "disable",
+            "msapplication-tileimage": "https://s.yimg.com/os/mit/media/p/presentation/images/icons/win8-tile-1484740.png",
+            "og:description": "The latest news and headlines from Yahoo! News. Get breaking news stories and in-depth coverage with videos and photos.",
+            "imagemode": "force",
+            "twitter:dnt": "on",
+            "twitter:site": "@YahooNews",
+            "oath:guce:consent-host": "guce.yahoo.com",
+            "browsermode": "application",
+            "msapplication-tap-highlight": "no",
+            "screen-orientation": "portrait",
+            "application-name": "Yahoo News - Latest News Headlines",
+            "msapplication-tilecolor": "#fff",
+            "og:type": "website",
+            "layoutmode": "fitscreen",
+            "og:title": "Yahoo News - Latest News Headlines",
+            "fb:pages": "338028696036",
+            "msapplication-navbutton-color": "red",
+            "referrer": "unsafe-url",
+            "fb:app_id": "458584288257241",
+            "conf:cjs:locale": "en-US",
+            "apple-mobile-web-app-status-bar-style": "#fff",
+            "viewport": "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no",
+            "apple-mobile-web-app-capable": "yes",
+            "mobile-web-app-capable": "yes",
+            "og:url": "http://news.yahoo.com",
+            "format-detection": "telephone=no"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo Mail",
+      "htmlTitle": "\u003cb\u003eYahoo Mail\u003c/b\u003e",
+      "link": "https://overview.mail.yahoo.com/",
+      "displayLink": "overview.mail.yahoo.com",
+      "snippet": "Take a trip into an upgraded, more organized inbox with Yahoo Mail. Login and start exploring all the free, organizational tools for your email.",
+      "htmlSnippet": "Take a trip into an upgraded, more organized inbox with \u003cb\u003eYahoo Mail\u003c/b\u003e. Login and start exploring all the free, organizational tools for your email.",
+      "cacheId": "pBMysYNiyMcJ",
+      "formattedUrl": "https://overview.mail.yahoo.com/",
+      "htmlFormattedUrl": "https://overview.mail.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSHUZOx7HFeBJ4VxwMTHxFdG5IIn-8lY-o38w2yiuS83uaR00yKqVBPojMI",
+            "width": "184",
+            "height": "274"
+          }
+        ],
+        "metatags": [
+          {
+            "oath:guce:product-eu": "false",
+            "oath:guce:consent-host": "guce.yahoo.com",
+            "viewport": "width=device-width,initial-scale=1",
+            "oath:guce:locale": "en-US",
+            "oath:guce:report-only": "false"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/cv/apiv2/default/bcg/norrin/images/box-bg-right-1.0.0.webp"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo",
+      "htmlTitle": "\u003cb\u003eYahoo\u003c/b\u003e",
+      "link": "https://login.yahoo.com/",
+      "displayLink": "login.yahoo.com",
+      "snippet": "Best in class Yahoo Mail, breaking local, national and global news, finance, sports, music, movies... You get more out of the web, you get more out of life.",
+      "htmlSnippet": "Best in class \u003cb\u003eYahoo Mail\u003c/b\u003e, breaking local, national and global news, finance, sports, music, movies... You get more out of the web, you get more out of life.",
+      "cacheId": "7tUGkgVh2DAJ",
+      "formattedUrl": "https://login.yahoo.com/",
+      "htmlFormattedUrl": "https://login.yahoo.com/",
+      "pagemap": {
+        "metatags": [
+          {
+            "referrer": "strict-origin-when-cross-origin",
+            "viewport": "initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no",
+            "format-detection": "telephone=no"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo Sports: News, Scores, Video, Fantasy Games, Schedules ...",
+      "htmlTitle": "\u003cb\u003eYahoo\u003c/b\u003e Sports: News, Scores, Video, Fantasy Games, Schedules ...",
+      "link": "https://sports.yahoo.com/",
+      "displayLink": "sports.yahoo.com",
+      "snippet": "Welcome to Yahoo! Sign inCreate an account Mail NFL Fantasy Football NCAAF NBA MLB WNBA Soccer Tennis Yahoo Sports AM MMA Golf NHL...",
+      "htmlSnippet": "Welcome to \u003cb\u003eYahoo\u003c/b\u003e! Sign inCreate an account &middot; \u003cb\u003eMail\u003c/b\u003e &middot; NFL &middot; Fantasy Football &middot; NCAAF &middot; NBA &middot; MLB &middot; WNBA &middot; Soccer &middot; Tennis &middot; \u003cb\u003eYahoo\u003c/b\u003e Sports AM &middot; MMA &middot; Golf &middot; NHL&nbsp;...",
+      "formattedUrl": "https://sports.yahoo.com/",
+      "htmlFormattedUrl": "https://sports.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTFMf2e7rooqrL-fQubAzZg50I_aysuQ38W6XuAuP_3HX_7fTlufghW-JWu",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/it/api/res/1.2/Nm.Q9ktBFq1bB8joIv0bCw--~A/YXBwaWQ9eW5ld3M7dz0xMjAwO2g9NjMwO3E9MTAw/https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png",
+            "twitter:app:url:iphone": "ysportacular://",
+            "apple-itunes-app": "app-id=286058814,app-argument=ysportacular://,affiliate-data=ct=syc-web-smartbanner",
+            "twitter:app:id:googleplay": "com.yahoo.mobile.client.android.sportacular",
+            "og:image:width": "630",
+            "twitter:card": "summary",
+            "theme-color": "#400090",
+            "og:site_name": "Yahoo Sports",
+            "al:android:package": "com.yahoo.mobile.client.android.sportacular",
+            "twitter:app:name:googleplay": "Yahoo Sports",
+            "msapplication-tileimage": "https://s.yimg.com/cv/apiv2/sports/web/app/Sports_144.png",
+            "al:ios:url": "ysportacular://",
+            "twitter:app:id:iphone": "286058814",
+            "og:description": "Sports News, Scores, Fantasy Games",
+            "al:ios:app_store_id": "286058814",
+            "twitter:site": "@YahooSports",
+            "oath:guce:consent-host": "guce.yahoo.com",
+            "twitter:app:country": "US",
+            "application-name": "Yahoo Sports: News, Scores, Video, Fantasy Games, Schedules More  - Yahoo Sports",
+            "msapplication-tilecolor": "#6e329d",
+            "og:type": "website",
+            "twitter:title": "Yahoo Sports: News, Scores, Video, Fantasy Games, Schedules More  - Yahoo Sports",
+            "al:ios:app_name": "Yahoo Sports",
+            "msvalidate.01": "A9862C0E6E1BE95BCE0BF3D0298FD58B",
+            "og:title": "Yahoo Sports: News, Scores, Video, Fantasy Games, Schedules More  - Yahoo Sports",
+            "og:image:height": "1200",
+            "al:web:url": "https://sports.yahoo.com/",
+            "fb:pages": "37510781596, 115396848484203, 119530628062118, 116456261706731, 1516980071665393, 110394988999413, 112156825484904, 228108177528276, 126435880711",
+            "al:android:url": "ysportacular://",
+            "fb:app_id": "90376669494",
+            "twitter:app:url:googleplay": "https://play.google.com/store/apps/details?id=com.yahoo.mobile.client.android.sportacular",
+            "viewport": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+            "twitter:description": "Sports News, Scores, Fantasy Games",
+            "al:android:app_name": "Yahoo Sports",
+            "twitter:app:name:iphone": "Yahoo Sports"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/it/api/res/1.2/Nm.Q9ktBFq1bB8joIv0bCw--~A/YXBwaWQ9eW5ld3M7dz0xMjAwO2g9NjMwO3E9MTAw/https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo Mail",
+      "htmlTitle": "\u003cb\u003eYahoo Mail\u003c/b\u003e",
+      "link": "https://sg.mail.yahoo.com/",
+      "displayLink": "sg.mail.yahoo.com",
+      "snippet": "Take a trip into an upgraded, more organised inbox. Sign in and start exploring all of the free organisational tools for your email. Check out new themes,...",
+      "htmlSnippet": "Take a trip into an upgraded, more organised inbox. Sign in and start exploring all of the free organisational tools for your email. Check out new themes,&nbsp;...",
+      "cacheId": "kfiPkUWZk1YJ",
+      "formattedUrl": "https://sg.mail.yahoo.com/",
+      "htmlFormattedUrl": "https://sg.mail.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ1lB9ncumW-CUL0T_ZMU3YKOoVYvPioFOaLh_NDSIq8JYPwvPLW8QxWeqy",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/nq/nr/img/desktop_notification_icon_3x_hyeOa8eLuUarSAZ1BW1p6y52zCsA520yKCg6fgaOCXQ_v1.png",
+            "twitter:card": "summary",
+            "og:type": "website",
+            "twitter:site": "@yahoomail",
+            "viewport": "width=device-width, initial-scale=1",
+            "og:title": "Yahoo Mail organised email",
+            "og:url": "https://mail.yahoo.com",
+            "og:description": "It's time to get stuff done with Yahoo Mail. Just add your Gmail, Outlook, AOL or Yahoo Mail to get going. We automatically organise all the things life throws at you, such as receipts and attachments, so you can find what you need fast. Plus, we've got your back with other convenient features such as one-tap unsubscribe, free trial expiry alerts and package tracking"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/nq/nr/img/desktop_notification_icon_3x_hyeOa8eLuUarSAZ1BW1p6y52zCsA520yKCg6fgaOCXQ_v1.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo Finance - Stock Market Live, Quotes, Business Finance News",
+      "htmlTitle": "\u003cb\u003eYahoo\u003c/b\u003e Finance - Stock Market Live, Quotes, Business &amp; Finance News",
+      "link": "https://finance.yahoo.com/",
+      "displayLink": "finance.yahoo.com",
+      "snippet": "At Yahoo Finance, you get free stock quotes, up-to-date news, portfolio management resources, international market data, social interaction and mortgage...",
+      "htmlSnippet": "At \u003cb\u003eYahoo\u003c/b\u003e Finance, you get free stock quotes, up-to-date news, portfolio management resources, international market data, social interaction and mortgage&nbsp;...",
+      "formattedUrl": "https://finance.yahoo.com/",
+      "htmlFormattedUrl": "https://finance.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSoCgoe2XIWK1wvQQnCXpvwGieiET3EZ89hNdiU356o8MB7kfJHy8vE4EBf",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png",
+            "apple-itunes-app": "app-id=328412701, app-clip-bundle-id=com.yahoo.finance.clip-qsp, affiliate-data=ct=us.fin.mbl.smart-banner&pt=9029, app-argument=https://finance.yahoo.com/",
+            "theme-color": "#400090",
+            "twitter:title": "Yahoo Finance - Stock Market Live, Quotes, Business Finance News",
+            "al:ios:app_name": "Yahoo Finance",
+            "msvalidate.01": "A9862C0E6E1BE95BCE0BF3D0298FD58B",
+            "og:title": "Yahoo Finance - Stock Market Live, Quotes, Business Finance News",
+            "al:android:package": "com.yahoo.mobile.client.android.finance",
+            "fb:pages": "458584288257241",
+            "og:description": "At Yahoo Finance, you get free stock quotes, up-to-date news, portfolio management resources, international market data, social interaction and mortgage rates that help you manage your financial life.",
+            "twitter:dnt": "on",
+            "al:ios:app_store_id": "328412701",
+            "al:android:url": "intent://#Intent;scheme=yfinance;action=android.intent.action.VIEW;package=com.yahoo.mobile.client.android.finance;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.yahoo.mobile.client.android.finance;end",
+            "fb:app_id": "458584288257241",
+            "oath:guce:consent-host": "guce.yahoo.com",
+            "twitter:site": "@YahooFinance",
+            "viewport": "width=device-width, initial-scale=1",
+            "twitter:description": "At Yahoo Finance, you get free stock quotes, up-to-date news, portfolio management resources, international market data, social interaction and mortgage rates that help you manage your financial life.",
+            "og:url": "https://finance.yahoo.com/",
+            "al:android:app_name": "Yahoo Finance"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Yahoo | Mail, Weather, Search, News, Finance, Sports, Shopping ...",
+      "htmlTitle": "\u003cb\u003eYahoo\u003c/b\u003e | \u003cb\u003eMail\u003c/b\u003e, Weather, Search, News, Finance, Sports, Shopping ...",
+      "link": "https://ca.yahoo.com/",
+      "displayLink": "ca.yahoo.com",
+      "snippet": "Latest news coverage, email, free stock quotes, live scores and video are just the beginning. Discover more every day at Yahoo!",
+      "htmlSnippet": "Latest news coverage, email, free stock quotes, live scores and video are just the beginning. Discover more every day at \u003cb\u003eYahoo\u003c/b\u003e!",
+      "cacheId": "gtBUazHxTmcJ",
+      "formattedUrl": "https://ca.yahoo.com/",
+      "htmlFormattedUrl": "https://ca.yahoo.com/",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSoCgoe2XIWK1wvQQnCXpvwGieiET3EZ89hNdiU356o8MB7kfJHy8vE4EBf",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png",
+            "full-screen": "yes",
+            "theme-color": "#fff",
+            "apple-mobile-web-app-title": "Yahoo",
+            "nightmode": "disable",
+            "msapplication-tileimage": "https://s.yimg.com/os/mit/media/p/presentation/images/icons/win8-tile-1484740.png",
+            "og:description": "Latest news coverage, email, free stock quotes, live scores and video are just the beginning. Discover more every day at Yahoo!",
+            "imagemode": "force",
+            "oath:guce:consent-host": "guce.yahoo.com",
+            "browsermode": "application",
+            "msapplication-tap-highlight": "no",
+            "screen-orientation": "portrait",
+            "application-name": "Yahoo",
+            "msapplication-tilecolor": "#fff",
+            "og:type": "website",
+            "layoutmode": "fitscreen",
+            "og:title": "Yahoo | Mail, Weather, Search, News, Finance, Sports, Shopping, Entertainment, Video",
+            "fb:pages": "168824166370",
+            "msapplication-navbutton-color": "red",
+            "referrer": "unsafe-url",
+            "fb:app_id": "458584288257241",
+            "conf:cjs:locale": "en-CA",
+            "apple-mobile-web-app-status-bar-style": "#fff",
+            "viewport": "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no",
+            "apple-mobile-web-app-capable": "yes",
+            "mobile-web-app-capable": "yes",
+            "og:url": "https://ca.yahoo.com/",
+            "format-detection": "telephone=no"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Help for your Yahoo Account",
+      "htmlTitle": "Help for your \u003cb\u003eYahoo\u003c/b\u003e Account",
+      "link": "https://help.yahoo.com/kb/account",
+      "displayLink": "help.yahoo.com",
+      "snippet": "Yahoo app. Business Use. Yahoo DSP. Account, Celebrity, Digital Magazines, Extensions, Finance, Homepage, Mail, Mobile, Movies, Music, My Yahoo, News by Yahoo...",
+      "htmlSnippet": "\u003cb\u003eYahoo\u003c/b\u003e app. Business Use. \u003cb\u003eYahoo\u003c/b\u003e DSP. Account, Celebrity, Digital Magazines, Extensions, Finance, Homepage, \u003cb\u003eMail\u003c/b\u003e, Mobile, Movies, Music, My \u003cb\u003eYahoo\u003c/b\u003e, News by \u003cb\u003eYahoo\u003c/b\u003e&nbsp;...",
+      "cacheId": "sV9TSGNQMKMJ",
+      "formattedUrl": "https://help.yahoo.com/kb/account",
+      "htmlFormattedUrl": "https://help.yahoo.com/kb/account",
+      "pagemap": {
+        "cse_thumbnail": [
+          {
+            "src": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSoCgoe2XIWK1wvQQnCXpvwGieiET3EZ89hNdiU356o8MB7kfJHy8vE4EBf",
+            "width": "225",
+            "height": "225"
+          }
+        ],
+        "metatags": [
+          {
+            "og:image": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png",
+            "viewport": "width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no",
+            "_csrf_header": "X-XSRF-TOKEN",
+            "_csrf_parameter": "_csrf",
+            "_csrf": "EQXgBiX3nA_w_WHkYOsDiaM-FQVkEKHbHmVeVKoNNvkpeJmEIGPSNhDCqT3dyQeCUMY3vZZcODxTdJn2LFM7ZZ8_DpwfSfiy",
+            "conf:cjs:consent-host": "guce.yahoo.com"
+          }
+        ],
+        "cse_image": [
+          {
+            "src": "https://s.yimg.com/cv/apiv2/social/images/yahoo_default_logo.png"
+          }
+        ]
+      }
+    }
+]
