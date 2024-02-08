@@ -10,6 +10,14 @@ public class DropDownOptions {
     private List<String> organizations;
     private List<String> professions;
 
+    public DropDownOptions() {}
+
+    public DropDownOptions(Builder builder) {
+        this.ages = builder.ages;
+        this.organizations = builder.organizations;
+        this.professions = builder.professions;
+    }
+
     public List<String> getAges() {
         return ages;
     }
@@ -32,5 +40,32 @@ public class DropDownOptions {
 
     public void setProfessions(List<String> professions) {
         this.professions = professions;
+    }
+
+    public static class Builder {
+        private List<String> ages;
+        private List<String> organizations;
+        private List<String> professions;
+
+        public Builder() {}
+
+        public Builder ages(List<String> ages) {
+            this.ages = ages;
+            return this;
+        }
+
+        public Builder organizations(List<String> organizations) {
+            this.organizations = organizations;
+            return this;
+        }
+
+        public Builder professions(List<String> professions) {
+            this.professions = professions;
+            return this;
+        }
+
+        public DropDownOptions build() {
+            return new DropDownOptions(this);
+        }
     }
 }
