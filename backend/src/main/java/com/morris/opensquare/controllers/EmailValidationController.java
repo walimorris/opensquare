@@ -2,7 +2,7 @@ package com.morris.opensquare.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import com.morris.opensquare.models.validations.DisposableEmailDomain;
-import com.morris.opensquare.services.impl.EmailValidationService;
+import com.morris.opensquare.services.impl.EmailValidationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class EmailValidationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailValidationController.class);
 
-    private final EmailValidationService emailValidationService;
+    private final EmailValidationServiceImpl emailValidationService;
 
     @Autowired
-    public EmailValidationController(EmailValidationService emailValidationService) {
+    public EmailValidationController(EmailValidationServiceImpl emailValidationService) {
         this.emailValidationService = emailValidationService;
     }
 

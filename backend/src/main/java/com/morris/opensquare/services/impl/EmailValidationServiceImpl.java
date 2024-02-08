@@ -1,5 +1,6 @@
 package com.morris.opensquare.services.impl;
 
+import com.morris.opensquare.services.EmailValidationService;
 import org.bson.types.ObjectId;
 import com.morris.opensquare.models.validations.DisposableEmailDomain;
 import com.morris.opensquare.repositories.DisposableEmailDomainRepository;
@@ -11,24 +12,29 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
 @Service
-public class EmailValidationService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailValidationService.class);
+public class EmailValidationServiceImpl implements EmailValidationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailValidationServiceImpl.class);
 
     private final DisposableEmailDomainRepository disposableEmailDomainRepository;
 
+    private static final String EMAIL_REGEX = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+
     @Autowired
-    public EmailValidationService(DisposableEmailDomainRepository disposableEmailDomainRepository) {
+    public EmailValidationServiceImpl(DisposableEmailDomainRepository disposableEmailDomainRepository) {
         this.disposableEmailDomainRepository = disposableEmailDomainRepository;
     }
 
+    @Override
     public DisposableEmailDomain addDisposableEmailDomain(String domain) {
         DisposableEmailDomain disposableEmailDomain = new DisposableEmailDomain.Builder()
                 .id(new ObjectId())
-                .domainName(domain)
+                .domainName(domain.trim())
                 .build();
         return disposableEmailDomainRepository.save(disposableEmailDomain);
     }
 
+    @Override
     public DisposableEmailDomain findDisposableEmailDomain(String emailAddress) {
         if (isValidEmail(emailAddress)) {
             String domain = getEmailDomain(emailAddress);
@@ -36,9 +42,6 @@ public class EmailValidationService {
         }
         return null;
     }
-
-    private static final String EMAIL_REGEX = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     private boolean isValidEmail(String emailAddress) {
         if (Pattern.compile(EMAIL_REGEX).matcher(emailAddress).matches()) {

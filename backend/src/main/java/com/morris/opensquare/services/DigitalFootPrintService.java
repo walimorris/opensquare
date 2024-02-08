@@ -53,7 +53,7 @@ public interface DigitalFootPrintService {
      * @throws IOException
      * @throws InterruptedException
      */
-    public JSONArray getNSLookupJSON(@NonNull String domain) throws IOException, InterruptedException;
+    JSONArray getNSLookupJSON(@NonNull String domain) throws IOException, InterruptedException;
 
     /**
      * Gets {@link NSLookupFootPrintList} object from {@link JSONArray} of objects that contain
@@ -64,7 +64,7 @@ public interface DigitalFootPrintService {
      * @return {@link NSLookupFootPrintList}
      * @throws JsonProcessingException
      */
-    public NSLookupFootPrintList getNSLookupFootprintList(@NonNull JSONArray nsLookupJsonArray) throws JsonProcessingException;
+    NSLookupFootPrintList getNSLookupFootprintList(@NonNull JSONArray nsLookupJsonArray) throws JsonProcessingException;
 
     /**
      * Marshall a Whois {@link JSONObject} to a {@link WhoIsFootPrint}
