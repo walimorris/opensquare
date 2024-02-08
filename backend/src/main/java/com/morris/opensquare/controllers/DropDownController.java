@@ -20,66 +20,92 @@ public class DropDownController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DropDownController.class);
 
     private final DropDownService dropDownService;
+    private static final String AGES = "ages";
+    private static final String PROFESSIONS = "professions";
+    private static final String ORGANIZATIONS = "organizations";
 
     @Autowired
     public DropDownController(DropDownService dropDownService) {
         this.dropDownService = dropDownService;
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/organizations")
     public ResponseEntity<List<String>> getOrganizations(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        List<String> sessionOrganizations = (List<String>) session.getAttribute("organizations");
-        if (sessionOrganizations != null) {
-            LOGGER.info("REUSING Organizations FROM SESSION");
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(sessionOrganizations);
-        }
-        LOGGER.info("CALLING ORGANIZATIONS DROPDOWN REQUEST");
-        List<String> organizations = dropDownService.getOrganizations();
-        request.getSession().setAttribute("organizations", organizations);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(organizations);
+        return dropDownOptionsFromAttribute(ORGANIZATIONS, request);
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/professions")
     public ResponseEntity<List<String>> getProfessions(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        List<String> sessionProfessions = (List<String>) session.getAttribute("professions");
-        if (sessionProfessions != null) {
-            LOGGER.info("REUSING Professions FROM SESSION");
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(sessionProfessions);
-        }
-        LOGGER.info("CALLING Professions DROPDOWN REQUEST");
-        List<String> professions = dropDownService.getProfessions();
-        request.getSession().setAttribute("professions", professions);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(professions);
+        return dropDownOptionsFromAttribute(PROFESSIONS, request);
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/age_ranges")
     public ResponseEntity<List<String>> getAgeRanges(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        List<String> sessionAgeRanges = (List<String>) session.getAttribute("ages");
-        if (sessionAgeRanges != null) {
-            LOGGER.info("REUSING AGE RANGES FROM SESSION");
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(sessionAgeRanges);
+        return dropDownOptionsFromAttribute(AGES, request);
+    }
+
+    /**
+     * Get drop-down options from given attribute. There are different attributes
+     * and each attribute contains a list of options based on the category.
+     *
+     * @param attribute the drop-down attribute (i.e., professions, organizations)
+     * @param request {@link HttpServletRequest}
+     *
+     * @return {@link ResponseEntity} list of drop-down options
+     */
+    ResponseEntity<List<String>> dropDownOptionsFromAttribute(String attribute, HttpServletRequest request) {
+        List<String> sessionAttributes = getDropDownOptionsFromSession(attribute, request);
+
+        if (sessionAttributes != null) {
+            return attributeResponseEntity(sessionAttributes);
         }
-        LOGGER.info("CALLING AGE RANGES DROPDOWN REQUEST");
-        List<String> ageRanges = dropDownService.getAgeRanges();
-        request.getSession().setAttribute("ages", ageRanges);
+
+        switch (attribute) {
+            case AGES:
+                List<String> ageRanges = dropDownService.getAgeRanges();
+                request.getSession().setAttribute(AGES, ageRanges);
+                return attributeResponseEntity(ageRanges);
+
+            case ORGANIZATIONS:
+                List<String> organizations = dropDownService.getOrganizations();
+                request.getSession().setAttribute(ORGANIZATIONS, organizations);
+                return attributeResponseEntity(organizations);
+
+            default:
+                List<String> professions = dropDownService.getProfessions();
+                request.getSession().setAttribute(PROFESSIONS, professions);
+                return attributeResponseEntity(professions);
+        }
+    }
+
+    /**
+     * Get attribute drop-down options from current session.
+     *
+     * @param attribute the drop-down attribute (i.e., professions, organizations)
+     * @param request {@link HttpServletRequest}
+     *
+     * @return {@link List<String>} drop-down options
+     */
+    @SuppressWarnings("unchecked")
+    private List<String> getDropDownOptionsFromSession(String attribute, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        switch(attribute) {
+            case AGES -> { return (List<String>) session.getAttribute(AGES); }
+            case ORGANIZATIONS -> { return (List<String>) session.getAttribute(ORGANIZATIONS); }
+            default -> { return (List<String>) session.getAttribute(PROFESSIONS); }
+        }
+    }
+
+    /**
+     * Get attribute response entity. A list of drop-down options.
+     *
+     * @param dropdownOptions {@link List<String>}
+     * @return {@link ResponseEntity}
+     */
+    private ResponseEntity<List<String>> attributeResponseEntity(List<String> dropdownOptions) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(ageRanges);
+                .body(dropdownOptions);
     }
 }
