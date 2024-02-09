@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.customsearch.model.Result;
+import com.morris.opensquare.models.DropDownOptions;
 import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +20,17 @@ import java.util.List;
  */
 public class TestHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestHelper.class);
+
+    private static final String ORG_1 = "Graphika";
+    private static final String ORG_2 = "RAND Organization";
+    private static final String ORG_3 = "Amazon Web Services";
+    private static final String PROFESSION_1 = "Software Engineer";
+    private static final String PROFESSION_2 = "Data Scientist";
+    private static final String PROFESSION_3 = "Intelligence Analyst";
+    private static final String AGE_RANGE_1 = "18-25";
+    private static final String AGE_RANGE_2 = "26-35";
+    private static final String AGE_RANGE_3 = "36-45";
+    private static final String AGE_RANGE_4 = "46-55";
 
     private TestHelper() {}
 
@@ -110,5 +123,45 @@ public class TestHelper {
             LOGGER.error(e.getMessage());
         }
         return null;
+    }
+
+    public static String asJSONString(Object object) throws JsonProcessingException {
+        if (object != null) {
+            return writeValueAsString(object);
+        }
+        return null;
+    }
+
+    public static DropDownOptions getDropDownOptions() {
+        return new DropDownOptions.Builder()
+                .ages(getAgeRanges())
+                .professions(getProfessions())
+                .organizations(getOrganizations())
+                .build();
+    }
+
+    private static List<String> getOrganizations() {
+        List<String> organizationsList = new ArrayList<>();
+        organizationsList.add(ORG_1);
+        organizationsList.add(ORG_2);
+        organizationsList.add(ORG_3);
+        return organizationsList;
+    }
+
+    private static List<String> getProfessions() {
+        List<String> professionsList = new ArrayList<>();
+        professionsList.add(PROFESSION_1);
+        professionsList.add(PROFESSION_2);
+        professionsList.add(PROFESSION_3);
+        return professionsList;
+    }
+
+    private static List<String> getAgeRanges() {
+        List<String> ageRangesList = new ArrayList<>();
+        ageRangesList.add(AGE_RANGE_1);
+        ageRangesList.add(AGE_RANGE_2);
+        ageRangesList.add(AGE_RANGE_3);
+        ageRangesList.add(AGE_RANGE_4);
+        return ageRangesList;
     }
 }

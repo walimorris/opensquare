@@ -20,7 +20,6 @@ class DisposableEmailDomainTest {
     private static final int TIMESTAMP = 123456789;
     private static final String DISPOSABLE_DOMAIN_FILE = "backend/src/test/resources/models/DisposableEmailDomain.json";
 
-
     private static DisposableEmailDomain disposableEmailDomain;
 
     @BeforeEach

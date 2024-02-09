@@ -14,9 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static com.morris.opensquare.TestHelper.asJSONString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,16 +40,6 @@ class DropDownControllerTest {
     private static final String ORGANIZATIONS = "organizations";
     private static final String PROFESSIONS = "professions";
     private static final String AGE_RANGES = "ages";
-
-    private static final String ORG_1 = "Graphika";
-    private static final String ORG_2 = "RAND Organization";
-    private static final String ORG_3 = "Amazon Web Services";
-    private static final String PROFESSION_1 = "Software Engineer";
-    private static final String PROFESSION_2 = "Data Scientist";
-    private static final String PROFESSION_3 = "Intelligence Analyst";
-    private static final String AGE_RANGE_1 = "18-25";
-    private static final String AGE_RANGE_2 = "26-35";
-    private static final String AGE_RANGE_3 = "36-45";
     private static DropDownOptions dropDownOptions;
     private static String organizationsAsString;
     private static String professionsAsString;
@@ -59,7 +47,7 @@ class DropDownControllerTest {
 
     @BeforeEach
     void setUp() throws JsonProcessingException {
-        dropDownOptions = getDropDownOptions();
+        dropDownOptions = TestHelper.getDropDownOptions();
 
         organizationsAsString = asJSONString(dropDownOptions.getOrganizations());
         professionsAsString = asJSONString(dropDownOptions.getProfessions());
@@ -118,44 +106,5 @@ class DropDownControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(ageRangesAsString));
-    }
-
-    private DropDownOptions getDropDownOptions() {
-        return new DropDownOptions.Builder()
-                .ages(getAgeRanges())
-                .professions(getProfessions())
-                .organizations(getOrganizations())
-                .build();
-    }
-
-    private List<String> getOrganizations() {
-        List<String> organizationsList = new ArrayList<>();
-        organizationsList.add(ORG_1);
-        organizationsList.add(ORG_2);
-        organizationsList.add(ORG_3);
-        return organizationsList;
-    }
-
-    private List<String> getProfessions() {
-        List<String> professionsList = new ArrayList<>();
-        professionsList.add(PROFESSION_1);
-        professionsList.add(PROFESSION_2);
-        professionsList.add(PROFESSION_3);
-        return professionsList;
-    }
-
-    private List<String> getAgeRanges() {
-        List<String> ageRangesList = new ArrayList<>();
-        ageRangesList.add(AGE_RANGE_1);
-        ageRangesList.add(AGE_RANGE_2);
-        ageRangesList.add(AGE_RANGE_3);
-        return ageRangesList;
-    }
-
-    private String asJSONString(Object object) throws JsonProcessingException {
-        if (object != null) {
-            return TestHelper.writeValueAsString(object);
-        }
-        return null;
     }
 }
