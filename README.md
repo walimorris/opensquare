@@ -103,13 +103,18 @@ and [Whois](https://en.wikipedia.org/wiki/WHOIS). Having a general suite of tool
 dashboard workspaces and use output from one tool as input for another.
 
 <div align="center">
-  <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
-    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-backlinks.png" alt="Logo" width="500" height="450">
+  <a href="https://github.com/walimorris/opensquare">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-backlinks.png" alt="Logo" width="650" height="450">
   </a>
 </div>
 <div align="center">
-  <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
-    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-whois.png" alt="Logo" width="500" height="450">
+  <a href="https://github.com/walimorris/opensquare">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-whois.png" alt="Logo" width="650" height="450">
+  </a>
+</div>
+<div align="center">
+  <a href="https://github.com/walimorris/opensquare">
+    <img src="backend/src/main/resources/images/backlink-snapshot.png" alt="Logo" width="650" height="450">
   </a>
 </div>
 
@@ -189,7 +194,7 @@ entry: path.resolve(__dirname, "/src/main/js/app.js"),
 - [ ] X (formerly Twitter) Service & View
 - [ ] Vkontakte Service & View
 
-See the [open issues](https://james-armistead.atlassian.net/jira/software/projects/OP/boards/1) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/walimorris/opensquare) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -215,7 +220,7 @@ See the [open issues](https://james-armistead.atlassian.net/jira/software/projec
 
 Wali Morris - [@LinkedIn](https://www.linkedin.com/in/wali-m/) - walimmorris@gmail.com
 
-Project Link: [Bitbucket](https://bitbucket.org/intelligence-opensent/opensentop/src/master/)
+Project Link: [GitHub](https://github.com/walimorris/opensquare)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

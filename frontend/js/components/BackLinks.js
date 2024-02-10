@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import axios from "axios";
 import {useEffect} from "react";
 import Box from "@mui/material/Box";
+import BackLinkInfoCard from "./BackLinkInfoCard";
 import BackLinkCard from "./BackLinkCard";
 
 export default function BackLinks() {
@@ -93,6 +94,7 @@ export default function BackLinks() {
     return (
         <React.Fragment>
             <Grid item xs={12} justifyContent='center' alignItems='center'>
+                <BackLinkInfoCard />
                 <Paper
                     component="form"
                     sx={{ p: '2px 4px', display: 'flex', width: '95%', marginLeft: '2.5%', marginTop: '5%', backgroundColor: 'tertiary' }}

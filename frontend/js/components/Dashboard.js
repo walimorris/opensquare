@@ -29,6 +29,7 @@ import Whois from "./Whois";
 import Nslookup from './Nslookup';
 import BackLinks from './BackLinks';
 import YouTubePlatform from "./YouTubePlatform";
+import EmailLookup from "./EmailLookup";
 
 function Copyright(props) {
     return (
@@ -107,6 +108,7 @@ export default function Dashboard(props) {
     const [renderWhois, setRenderWhois] = React.useState(false);
     const [renderNslookup, setRenderNslookup] = React.useState(false);
     const [renderBacklinks, setRenderBacklinks] = React.useState(false);
+    const [renderEmailLookup, setRenderEmailLookup] = React.useState(false);
 
     // platforms
     const [renderYouTubePlatform, setRenderYouTubePlatform] = React.useState(false);
@@ -132,6 +134,7 @@ export default function Dashboard(props) {
             setRenderWhois(false);
             setRenderNslookup(false);
             setRenderBacklinks(false);
+            setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
         } else if (childData === 'Whois') {
             // remove non-whois items
@@ -140,6 +143,7 @@ export default function Dashboard(props) {
             setRenderMostAnalyzed(false);
             setRenderNslookup(false);
             setRenderBacklinks(false);
+            setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
 
             // render whois items
@@ -151,6 +155,7 @@ export default function Dashboard(props) {
             setRenderMostAnalyzed(false);
             setRenderWhois(false);
             setRenderBacklinks(false);
+            setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
 
 
@@ -163,11 +168,25 @@ export default function Dashboard(props) {
             setRenderMostAnalyzed(false);
             setRenderWhois(false);
             setRenderNslookup(false);
+            setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
 
 
             // render backlinks items
             setRenderBacklinks(true);
+        } else if (childData === 'EmailLookup') {
+            // remove non-email lookup items
+            setRenderChart(false);
+            setRenderOrders(false);
+            setRenderMostAnalyzed(false);
+            setRenderWhois(false);
+            setRenderNslookup(false);
+            setRenderBacklinks(false);
+            setRenderYouTubePlatform(false);
+
+
+            // render email lookup items
+            setRenderEmailLookup(true);
         } else if (childData === 'YouTube') {
             // remove non-youtube items
             setRenderChart(false);
@@ -176,6 +195,7 @@ export default function Dashboard(props) {
             setRenderWhois(false);
             setRenderNslookup(false);
             setRenderBacklinks(false);
+            setRenderEmailLookup(false);
 
             setRenderYouTubePlatform(true);
         }
@@ -316,6 +336,12 @@ export default function Dashboard(props) {
                             { renderBacklinks && <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <BackLinks />
+                                </Paper>
+                            </Grid> }
+                            {/* email lookup component */}
+                            { renderEmailLookup && <Grid item xs={12}>
+                                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                                    <EmailLookup />
                                 </Paper>
                             </Grid> }
                             {/* youtube component */}

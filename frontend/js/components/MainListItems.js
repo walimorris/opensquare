@@ -94,6 +94,12 @@ export default function MainListItems(props) {
                         </ListItemIcon>
                         <ListItemText primary="BackLinks" />
                     </ListItemButton>
+                    <ListItemButton onClick={handleTrigger} sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                            <OpenInNewIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="EmailLookup" />
+                    </ListItemButton>
                 </List>
             </Collapse>
             <ListItemButton>
