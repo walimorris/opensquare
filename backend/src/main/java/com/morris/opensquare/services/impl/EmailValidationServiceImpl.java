@@ -31,7 +31,7 @@ public class EmailValidationServiceImpl implements EmailValidationService {
                 .id(new ObjectId())
                 .domainName(domain.trim())
                 .build();
-        return disposableEmailDomainRepository.save(disposableEmailDomain);
+        return disposableEmailDomainRepository.insert(disposableEmailDomain);
     }
 
     @Override
