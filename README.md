@@ -118,6 +118,33 @@ dashboard workspaces and use output from one tool as input for another.
   </a>
 </div>
 
+### MongoDB Atlas Functions Highlight
+An [Atlas Function](https://www.mongodb.com/docs/atlas/app-services/functions/) is a piece of server-side JavaScript code that you can write to define your app's behavior. 
+Atlas Functions can call other functions, call external APIs, create triggers, and run on a schedule amongst other things.
+Atlas Functions exhibit the power of serverless, and doesn't require any management on our end. Instead, we just write our function's code
+and the managed server within Atlas cluster handles the execution environment. Atlas Functions allow us at Opensquare
+to implement exciting features. Below is a diagram example of how we implemented real time feeds/notifications for updating users about
+malicious email addresses and a target's real-time location. Keep in mind that this is extensible and can be applied to a number of use-cases: 
+device monitoring/alerting, location-tracking, real time analytics, etc. 
+
+In our example below, we use a Scheduled Atlas Function to periodically send a get request to an external service that contains a list of disposable email 
+addresses that's maintained by a group of active participants. New disposable email addresses are inserted within a MongoDB collection 
+that stores disposable email addresses. The work of the serverless function is done. Now, within the context of our Springboot application and another 
+feature that makes MongoDB Atlas truly versatile is its Change Data Capture ([CDC](https://en.wikipedia.org/wiki/Change_data_capture)) feature [Change Streams](https://www.mongodb.com/docs/manual/changeStreams/). Within our application 
+we implement a ChangeStream Watch cursor on various collections that monitor and have access to real-time data changes within our application. This means that 
+once new disposable email addresses are inserted into collection we can send notifications through email/sms or update users directly in app via an application feed.
+Worry not, this feature will be useful in many different OSINT strategies and against various use-cases where real time updates can be more meaningful. 
+
+These features of MongoDB Atlas: CDC, streaming and serverless functions significantly reduces application complexity now that we don't need to implement complex code to tail the oplog,
+and will allow Opensquare to provide massive productivity boosts to users. 
+
+
+<div align="center">
+  <a href="https://github.com/walimorris/opensquare">
+    <img src="backend/src/main/resources/images/disposable-email-atlas-function.png" alt="Logo" width="650" height="450">
+  </a>
+</div>
+
 
 
 <!-- GETTING STARTED -->
