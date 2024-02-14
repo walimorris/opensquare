@@ -20,7 +20,7 @@ public class OpensquareApplication {
 		 * gives us granular level of insight into what data has changed. From the WatchStreamService,
 		 * we can monitor on collection level.
 		 */
-		watchStreamService.watchEmailDomainAdditionStream();
+		watchStreamService.watchAll();
 	}
 
 }
