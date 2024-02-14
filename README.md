@@ -131,7 +131,7 @@ In our example below, we use a Scheduled Atlas Function to periodically send a g
 addresses that's maintained by a group of active participants. New disposable email addresses are inserted within a MongoDB collection 
 that stores disposable email addresses. The work of the serverless function is done. Now, within the context of our Springboot application and another 
 feature that makes MongoDB Atlas truly versatile is its Change Data Capture ([CDC](https://en.wikipedia.org/wiki/Change_data_capture)) feature [Change Streams](https://www.mongodb.com/docs/manual/changeStreams/). Within our application 
-we implement a ChangeStream Watch cursor on various collections that monitor and have access to real-time data changes within our application. This means that 
+we implement a ChangeStream Watch cursor on various collections that monitor and have access to real-time data changes. This means that 
 once new disposable email addresses are inserted into collection we can send notifications through email/sms or update users directly in app via an application feed.
 Worry not, this feature will be useful in many different OSINT strategies and against various use-cases where real time updates can be more meaningful. 
 
