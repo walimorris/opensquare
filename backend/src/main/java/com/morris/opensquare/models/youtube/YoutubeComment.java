@@ -228,7 +228,7 @@ public class YoutubeComment implements Serializable {
             return this;
         }
 
-        public Builder liseCount(int likeCount) {
+        public Builder likeCount(int likeCount) {
             this.likeCount = likeCount;
             return this;
         }
