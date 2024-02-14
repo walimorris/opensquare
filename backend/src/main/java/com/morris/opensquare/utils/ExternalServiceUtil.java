@@ -5,6 +5,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.CustomsearchRequestInitializer;
+import com.google.api.services.youtube.YouTube;
+import com.morris.opensquare.models.exceptions.OpenSquareYouTubeServiceException;
 import com.morris.opensquare.services.loggers.LoggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Optional;
 
-import static com.morris.opensquare.utils.Constants.ERROR_GOOGLE_CUSTOM_SEARCH_SERVICE;
+import static com.morris.opensquare.utils.Constants.*;
 
 @Component("externalServiceUtil")
 public class ExternalServiceUtil {
@@ -57,5 +59,29 @@ public class ExternalServiceUtil {
             loggerService.saveLog(e.getClass().getName(), ERROR_GOOGLE_CUSTOM_SEARCH_SERVICE + ": " + e.getMessage(), Optional.of(LOGGER));
         }
         return customsearch;
+    }
+
+    /**
+     * Gets YouTube API Service for requests.
+     *
+     * @param applicationName name of YouTube-based application
+     *
+     * @return {@link YouTube}
+     */
+    public YouTube getYouTubeService(String applicationName) {
+        YouTube youTube = null;
+        try {
+            final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+            youTube = new YouTube.Builder(httpTransport, JacksonFactory.getDefaultInstance(), null)
+                    .setApplicationName(applicationName)
+                    .build();
+        } catch (GeneralSecurityException | IOException e) {
+            loggerService.saveLog(e.getClass().getName(), ERROR_YOUTUBE_SERVICE_2 + " " + applicationName + ": " + e.getMessage(), Optional.of(LOGGER));
+        }
+        if (youTube == null) {
+            loggerService.saveLog(OpenSquareYouTubeServiceException.class.getName(), ERROR_YOUTUBE_SERVICE_1, Optional.empty());
+            throw new OpenSquareYouTubeServiceException(ERROR_YOUTUBE_SERVICE_1);
+        }
+        return youTube;
     }
 }
