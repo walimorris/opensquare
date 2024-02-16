@@ -96,4 +96,7 @@ public final class Constants {
     public static final String ERROR_VALIDATING_URL = "Error validating url {}: {}";
     public static final String INSIDE_PAGINATION_LOOP = "Inside pagination loop: {}";
     public static final String VIDEO_PRESENT_IN_INDEX = "video: {} present in index: '{}'";
+
+    // external urls
+    public static final String OWASP_BLOG = "https://owasp.org/blog";
 }

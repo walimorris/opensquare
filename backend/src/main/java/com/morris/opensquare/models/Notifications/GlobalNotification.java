@@ -13,7 +13,7 @@ public class GlobalNotification {
     private ObjectId id;
 
     /**
-     * In order to make a TTL field on a MDB collection that deletes a Document based on the given date, you
+     * In order to make a TTL field on MDB collection that deletes a Document based on the given date, you
      * must create an index such as <b>db.collection.createIndex({ "expiration": 1}, {expireAfterSeconds: 0})</b>
      * on the expiring Date field in the collection. This, effectively, creates a TTL field on that collection.
      * <br><br>
@@ -21,16 +21,25 @@ public class GlobalNotification {
      */
     private Date expiration;
     private String message;
-
     private String sender;
+    private OwaspBlogReference owaspRef;
 
     public GlobalNotification() {}
+
+    public GlobalNotification(ObjectId id, Date expiration, String message, String sender, OwaspBlogReference owaspRef) {
+        this.id = id;
+        this.expiration = expiration;
+        this.message = message;
+        this.sender = sender;
+        this.owaspRef = owaspRef;
+    }
 
     public GlobalNotification(Builder builder) {
         this.id = builder.id;
         this.expiration = builder.expiration;
         this.message = builder.message;
         this.sender = builder.sender;
+        this.owaspRef = builder.owaspRef;
     }
 
     public ObjectId getId() {
@@ -65,6 +74,14 @@ public class GlobalNotification {
         this.sender = sender;
     }
 
+    public OwaspBlogReference getOwaspRef() {
+        return owaspRef;
+    }
+
+    public void setOwaspRef(OwaspBlogReference owaspRef) {
+        this.owaspRef = owaspRef;
+    }
+
     @Override
     public String toString() {
         return "GlobalNotification{" +
@@ -72,6 +89,7 @@ public class GlobalNotification {
                 ", expiration=" + expiration +
                 ", message='" + message + '\'' +
                 ", sender='" + sender + '\'' +
+                ", owaspRef='" + owaspRef.toString() + '\'' +
                 '}';
     }
 
@@ -80,6 +98,7 @@ public class GlobalNotification {
         private Date expiration;
         private String message;
         private String sender;
+        private OwaspBlogReference owaspRef;
 
         public Builder() {}
 
@@ -100,6 +119,11 @@ public class GlobalNotification {
 
         public Builder sender(String sender) {
             this.sender = sender;
+            return this;
+        }
+
+        public Builder owaspRef(OwaspBlogReference owaspRef) {
+            this.owaspRef = owaspRef;
             return this;
         }
 

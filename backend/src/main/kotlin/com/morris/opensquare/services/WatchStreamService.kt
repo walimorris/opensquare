@@ -25,47 +25,52 @@ class WatchStreamService @Autowired constructor(private val mongoTemplate: Mongo
         private const val DATABASE = "sample_restaurants"
         private const val DISPOSABLE_EMAIL_DOMAINS_COLLECTION = "disposable_email_domains"
         private const val MONGO_LOGGER_COLLECTION = "mongo_logger"
+        private const val GLOBAL_NOTIFICATIONS_COLLECTION = "global_notifications"
         private const val INSERT = "insert"
         private const val UPDATE = "update"
+        private const val MODIFY = "modify"
         private const val OP_TYPE = "operationType"
     }
 
     fun watchEmailDomainChangeStream() {
-        val collection = getDisposableEmailDomainCollection()
-        val pipeline: MutableList<Bson> = insertUpdateOperationsPipeline()
+        val collection = getCollection(DISPOSABLE_EMAIL_DOMAINS_COLLECTION)
+        val pipeline: MutableList<Bson> = insertUpdateModifyOperationsPipeline()
         watchCollectionChangeStream(collection, pipeline)
     }
 
     fun watchMongoLoggerChangeStream() {
-        val collection = getMongoLoggerCollection()
-        val pipeline: MutableList<Bson> = insertUpdateOperationsPipeline()
+        val collection = getCollection(MONGO_LOGGER_COLLECTION)
+        val pipeline: MutableList<Bson> = insertUpdateModifyOperationsPipeline()
+        watchCollectionChangeStream(collection, pipeline)
+    }
+
+    fun watchGlobalNotificationsChangeStream() {
+        val collection = getCollection(GLOBAL_NOTIFICATIONS_COLLECTION)
+        val pipeline: MutableList<Bson> = insertUpdateModifyOperationsPipeline()
         watchCollectionChangeStream(collection, pipeline)
     }
 
     fun watchAll() {
         watchEmailDomainChangeStream()
         watchMongoLoggerChangeStream()
+        watchGlobalNotificationsChangeStream()
     }
 
     private fun getDatabaseInstance(): MongoDatabase {
         return mongoTemplate.mongoDatabaseFactory.getMongoDatabase(DATABASE)
     }
 
-    private fun getDisposableEmailDomainCollection(): MongoCollection<Document> {
-        return getDatabaseInstance().getCollection(DISPOSABLE_EMAIL_DOMAINS_COLLECTION)
+    private fun getCollection(collection: String): MongoCollection<Document> {
+        return getDatabaseInstance().getCollection(collection)
     }
 
-    private fun getMongoLoggerCollection(): MongoCollection<Document> {
-        return getDatabaseInstance().getCollection(MONGO_LOGGER_COLLECTION)
-    }
-
-    private fun insertUpdateOperationsPipeline(): MutableList<Bson> {
-        val operations: List<String> = arrayListOf(INSERT, UPDATE)
+    private fun insertUpdateModifyOperationsPipeline(): MutableList<Bson> {
+        val operations: List<String> = arrayListOf(INSERT, UPDATE, MODIFY)
         return mutableListOf(Aggregates.match(Filters.`in`(OP_TYPE, operations)))
     }
 
     private fun watchCollectionChangeStream(collection: MongoCollection<Document>, pipeline: MutableList<Bson>) {
-        val changeStream: ChangeStreamIterable<Document> = collection.watch(pipeline).fullDocument(FullDocument.UPDATE_LOOKUP)
+        val changeStream: ChangeStreamIterable<Document> = collection.watch(pipeline).fullDocument(FullDocument.DEFAULT)
         for (document in changeStream) {
             println(document)
         }

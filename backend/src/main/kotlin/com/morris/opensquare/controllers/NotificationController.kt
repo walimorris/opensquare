@@ -1,6 +1,7 @@
 package com.morris.opensquare.controllers
 
 import com.morris.opensquare.models.Notifications.GlobalNotification
+import com.morris.opensquare.models.Notifications.OwaspBlogReference
 import com.morris.opensquare.services.NotificationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -18,6 +19,17 @@ class NotificationController @Autowired constructor(private val notificationServ
     fun postGlobalNotificationBroadCast(@RequestParam message: String): ResponseEntity<GlobalNotification> {
         println("message = $message")
         val globalNotification = notificationService.broadcastNotification(message)
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(globalNotification)
+    }
+
+    @PostMapping("/admin/api/notifications/owasp")
+    fun postOwaspNotificationBroadcast(@RequestParam message: String,
+                                       @RequestParam owaspRef: OwaspBlogReference): ResponseEntity<GlobalNotification> {
+
+        println("owaspRef = $owaspRef")
+        val globalNotification = notificationService.broadcastOwaspNotification(message, owaspRef)
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(globalNotification)
