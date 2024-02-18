@@ -1,10 +1,13 @@
 package com.morris.opensquare.models.Notifications;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_TIME_PATTERN;
 
 @Document("global_notifications")
 public class GlobalNotification {
@@ -19,14 +22,15 @@ public class GlobalNotification {
      * <br><br>
      * @see <a href="https://www.mongodb.com/docs/manual/tutorial/expire-data/#std-label-expire-data-atlas-ui">TTL DOCS</a>
      */
-    private Date expiration;
+    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
+    private LocalDateTime expiration;
     private String message;
     private String sender;
     private OwaspBlogReference owaspRef;
 
     public GlobalNotification() {}
 
-    public GlobalNotification(ObjectId id, Date expiration, String message, String sender, OwaspBlogReference owaspRef) {
+    public GlobalNotification(ObjectId id, LocalDateTime expiration, String message, String sender, OwaspBlogReference owaspRef) {
         this.id = id;
         this.expiration = expiration;
         this.message = message;
@@ -50,11 +54,11 @@ public class GlobalNotification {
         this.id = id;
     }
 
-    public Date getExpiration() {
+    public LocalDateTime getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(Date expiration) {
+    public void setExpiration(LocalDateTime expiration) {
         this.expiration = expiration;
     }
 
@@ -95,7 +99,7 @@ public class GlobalNotification {
 
     public static class Builder {
         private ObjectId id;
-        private Date expiration;
+        private LocalDateTime expiration;
         private String message;
         private String sender;
         private OwaspBlogReference owaspRef;
@@ -107,7 +111,7 @@ public class GlobalNotification {
             return this;
         }
 
-        public Builder expiration(Date expiration) {
+        public Builder expiration(LocalDateTime expiration) {
             this.expiration = expiration;
             return this;
         }

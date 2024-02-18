@@ -22,5 +22,4 @@ public class OpensquareApplication {
 		 */
 		watchStreamService.watchAll();
 	}
-
 }

@@ -6,8 +6,8 @@ import com.morris.opensquare.repositories.GlobalNotificationsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.ZoneOffset
-import java.util.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class NotificationService @Autowired constructor(private val globalNotificationsRepository: GlobalNotificationsRepository) {
@@ -15,7 +15,6 @@ class NotificationService @Autowired constructor(private val globalNotifications
     companion object {
         private const val SENDER = "Opensquare Team"
         private const val PLUS_DAYS: Long = 5
-        private const val OFFSET = "Z"
     }
 
     fun broadcastNotification(message: String): GlobalNotification {
@@ -30,14 +29,11 @@ class NotificationService @Autowired constructor(private val globalNotifications
     }
 
     private fun buildSimpleBroadCastNotification(message:String): GlobalNotification {
-        val weekExpiration = Date.from(LocalDate
-            .now()
-            .plusDays(PLUS_DAYS)
-            .atStartOfDay()
-            .toInstant(ZoneOffset.of(OFFSET)))
-
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val weekExpiration = LocalDateTime.now().plusDays(PLUS_DAYS).format(dateTimeFormatter)
+        println(weekExpiration.toString())
         return GlobalNotification.Builder()
-            .expiration(weekExpiration)
+            .expiration(LocalDate.parse(weekExpiration, dateTimeFormatter).atStartOfDay())
             .message(message)
             .sender(SENDER)
             .build()

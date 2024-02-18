@@ -3,6 +3,7 @@ package com.morris.opensquare;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.api.services.customsearch.model.Result;
 import com.morris.opensquare.models.DropDownOptions;
 import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
@@ -32,6 +33,7 @@ public class TestHelper {
     private static final String AGE_RANGE_3 = "36-45";
     private static final String AGE_RANGE_4 = "46-55";
 
+    // TODO: add testhelper global context
     private TestHelper() {}
 
     /**
@@ -55,6 +57,7 @@ public class TestHelper {
      */
     public static Object convertModelFromFile(String fileName, Class<?> clazz, Class<?> type) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         if (clazz.isAssignableFrom(List.class)) {
             if (type == NSLookupFootPrint.class) {
                 TypeReference<List<NSLookupFootPrint>> reference = new TypeReference<>() {};
@@ -81,6 +84,7 @@ public class TestHelper {
      */
     public static <T> T convertModelFromFile(String fileName, Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         return mapper.readValue(new File(fileName), clazz);
     }
 
@@ -93,6 +97,7 @@ public class TestHelper {
      */
     public static JSONObject getJSONFromObject(Object object) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         return mapper.convertValue(object, JSONObject.class);
     }
 
@@ -106,6 +111,7 @@ public class TestHelper {
      */
     public static String writeValueAsString(Object object) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         return objectMapper.writeValueAsString(object);
     }
 
