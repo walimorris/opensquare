@@ -118,6 +118,15 @@ dashboard workspaces and use output from one tool as input for another.
   </a>
 </div>
 
+### MongoDB Charts Highlight
+Gain valuable insights about Opensquare users and popular platforms being used in various OSINT strategies with [MongoDB Charts](https://www.mongodb.com/products/charts)
+
+<div align="center">
+  <a href="https://github.com/walimorris/opensquare">
+    <img src="backend/src/main/resources/images/mongodb-charts.png" alt="Logo" width="500" height="300">
+  </a>
+</div>
+
 ### MongoDB Atlas Functions Highlight
 An [Atlas Function](https://www.mongodb.com/docs/atlas/app-services/functions/) is a piece of server-side JavaScript code that you can write to define your app's behavior. 
 Atlas Functions can call other functions, call external APIs, create triggers, and run on a schedule amongst other things.
@@ -144,7 +153,6 @@ and will allow Opensquare to provide massive productivity boosts to users.
     <img src="backend/src/main/resources/images/disposable-email-atlas-function.png" alt="Logo" width="650" height="450">
   </a>
 </div>
-
 
 
 <!-- GETTING STARTED -->

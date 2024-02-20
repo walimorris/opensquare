@@ -106,7 +106,7 @@ function getImagePath(platform) {
 export default function MostAnalyzedPlatform({userDetails}) {
     return (
         <React.Fragment>
-            <Title>Most Analyzed Platform</Title>
+            <Title>Your Favorite Platform</Title>
             <img className='platformImage'
                  src={getMostAnalyzedPlatformImage(userDetails[PLATFORM_ANALYSIS_TRACKER_PROPERTY])}
                  alt='platform-image'/>

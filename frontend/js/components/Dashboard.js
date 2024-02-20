@@ -295,7 +295,7 @@ export default function Dashboard(props) {
                                         p: 2,
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        height: 240,
+                                        height: 580,
                                     }}
                                 >
                                     <Chart />

@@ -1,24 +1,15 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActionArea } from '@mui/material';
 import Title from './Title';
+import {ResponsiveContainer} from "recharts";
 
 // Generate Sales Data
 function createData(time, amount) {
     return { time, amount };
 }
-
-const data = [
-    createData('00:00', 0),
-    createData('03:00', 3),
-    createData('06:00', 6),
-    createData('09:00', 8),
-    createData('12:00', 1),
-    createData('15:00', 2),
-    createData('18:00', 2),
-    createData('21:00', 2),
-    createData('24:00', undefined),
-];
 
 export default function Chart() {
     const theme = useTheme();
@@ -27,44 +18,16 @@ export default function Chart() {
         <React.Fragment>
             <Title>Today</Title>
             <ResponsiveContainer>
-                <LineChart
-                    data={data}
-                    margin={{
-                        top: 16,
-                        right: 16,
-                        bottom: 0,
-                        left: 24,
-                    }}
-                >
-                    <XAxis
-                        dataKey="time"
-                        stroke={theme.palette.text.secondary}
-                        style={theme.typography.body2}
-                    />
-                    <YAxis
-                        stroke={theme.palette.text.secondary}
-                        style={theme.typography.body2}
-                    >
-                        <Label
-                            angle={270}
-                            position="left"
-                            style={{
-                                textAnchor: 'middle',
-                                fill: theme.palette.text.primary,
-                                ...theme.typography.body1,
-                            }}
-                        >
-                            Analyses (All)
-                        </Label>
-                    </YAxis>
-                    <Line
-                        isAnimationActive={false}
-                        type="monotone"
-                        dataKey="amount"
-                        stroke={theme.palette.primary.main}
-                        dot={false}
-                    />
-                </LineChart>
+                <Card>
+                    <CardActionArea>
+                        <CardMedia
+                            component="iframe"
+                            style={{maxWidth: 830, height: 480, background: "#F1F5F4", border: "none", borderRadius: "2px", boxShadow: "0 2px 10px 0 rgba(70, 76, 79, .2)"}}
+                            src="https://charts.mongodb.com/charts-project-0-abbrz/embed/charts?id=65d4ea34-193b-4a49-8e71-508c0a11a970&maxDataAge=3600&theme=light&autoRefresh=true"
+                            alt="Global Opensqaure Frequency of Analysis by Platform"
+                        />
+                    </CardActionArea>
+                </Card>
             </ResponsiveContainer>
         </React.Fragment>
     );
