@@ -101,4 +101,5 @@ public final class Constants {
     public static final String OWASP_BLOG = "https://owasp.org/blog";
     public static final String OWASP_BLOG_MD_PREFIX = "md";
     public static final String OPENSQUARE_JAVA_MONGODB_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    public static final String OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 }

@@ -6,6 +6,7 @@ import com.morris.opensquare.services.NotificationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,6 +23,14 @@ class NotificationController @Autowired constructor(private val notificationServ
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(globalNotification)
+    }
+
+    @GetMapping("/admin/api/notifications/globalAll")
+    fun getAllGlobalNotifications(): ResponseEntity<List<GlobalNotification>> {
+        val allNotifications = notificationService.readAllGlobalNotifications()
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(allNotifications)
     }
 
     @PostMapping("/admin/api/notifications/owasp")

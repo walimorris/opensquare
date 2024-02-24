@@ -21,6 +21,10 @@ class NotificationService @Autowired constructor(private val globalNotifications
         return globalNotificationsRepository.insert(notification)
     }
 
+    fun readAllGlobalNotifications(): List<GlobalNotification> {
+        return globalNotificationsRepository.findAll()
+    }
+
     fun broadcastOwaspNotification(message: String, owaspReference: OwaspBlogReference): GlobalNotification {
         val notification = buildSimpleBroadCastNotification(message)
         notification.owaspRef = owaspReference

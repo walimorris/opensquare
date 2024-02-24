@@ -24,7 +24,7 @@ export default function Chart() {
                             component="iframe"
                             style={{maxWidth: 830, height: 480, background: "#F1F5F4", border: "none", borderRadius: "2px", boxShadow: "0 2px 10px 0 rgba(70, 76, 79, .2)"}}
                             src="https://charts.mongodb.com/charts-project-0-abbrz/embed/charts?id=65d4ea34-193b-4a49-8e71-508c0a11a970&maxDataAge=3600&theme=light&autoRefresh=true"
-                            alt="Global Opensqaure Frequency of Analysis by Platform"
+                            alt="Global: Opensquare Frequency of Analysis by Platform"
                         />
                     </CardActionArea>
                 </Card>

@@ -1,12 +1,16 @@
 package com.morris.opensquare.models.Notifications;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN;
 import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_TIME_PATTERN;
 
 @Document("global_notifications")
@@ -23,6 +27,7 @@ public class GlobalNotification {
      * @see <a href="https://www.mongodb.com/docs/manual/tutorial/expire-data/#std-label-expire-data-atlas-ui">TTL DOCS</a>
      */
     @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime expiration;
     private String message;
     private String sender;
@@ -54,8 +59,11 @@ public class GlobalNotification {
         this.id = id;
     }
 
+    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     public LocalDateTime getExpiration() {
-        return expiration;
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN);
+        System.out.println("parsing: " + this.expiration.toString());
+        return LocalDateTime.parse(this.expiration.toString().split("\\.")[0], dateTimeFormatter);
     }
 
     public void setExpiration(LocalDateTime expiration) {
@@ -88,12 +96,18 @@ public class GlobalNotification {
 
     @Override
     public String toString() {
+        String owaspString;
+        if (owaspRef != null) {
+            owaspString = owaspRef.toString();
+        } else {
+            owaspString = "";
+        }
         return "GlobalNotification{" +
                 "id=" + id +
                 ", expiration=" + expiration +
                 ", message='" + message + '\'' +
                 ", sender='" + sender + '\'' +
-                ", owaspRef='" + owaspRef.toString() + '\'' +
+                ", owaspRef='" + owaspString + '\'' +
                 '}';
     }
 
