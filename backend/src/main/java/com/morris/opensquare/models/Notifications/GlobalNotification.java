@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,7 @@ import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_JSON
 import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_TIME_PATTERN;
 
 @Document("global_notifications")
-public class GlobalNotification {
+public class GlobalNotification implements Serializable {
 
     @Id
     private ObjectId id;

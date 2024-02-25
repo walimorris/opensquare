@@ -17,6 +17,9 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import MainListItem from './MainListItems';
 import SecondaryListItems from './SecondaryListItems';
 import TertiaryListItems from './TertiaryListItems';
@@ -30,6 +33,7 @@ import Nslookup from './Nslookup';
 import BackLinks from './BackLinks';
 import YouTubePlatform from "./YouTubePlatform";
 import EmailLookup from "./EmailLookup";
+import NotificationChip from "./NotificationChip";
 
 function Copyright(props) {
     return (
@@ -113,9 +117,17 @@ export default function Dashboard(props) {
     // platforms
     const [renderYouTubePlatform, setRenderYouTubePlatform] = React.useState(false);
 
+    // notification chip
+    const notifications = props.globalNotifications;
+    const [showNotifications, setShowNotifications] = React.useState(false);
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    }
 
     const handleToggleAll = (childData) => {
         console.log(childData);
@@ -210,6 +222,16 @@ export default function Dashboard(props) {
         window.location.href = '/logout';
     }
 
+    function notificationsLabel(count) {
+        if (count === 0) {
+            return 'no notifications';
+        }
+        if (count > 99) {
+            return 'more than 99 notifications';
+        }
+        return `${count} notifications`;
+    }
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -241,11 +263,22 @@ export default function Dashboard(props) {
                         >
                             Dashboard
                         </Typography>
+                        <Stack direction="row" spacing={1} sx={{marginRight: '65%'}}>
+                            <Chip
+                                avatar={<Avatar alt="W" src="/images/professional_me.jpeg" />}
+                                label="Avatar"
+                                variant="outlined"
+                            />
+                        </Stack>
                         <IconButton color="inherit" sx={{ marginRight: '5%' }}>
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
+                            <Badge badgeContent={2} color="secondary">
+                                <NotificationsIcon onClick={toggleNotifications}/>
                             </Badge>
+                            {showNotifications && <Badge>
+                                <NotificationChip notifications={notifications}/>
+                            </Badge>}
                         </IconButton>
+
                         <Button onClick={handleLogout} size="small" color="white" endIcon={<LogoutIcon />}>
                             Logout
                         </Button>

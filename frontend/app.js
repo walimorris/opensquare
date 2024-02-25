@@ -12,16 +12,25 @@ import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 
 const App = () => {
     const [userDetails, setUserDetails] = useState({});
+    const [globalNotifications, setGlobalNotifications] = useState({});
 
     let detailsConfig = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:8081/opensentop/api/actions/user_details',
+        url: '/opensentop/api/actions/user_details',
         headers: {
             'Content-Type': 'application/json'
         },
-        data: ''
     };
+
+    let globalNotificationsConfig = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: '/opensquare/admin/api/notifications/globalAll',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }
 
     useEffect(() => {
         async function fetchUserDetails() {
@@ -37,6 +46,20 @@ const App = () => {
         fetchUserDetails();
     }, []);
 
+    useEffect(() => {
+        async function fetchGlobalNotifications() {
+            await axios.request(globalNotificationsConfig)
+                .then((response) => {
+                    console.log(response.data);
+                    setGlobalNotifications(response.data)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+            }
+            fetchGlobalNotifications();
+        }, []);
+
     const navigate = e => {
         console.log(e);
         if (e === 'home') {
@@ -50,7 +73,7 @@ const App = () => {
         <div id={'app'}>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<Dashboard userDetails={userDetails} />} />
+                    <Route path='/' element={<Dashboard userDetails={userDetails} globalNotifications={globalNotifications}/>} />
                     <Route path='/settings' element={<Settings userDetails={userDetails}/>} />
                     <Route path='/about' element={<About />} />
                 </Routes>
