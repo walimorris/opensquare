@@ -40,11 +40,6 @@ class OwaspReferenceService {
         val objectMapper = ObjectMapper()
         val arrayType: TypeReference<List<OwaspBlogSnippet>> = object: TypeReference<List<OwaspBlogSnippet>>(){}
         val blogSnippets: List<OwaspBlogSnippet> = objectMapper.readValue(blogs.toString(), arrayType)
-
-        for (snippet in blogSnippets) {
-            println(snippet.path)
-        }
-
         return blogs.toString()
     }
 }
