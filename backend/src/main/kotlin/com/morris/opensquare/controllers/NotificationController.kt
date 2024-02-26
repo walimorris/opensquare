@@ -16,7 +16,6 @@ class NotificationController @Autowired constructor(private val notificationServ
 
     @PostMapping("/admin/api/notifications")
     fun postGlobalNotificationBroadCast(@RequestParam message: String): ResponseEntity<GlobalNotification> {
-        println("message = $message")
         val globalNotification = notificationService.broadcastNotification(message)
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
@@ -28,8 +27,6 @@ class NotificationController @Autowired constructor(private val notificationServ
         val httpSession: HttpSession = httpServletRequest.session
         val sessionAllNotifications: Any? = httpSession.getAttribute("globalNotifications")
         if (sessionAllNotifications != null) {
-            println("reusing session data: ")
-            println(sessionAllNotifications.toString())
             return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(sessionAllNotifications)
