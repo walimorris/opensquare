@@ -1,16 +1,20 @@
 package com.morris.opensquare.models.Notifications;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.bson.types.ObjectId;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import static com.morris.opensquare.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class OwaspBlogReference {
+public class OwaspBlogReference implements Serializable {
 
     @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime date;
     private String author;
     private String title;
