@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, styled, ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -127,6 +127,10 @@ export default function Dashboard(props) {
 
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications);
+    }
+
+    const getNotificationCount = () => {
+        return notifications.length;
     }
 
     const handleToggleAll = (childData) => {
@@ -271,7 +275,7 @@ export default function Dashboard(props) {
                             />
                         </Stack>
                         <IconButton color="inherit" sx={{ marginRight: '5%' }}>
-                            <Badge badgeContent={2} color="secondary">
+                            <Badge badgeContent={getNotificationCount()} color="secondary">
                                 <NotificationsIcon onClick={toggleNotifications}/>
                             </Badge>
                             {showNotifications && <Badge>
