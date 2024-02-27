@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class YouTubeServiceImpl implements YouTubeService {
@@ -81,6 +78,33 @@ public class YouTubeServiceImpl implements YouTubeService {
             return videoSnippet.getChannelId();
         }
         return null;
+    }
+
+    public Channel channelFromUserName(String userName, String key) throws IOException {
+        YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+        YouTube.Channels.List request = youTubeService.channels()
+                .list("snippet,contentDetails,topicDetails");
+        ChannelListResponse response = request.setKey(key)
+                .setForUsername(userName)
+                .execute();
+        return response.getItems().get(0);
+    }
+
+    public List<String> getChannelTopics(String userName, String key) throws IOException {
+        // returns links to topic wikipedia pages
+        List<String> rawTopics = getChannelTopicsRaw(userName, key);
+        List<String> strippedTopics = new ArrayList<>();
+
+        rawTopics.forEach(topic -> {
+            String[] splitTopic = topic.split("/");
+            strippedTopics.add(splitTopic[splitTopic.length - 1]);
+        });
+        return strippedTopics;
+    }
+
+    public List<String> getChannelTopicsRaw(String userName, String key) throws IOException {
+        Channel channel = channelFromUserName(userName, key);
+        return channel.getTopicDetails().getTopicCategories();
     }
 
     @Override

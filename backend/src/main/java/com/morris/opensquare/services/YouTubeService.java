@@ -1,6 +1,7 @@
 package com.morris.opensquare.services;
 
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.CommentThread;
 import com.google.api.services.youtube.model.PageInfo;
 import com.morris.opensquare.models.youtube.YoutubeComment;
@@ -50,6 +51,10 @@ public interface YouTubeService {
      * @return {@link String} the video's channel id
      */
     String channelIdFromVideoId(String videoId, String key);
+
+    Channel channelFromUserName(String userName, String key) throws IOException;
+    List<String> getChannelTopics(String userName, String key) throws IOException;
+    List<String> getChannelTopicsRaw(String userName, String key) throws IOException;
 
     /**
      * Constructs a mapping structure of key metadata from a YouTube video's channel id.

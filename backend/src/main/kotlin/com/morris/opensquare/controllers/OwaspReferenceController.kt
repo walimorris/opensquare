@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/opensquare")
 class OwaspReferenceController @Autowired constructor(private val owaspReferenceService: OwaspReferenceService) {
 
-    @CrossOrigin
+    @CrossOrigin(origins = ["https://cloud.mongodb.com"])
     @GetMapping("/owasp/posts")
     fun getLatestOwaspBlog(httpServletRequest: HttpServletRequest): ResponseEntity<out Any> {
         println("API triggered")
