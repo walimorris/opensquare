@@ -20,6 +20,6 @@ class OwaspReferenceController @Autowired constructor(private val owaspReference
         println("API triggered")
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(owaspReferenceService.getOwaspGithubPage())
+            .body(owaspReferenceService.getOwaspBlogSnippets())
     }
 }

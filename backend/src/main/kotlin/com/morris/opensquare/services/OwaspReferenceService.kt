@@ -16,30 +16,40 @@ import java.net.http.HttpResponse
 @Service
 class OwaspReferenceService {
 
-    fun getOwaspGithubPage(): String {
+    fun getOwaspBlogSnippets(): String {
+        val owaspGithubInputStream = scrapOwaspGithubPage()
+        val owaspBlogTree = buildOwaspBlogTreeBuilder(owaspGithubInputStream)
+        val owaspBlogSnippets = getOwaspBlogSnippets(owaspBlogTree)
+        return owaspBlogSnippets.toString()
+    }
+
+    private fun scrapOwaspGithubPage(): InputStream {
         val client = HttpClient.newBuilder().build();
         val request = HttpRequest.newBuilder()
             .uri(URI.create("https://github.com/OWASP/owasp.github.io/tree/main/_posts"))
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return ByteArrayInputStream(response.body().toByteArray())
+    }
 
+    private fun buildOwaspBlogTreeBuilder(owaspBlogResponseStream: InputStream): String {
         val treeBuilder: StringBuilder = StringBuilder()
-        val responseStream: InputStream = ByteArrayInputStream(response.body().toByteArray())
-        val responseBufferedRead = responseStream.bufferedReader().use(BufferedReader::readText)
+        val responseBufferedRead = owaspBlogResponseStream.bufferedReader().use(BufferedReader::readText)
 
         responseBufferedRead.reader().forEachLine { line ->
             if (line.contains("refType")) {
                 treeBuilder.append(line)
             }
         }
-        val jsonStr = treeBuilder.toString().substring(71)
-        val jsonObject = JSONObject(jsonStr.substring(0, jsonStr.length - 9))
+        return treeBuilder.toString().substring(71)
+    }
+
+    private fun getOwaspBlogSnippets(owaspTree: String): List<OwaspBlogSnippet> {
+        val jsonObject = JSONObject(owaspTree.substring(0, owaspTree.length - 9))
         val payload = jsonObject.getJSONObject("payload").getJSONObject("tree")
         val blogs = payload.getJSONArray("items")
-
         val objectMapper = ObjectMapper()
         val arrayType: TypeReference<List<OwaspBlogSnippet>> = object: TypeReference<List<OwaspBlogSnippet>>(){}
-        val blogSnippets: List<OwaspBlogSnippet> = objectMapper.readValue(blogs.toString(), arrayType)
-        return blogs.toString()
+        return objectMapper.readValue(blogs.toString(), arrayType)
     }
 }
