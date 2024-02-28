@@ -43,6 +43,16 @@ public interface YouTubeService {
     String removeAuthorChannelDecorFromYoutubeAPIComment(String value);
 
     /**
+     * Get YouTube Channel object from channelId.
+     *
+     * @param channelId {@link String} channelId
+     * @param key {@link String} Google API Key
+     *
+     * @return {@link Channel}
+     */
+    Channel channelFromChannelId(String channelId, String key);
+
+    /**
      * Get a YouTube channel id from a given YouTube video id.
      *
      * @param videoId {@link String} YouTube videoId
@@ -52,9 +62,47 @@ public interface YouTubeService {
      */
     String channelIdFromVideoId(String videoId, String key);
 
-    Channel channelFromUserName(String userName, String key) throws IOException;
-    List<String> getChannelTopics(String userName, String key) throws IOException;
-    List<String> getChannelTopicsRaw(String userName, String key) throws IOException;
+    /**
+     * Gets YouTube {@link Channel} info based on the channel owners username.
+     *
+     * @param userName Owner - YouTube Channel username
+     * @param key Google API key
+     *
+     * @return {@link Channel}
+     */
+    Channel channelFromUserName(String userName, String key);
+
+    /**
+     * Get YouTube {@link Channel} topics. Channel Topics are links to the topics wikipedia page.
+     * Functionality for this method strips the wikipedia link and pulls the respective topics.
+     * An example of a topic is: society or comedy
+     *
+     * @param userName Owner - YouTube channel username
+     * @param key Google API key
+     *
+     * @return {@link List<String>}
+     */
+    List<String> getChannelTopics(String userName, String key);
+
+    /**
+     * Get YouTube {@link Channel} topics in raw format, i.e. the full wikipedia url link to the topic decription.
+     *
+     * @param userName Owner - YouTube Channel Username
+     * @param key Google API key
+     *
+     * @return {@link List<String>}
+     */
+    List<String> getChannelTopicsRaw(String userName, String key);
+
+    /**
+     * Get Channel results based on YouTube keyword search.
+     *
+     * @param keyword {@link String} search query
+     * @param key {@link String} Google API key
+     *
+     * @return {@link List<Channel>}
+     */
+    List<Channel> getChannelsFromYouTubeByKeywordTopic(String keyword, String key);
 
     /**
      * Constructs a mapping structure of key metadata from a YouTube video's channel id.

@@ -60,6 +60,23 @@ public class YouTubeServiceImpl implements YouTubeService {
                 .trim();
     }
 
+    public Channel channelFromChannelId(String channelId, String key) {
+        Channel channel = null;
+        try {
+            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube.Channels.List request = youTubeService.channels()
+                    .list("snippet,contentDetails,statistics");
+            ChannelListResponse response = request.setKey(key)
+                    .setId(channelId)
+                    .setMaxResults(1L)
+                    .execute();
+            channel = response.getItems().get(0);
+        } catch (IOException e) {
+            loggerService.saveLog(e.getClass().getName(), "Error getting Channel info with Id " + channelId + e.getMessage(), Optional.of(LOGGER));
+        }
+        return channel;
+    }
+
     @Override
     public String channelIdFromVideoId(String videoId, String key) {
         VideoSnippet videoSnippet = null;
@@ -80,17 +97,27 @@ public class YouTubeServiceImpl implements YouTubeService {
         return null;
     }
 
-    public Channel channelFromUserName(String userName, String key) throws IOException {
-        YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
-        YouTube.Channels.List request = youTubeService.channels()
-                .list("snippet,contentDetails,topicDetails");
-        ChannelListResponse response = request.setKey(key)
-                .setForUsername(userName)
-                .execute();
-        return response.getItems().get(0);
+    @Override
+    public Channel channelFromUserName(String userName, String key) {
+        Channel channel = null;
+
+        try {
+            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube.Channels.List request = youTubeService.channels()
+                    .list("snippet,contentDetails,topicDetails");
+            ChannelListResponse response = request.setKey(key)
+                    .setForUsername(userName)
+                    .execute();
+            channel = response.getItems().get(0);
+        } catch (IOException e) {
+            loggerService.saveLog(e.getClass().getName(), "Error query YouTube Channel from Username: " + userName + e.getMessage(), Optional.of(LOGGER));
+        }
+        return channel;
     }
 
-    public List<String> getChannelTopics(String userName, String key) throws IOException {
+    @Override
+    public List<String> getChannelTopics(String userName, String key) {
+
         // returns links to topic wikipedia pages
         List<String> rawTopics = getChannelTopicsRaw(userName, key);
         List<String> strippedTopics = new ArrayList<>();
@@ -102,9 +129,39 @@ public class YouTubeServiceImpl implements YouTubeService {
         return strippedTopics;
     }
 
-    public List<String> getChannelTopicsRaw(String userName, String key) throws IOException {
+    @Override
+    public List<String> getChannelTopicsRaw(String userName, String key) {
         Channel channel = channelFromUserName(userName, key);
         return channel.getTopicDetails().getTopicCategories();
+    }
+
+    @Override
+    public List<Channel> getChannelsFromYouTubeByKeywordTopic(String keyword, String key) {
+        SearchListResponse searchResponse = null;
+        try {
+            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube.Search.List request = youTubeService.search()
+                    .list(SNIPPET);
+
+            searchResponse = request.setKey(key)
+                    .setMaxResults(10L)
+                    .setQ(keyword)
+                    .execute();
+        } catch (IOException e) {
+            loggerService.saveLog(e.getClass().getName(), "Error searching YouTube Topic Keyword: " + keyword + e.getMessage(), Optional.of(LOGGER));
+        }
+        if (searchResponse != null) {
+            return channelsFromSearchResults(searchResponse.getItems(), key);
+        }
+        return null;
+    }
+
+    private List<Channel> channelsFromSearchResults(List<SearchResult> searchResults, String key) {
+        List<Channel> channels = new ArrayList<>();
+        for (SearchResult result : searchResults) {
+            channels.add(channelFromChannelId(result.getSnippet().getChannelId(), key));
+        }
+        return channels;
     }
 
     @Override
