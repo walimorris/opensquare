@@ -102,7 +102,22 @@ public interface YouTubeService {
      */
     List<Channel> getChannelsFromYouTubeByKeywordTopic(String keyword, String key);
 
-    List<CommentSnippet> getCommentsFromUserOnYouTubeVideo(String user, String videoId, String key) throws IOException;
+    /**
+     * Get Comments from a specific user on a YouTube video, given the video id. It should be noted that
+     * these results are limited to only 100 comments in the YouTube video. This limitation is due to
+     * YouTube's native API for {@link CommentThreadListResponse} that can only return a maximum of 100
+     * comments. Opensquare is searching for a way around this to return more results and even nested
+     * comments from a specific user. Due to these limitations, result sets are best run on newest videos.
+     *
+     * @param user {@link String} youtube user name
+     * @param videoId {@link String} youtube videoId
+     * @param key {@link String} youtube api key
+     *
+     * @see <a href="https://developers.google.com/youtube/v3/docs/commentThreads/list">YouTube Docs</a>
+     *
+     * @return {@link List<CommentSnippet>}
+     */
+    List<CommentSnippet> getCommentsFromUserOnYouTubeVideo(String user, String videoId, String key);
 
     /**
      * Constructs a mapping structure of key metadata from a YouTube video's channel id.
@@ -117,7 +132,7 @@ public interface YouTubeService {
     Map<String, String> analyzeYoutubeChannelMetaData(String channelId, String key) throws IOException;
 
     /**
-     * Gets CommentItems from the {@link YouTube} google service.
+     * Gets CommentThreadListResponse from the {@link YouTube} google service.
      *
      * @param applicationName YouTube's application name for service
      * @param key youtube api key
@@ -125,9 +140,9 @@ public interface YouTubeService {
      *
      * @see <a href="https://developers.google.com/youtube/v3/docs/commentThreads/list">YouTube Docs</a>
      *
-     * @return {@link List<CommentThread>}
+     * @return {@link CommentThreadListResponse}
      */
-    CommentThreadListResponse getCommentItemsResponse(String applicationName, String key, String videoId, String paginationToken) throws IOException;
+    CommentThreadListResponse getCommentItemsResponse(String applicationName, String key, String videoId) throws IOException;
 
     /**
      * Used within CSVHeaders to unwrap and marshall {@link YoutubeComment} in CSV files.
