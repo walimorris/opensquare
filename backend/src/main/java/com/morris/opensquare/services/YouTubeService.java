@@ -1,9 +1,7 @@
 package com.morris.opensquare.services;
 
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.Channel;
-import com.google.api.services.youtube.model.CommentThread;
-import com.google.api.services.youtube.model.PageInfo;
+import com.google.api.services.youtube.model.*;
 import com.morris.opensquare.models.youtube.YoutubeComment;
 import org.apache.commons.csv.CSVRecord;
 import org.json.JSONObject;
@@ -104,6 +102,8 @@ public interface YouTubeService {
      */
     List<Channel> getChannelsFromYouTubeByKeywordTopic(String keyword, String key);
 
+    List<CommentSnippet> getCommentsFromUserOnYouTubeVideo(String user, String videoId, String key) throws IOException;
+
     /**
      * Constructs a mapping structure of key metadata from a YouTube video's channel id.
      *
@@ -127,7 +127,7 @@ public interface YouTubeService {
      *
      * @return {@link List<CommentThread>}
      */
-    List<CommentThread> getCommentItems(String applicationName, String key, String videoId) throws IOException;
+    CommentThreadListResponse getCommentItemsResponse(String applicationName, String key, String videoId, String paginationToken) throws IOException;
 
     /**
      * Used within CSVHeaders to unwrap and marshall {@link YoutubeComment} in CSV files.

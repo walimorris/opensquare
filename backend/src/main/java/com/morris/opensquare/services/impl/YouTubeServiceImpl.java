@@ -128,7 +128,6 @@ public class YouTubeServiceImpl implements YouTubeService {
         });
         return strippedTopics;
     }
-
     @Override
     public List<String> getChannelTopicsRaw(String userName, String key) {
         Channel channel = channelFromUserName(userName, key);
@@ -165,6 +164,27 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
+    public List<CommentSnippet> getCommentsFromUserOnYouTubeVideo(String user, String videoId, String key) throws IOException {
+        user = "@" + user; // youtube user-names start with @ symbol
+        CommentThreadListResponse commentThreadsResponse = getCommentItemsResponse("opensentop", key, videoId, null);
+        List<CommentSnippet> commentsFromUser = new ArrayList<>();
+
+        String paginationToken = String.valueOf(commentThreadsResponse.getTokenPagination());
+        while (!paginationToken.isEmpty()) {
+            for (CommentThread thread : commentThreadsResponse.getItems()) {
+                CommentSnippet currentComment = thread.getSnippet().getTopLevelComment().getSnippet();
+                LOGGER.info("current comment from user: " + currentComment.getAuthorDisplayName());
+                if (user.equals(currentComment.getAuthorDisplayName())) {
+                    commentsFromUser.add(currentComment);
+                }
+            }
+            paginationToken = commentThreadsResponse.getNextPageToken();
+            commentThreadsResponse.setNextPageToken(paginationToken);
+        }
+        return commentsFromUser;
+    }
+
+    @Override
     public Map<String, String> analyzeYoutubeChannelMetaData(String channelId, String key) throws IOException {
         YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
         YouTube.Channels.List request = youTubeService.channels().list(SNIPPET);
@@ -184,19 +204,16 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
-    public List<CommentThread> getCommentItems(String applicationName, String key, String videoId) throws IOException {
+    public CommentThreadListResponse getCommentItemsResponse(String applicationName, String key, String videoId, String paginationToken) throws IOException {
         YouTube youtubeservice = externalServiceUtil.getYouTubeService(applicationName);
         YouTube.CommentThreads.List request = youtubeservice.commentThreads()
-                .list(SNIPPET_REPLIES);
+                .list(SNIPPET_REPLIES)
+                .setMaxResults(100L)
+                .setPageToken(paginationToken);
 
-        PageInfo pageInfo = setPageInfo(40, 40);
-
-        CommentThreadListResponse response = request.setKey(key)
+        return request.setKey(key)
                 .setVideoId(videoId)
-                .execute()
-                .setPageInfo(pageInfo);
-
-        return response.getItems();
+                .execute();
     }
 
     @Override
