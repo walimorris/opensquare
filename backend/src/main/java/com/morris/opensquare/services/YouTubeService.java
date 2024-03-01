@@ -103,11 +103,8 @@ public interface YouTubeService {
     List<Channel> getChannelsFromYouTubeByKeywordTopic(String keyword, String key);
 
     /**
-     * Get Comments from a specific user on a YouTube video, given the video id. It should be noted that
-     * these results are limited to only 100 comments in the YouTube video. This limitation is due to
-     * YouTube's native API for {@link CommentThreadListResponse} that can only return a maximum of 100
-     * comments. Opensquare is searching for a way around this to return more results and even nested
-     * comments from a specific user. Due to these limitations, result sets are best run on newest videos.
+     * Get TopLevel Comments from a specific user on a YouTube video, given the video id. It should be noted that
+     * these results are limited to top level comments. Nested comments will be released in the future.
      *
      * @param user {@link String} youtube user name
      * @param videoId {@link String} youtube videoId
@@ -117,7 +114,7 @@ public interface YouTubeService {
      *
      * @return {@link List<CommentSnippet>}
      */
-    List<CommentSnippet> getCommentsFromUserOnYouTubeVideo(String user, String videoId, String key);
+    List<CommentSnippet> getTopLevelCommentsFromUserOnYouTubeVideo(String user, String videoId, String key);
 
     /**
      * Constructs a mapping structure of key metadata from a YouTube video's channel id.
@@ -132,7 +129,7 @@ public interface YouTubeService {
     Map<String, String> analyzeYoutubeChannelMetaData(String channelId, String key) throws IOException;
 
     /**
-     * Gets CommentThreadListResponse from the {@link YouTube} google service.
+     * Gets TopLevel Comments from the {@link YouTube} google service on a specific video.
      *
      * @param applicationName YouTube's application name for service
      * @param key youtube api key
@@ -142,7 +139,7 @@ public interface YouTubeService {
      *
      * @return {@link CommentThreadListResponse}
      */
-    CommentThreadListResponse getCommentItemsResponse(String applicationName, String key, String videoId) throws IOException;
+    List<CommentSnippet> getTopLevelCommentsFromYouTubeVideo(String applicationName, String key, String videoId);
 
     /**
      * Used within CSVHeaders to unwrap and marshall {@link YoutubeComment} in CSV files.

@@ -164,18 +164,60 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
-    public List<CommentSnippet> getCommentsFromUserOnYouTubeVideo(String user, String videoId, String key) {
+    public List<CommentSnippet> getTopLevelCommentsFromUserOnYouTubeVideo(String user, String videoId, String key) {
         user = "@" + user; // youtube user-names start with @ symbol
-        CommentThreadListResponse commentThreadsResponse = getCommentItemsResponse("opensentop", key, videoId);
-        List<CommentSnippet> commentsFromUser = new ArrayList<>();
+        List<CommentSnippet> allTopLevelComments = getTopLevelCommentsFromYouTubeVideo("opensentop", key, videoId);
+        List<CommentSnippet> topLevelCommentSnippetsFromUser = new ArrayList<>();
 
-        for (CommentThread thread : commentThreadsResponse.getItems()) {
-            CommentSnippet currentComment = thread.getSnippet().getTopLevelComment().getSnippet();
-            if (user.equals(currentComment.getAuthorDisplayName())) {
-                commentsFromUser.add(currentComment);
+        for (CommentSnippet currentSnippet : allTopLevelComments) {
+            if (user.equals(currentSnippet.getAuthorDisplayName())) {
+                topLevelCommentSnippetsFromUser.add(currentSnippet);
             }
         }
-        return commentsFromUser;
+        return topLevelCommentSnippetsFromUser;
+    }
+
+    @Override
+    public List<CommentSnippet> getTopLevelCommentsFromYouTubeVideo(String applicationName, String key, String videoId) {
+        YouTube youtubeservice = externalServiceUtil.getYouTubeService(applicationName);
+        YouTube.CommentThreads.List request;
+        PageInfo pageInfo = setPageInfo(40, 40);
+        List<CommentSnippet> allTopLevelComments = new ArrayList<>();
+
+        try {
+            request = youtubeservice.commentThreads().list(SNIPPET_REPLIES);
+            CommentThreadListResponse response =  request.setKey(key)
+                    .setVideoId(videoId)
+                    .execute()
+                    .setPageInfo(pageInfo);
+
+            List<CommentThread> comments = response.getItems();
+            if (!comments.isEmpty()) {
+                for (CommentThread thread : comments) {
+                    allTopLevelComments.add(thread.getSnippet().getTopLevelComment().getSnippet());
+                }
+                String nextPageToken = response.getNextPageToken();
+                int loop = 1;
+                while (nextPageToken != null) {
+                    LOGGER.info("inside pagination loop: {}", loop);
+                    response = request.setKey(key)
+                            .setVideoId(videoId)
+                            .setPageToken(nextPageToken)
+                            .execute();
+                    comments = response.getItems();
+                    for (CommentThread thread : comments) {
+                        allTopLevelComments.add(thread.getSnippet().getTopLevelComment().getSnippet());
+                    }
+                    nextPageToken = response.getNextPageToken();
+                    loop++;
+                }
+            }
+
+        } catch (IOException e) {
+            loggerService.saveLog(e.getClass().getName(), "Error searching YouTube video for user commments for video:  " + videoId + e.getMessage(), Optional.of(LOGGER));
+        }
+
+        return allTopLevelComments;
     }
 
     @Override
@@ -195,27 +237,6 @@ public class YouTubeServiceImpl implements YouTubeService {
         meta.put(Constants.YOUTUBE_PROPERTY_CHANNEL_DESCRIPTION, channelSnippet.getDescription());
         meta.put(Constants.YOUTUBE_PROPERTY_COUNTRY, channelSnippet.getCountry());
         return meta;
-    }
-
-    @Override
-    public CommentThreadListResponse getCommentItemsResponse(String applicationName, String key, String videoId) {
-        YouTube.CommentThreads.List request;
-        YouTube youtubeservice = externalServiceUtil.getYouTubeService(applicationName);
-
-        try {
-             request = youtubeservice.commentThreads()
-                    .list(SNIPPET_REPLIES)
-                    .setMaxResults(100L);
-
-            return request.setKey(key)
-                    .setVideoId(videoId)
-                    .execute();
-
-        } catch (IOException e) {
-            loggerService.saveLog(e.getClass().getName(), "Error searching YouTube video for user commments for video:  " + videoId + e.getMessage(), Optional.of(LOGGER));
-        }
-
-        return null;
     }
 
     @Override
