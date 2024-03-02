@@ -14,8 +14,8 @@ public class PlatformAnalysisTracker {
     @Field("platform")
     private String platform;
 
-    @Field("analysis_count")
-    private int analysisCount;
+    @Field("count")
+    private int count;
 
     public ObjectId getId() {
         return id;
@@ -34,11 +34,11 @@ public class PlatformAnalysisTracker {
     }
 
     public int getAnalysisCount() {
-        return analysisCount;
+        return count;
     }
 
     public void setAnalysisCount(int analysisCount) {
-        this.analysisCount = analysisCount;
+        this.count = analysisCount;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class PlatformAnalysisTracker {
         return "PlatformAnalysisTracker{" +
                 "id=" + id +
                 ", platform='" + platform + '\'' +
-                ", analysisCount=" + analysisCount +
+                ", analysisCount=" + count +
                 '}';
     }
 }

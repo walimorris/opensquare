@@ -1,5 +1,6 @@
 package com.morris.opensquare.services.trackers.impl;
 
+import com.morris.opensquare.models.Platform;
 import com.morris.opensquare.repositories.PlatformAnalysisTrackerRepository;
 import com.morris.opensquare.services.trackers.PlatformAnalysisTrackerService;
 import jakarta.servlet.http.HttpSession;
@@ -20,11 +21,11 @@ public class PlatformAnalysisTrackerServiceImpl implements PlatformAnalysisTrack
     }
 
     @Override
-    public int incrementPlatformAnalysisCount(String platform, int incrementBy, HttpSession session) {
-        int platformAnalysisTrackerUpdateValue = platformAnalysisTrackerRepository
+    public int incrementPlatformAnalysisCount(Platform platform, int incrementBy, HttpSession session) {
+        int platformAnalysisTrackerIncrementCount = platformAnalysisTrackerRepository
                 .updatePlatformAnalysisTrackerByPlatformAndAnalysisCount(platform, incrementBy);
 
-        LOGGER.info("{} tracker property was update to count with value: {}", platform, platformAnalysisTrackerUpdateValue);
-        return platformAnalysisTrackerUpdateValue;
+        LOGGER.info("{} tracker property was increment [1] time(s): {}", platform, platformAnalysisTrackerIncrementCount);
+        return platformAnalysisTrackerIncrementCount;
     }
 }
