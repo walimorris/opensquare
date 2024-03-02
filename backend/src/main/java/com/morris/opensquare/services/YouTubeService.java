@@ -104,7 +104,7 @@ public interface YouTubeService {
 
     /**
      * Get TopLevel Comments from a specific user on a YouTube video, given the video id. It should be noted that
-     * these results are limited to top level comments. Nested comments will be released in the future.
+     * these results are limited to top level comments. Nested comments will be released in future.
      *
      * @param user {@link String} youtube user name
      * @param videoId {@link String} youtube videoId
