@@ -36,6 +36,9 @@ public class ApplicationPropertiesConfiguration {
     @Value("${secrets.googleAppName}")
     private String googleAppName;
 
+    @Value("${secrets.appName}")
+    private String appName;
+
     @Value("${secrets.googleApiKey}")
     private String googleApiKey;
 
@@ -82,5 +85,8 @@ public class ApplicationPropertiesConfiguration {
 
     @Bean
     public String engineCx() { return this.engineCx; }
+
+    @Bean
+    public String appName() { return this.appName; }
 
 }

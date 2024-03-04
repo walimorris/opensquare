@@ -181,7 +181,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     public List<CommentSnippet> getTopLevelCommentsFromYouTubeVideo(String applicationName, String key, String videoId) {
         YouTube youtubeservice = externalServiceUtil.getYouTubeService(applicationName);
         YouTube.CommentThreads.List request;
-        PageInfo pageInfo = setPageInfo(50, 50);
+        PageInfo pageInfo = setPageInfo(20, 20);
         List<CommentSnippet> allTopLevelComments = new ArrayList<>();
 
         try {
