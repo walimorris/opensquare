@@ -181,7 +181,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     public List<CommentSnippet> getTopLevelCommentsFromYouTubeVideo(String applicationName, String key, String videoId) {
         YouTube youtubeservice = externalServiceUtil.getYouTubeService(applicationName);
         YouTube.CommentThreads.List request;
-        PageInfo pageInfo = setPageInfo(40, 40);
+        PageInfo pageInfo = setPageInfo(50, 50);
         List<CommentSnippet> allTopLevelComments = new ArrayList<>();
 
         try {
@@ -193,11 +193,12 @@ public class YouTubeServiceImpl implements YouTubeService {
 
             List<CommentThread> comments = response.getItems();
             if (!comments.isEmpty()) {
-                for (CommentThread thread : comments) {
-                    allTopLevelComments.add(thread.getSnippet().getTopLevelComment().getSnippet());
-                }
+                comments.parallelStream().forEach(commentThread -> {
+                    call(commentThread, allTopLevelComments, Thread.currentThread().getName());
+                });
                 String nextPageToken = response.getNextPageToken();
                 int loop = 1;
+
                 while (nextPageToken != null) {
                     LOGGER.info("inside pagination loop: {}", loop);
                     response = request.setKey(key)
@@ -205,9 +206,10 @@ public class YouTubeServiceImpl implements YouTubeService {
                             .setPageToken(nextPageToken)
                             .execute();
                     comments = response.getItems();
-                    for (CommentThread thread : comments) {
-                        allTopLevelComments.add(thread.getSnippet().getTopLevelComment().getSnippet());
-                    }
+                    comments.parallelStream().forEach(commentThread -> {
+                        call(commentThread, allTopLevelComments, Thread.currentThread().getName());
+                    });
+
                     nextPageToken = response.getNextPageToken();
                     loop++;
                 }
@@ -218,6 +220,11 @@ public class YouTubeServiceImpl implements YouTubeService {
         }
 
         return allTopLevelComments;
+    }
+
+    private void call(CommentThread commentThread, List<CommentSnippet> topLevelComments, String name) {
+        LOGGER.info("adding snippet for thread {}: ", name);
+        topLevelComments.add(commentThread.getSnippet().getTopLevelComment().getSnippet());
     }
 
     @Override
