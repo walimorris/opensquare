@@ -88,6 +88,7 @@ export default function BackLinks() {
                 }
             })
         }
+        console.log("this is image: " + image)
         return image;
     }
 

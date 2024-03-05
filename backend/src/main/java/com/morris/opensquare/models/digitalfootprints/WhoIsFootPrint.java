@@ -3,8 +3,14 @@ package com.morris.opensquare.models.digitalfootprints;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WhoIsFootPrint {
+public class WhoIsFootPrint implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty("domainName")
     private String domainName;

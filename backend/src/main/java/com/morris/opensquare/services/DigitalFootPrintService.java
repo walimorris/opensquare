@@ -2,6 +2,7 @@ package com.morris.opensquare.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.services.customsearch.model.Result;
+import com.morris.opensquare.models.digitalfootprints.GoogleResultWrapper;
 import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
 import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrintList;
 import com.morris.opensquare.models.digitalfootprints.WhoIsFootPrint;
@@ -113,8 +114,8 @@ public interface DigitalFootPrintService {
      * @return {@link List<Result>}
      * @throws IOException
      */
-    List<Result> getBacklinksFromUrl(@NonNull String applicationName,
-                                     @NonNull String googleApiKey,
-                                     @NonNull String engineCx,
-                                     @NonNull String url) throws IOException;
+    List<GoogleResultWrapper> getBacklinksFromUrl(@NonNull String applicationName,
+                                                  @NonNull String googleApiKey,
+                                                  @NonNull String engineCx,
+                                                  @NonNull String url) throws IOException;
 }

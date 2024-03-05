@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.model.Result;
 import com.google.api.services.customsearch.model.Search;
-import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
-import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrintList;
-import com.morris.opensquare.models.digitalfootprints.OS;
-import com.morris.opensquare.models.digitalfootprints.WhoIsFootPrint;
+import com.morris.opensquare.models.digitalfootprints.*;
 import com.morris.opensquare.services.DigitalFootPrintService;
 import com.morris.opensquare.services.FileService;
 import com.morris.opensquare.services.IdentityGenerator;
@@ -30,6 +27,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -168,7 +166,7 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
     }
 
     @Override
-    public List<Result> getBacklinksFromUrl(@NonNull String applicationName,
+    public List<GoogleResultWrapper> getBacklinksFromUrl(@NonNull String applicationName,
                                             @NonNull String googleApiKey,
                                             @NonNull String engineCx,
                                             @NonNull String url) throws IOException {
@@ -186,8 +184,25 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
                 .setCx(engineCx);
 
         Search searchResult = list.execute();
-        return searchResult.getItems();
+        return getGoogleResultsWrapperList(searchResult.getItems());
+    }
 
+    private List<GoogleResultWrapper> getGoogleResultsWrapperList(List<Result> googleSearchResults) {
+        List<GoogleResultWrapper> results = new ArrayList<>();
+        for (Result result : googleSearchResults) {
+            results.add(new GoogleResultWrapper.Builder()
+                    .pageMap(result.getPagemap())
+                    .snippet(result.getSnippet())
+                    .title(result.getTitle())
+                    .kind(result.getKind())
+                    .cacheId(result.getCacheId())
+                    .displayLink(result.getDisplayLink())
+                    .formattedUrl(result.getFormattedUrl())
+                    .htmlSnippet(result.getHtmlSnippet())
+                    .htmlTitle(result.getHtmlTitle())
+                    .build());
+        }
+        return results;
     }
 
     private void parseWhoIsParts(@NonNull String s, @NonNull JSONObject whoisJson) {

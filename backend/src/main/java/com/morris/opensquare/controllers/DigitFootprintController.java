@@ -1,10 +1,6 @@
 package com.morris.opensquare.controllers;
 
-import com.google.api.services.customsearch.model.Result;
-import com.morris.opensquare.models.digitalfootprints.DomainRequest;
-import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrintList;
-import com.morris.opensquare.models.digitalfootprints.UrlRequest;
-import com.morris.opensquare.models.digitalfootprints.WhoIsFootPrint;
+import com.morris.opensquare.models.digitalfootprints.*;
 import com.morris.opensquare.services.DigitalFootPrintService;
 import com.morris.opensquare.utils.ApplicationConfigurationUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,7 +66,7 @@ public class DigitFootprintController {
     }
 
     @GetMapping("/backlinks")
-    public ResponseEntity<List<Result>> getBacklinks(@Validated UrlRequest urlRequest, HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<List<GoogleResultWrapper>> getBacklinks(@Validated UrlRequest urlRequest, HttpServletRequest httpServletRequest) throws IOException {
         LOGGER.info("URL SEARCH: {}", urlRequest.getUrl());
         HttpSession httpSession = httpServletRequest.getSession();
 
@@ -79,7 +75,7 @@ public class DigitFootprintController {
             String googleKey = applicationConfigurationUtil.getApplicationPropertiesConfiguration().googleApiKey();
             String engineCx = applicationConfigurationUtil.getApplicationPropertiesConfiguration().engineCx();
 
-            List<Result> results = digitalFootPrintService.getBacklinksFromUrl(googleSearchAppName, googleKey, engineCx, urlRequest.getUrl());
+            List<GoogleResultWrapper> results = digitalFootPrintService.getBacklinksFromUrl(googleSearchAppName, googleKey, engineCx, urlRequest.getUrl());
             httpSession.setAttribute("backlinks", results);
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)

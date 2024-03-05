@@ -3,10 +3,7 @@ package com.morris.opensquare.controllers;
 import com.google.api.services.customsearch.model.Result;
 import com.morris.opensquare.TestHelper;
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
-import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
-import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrintList;
-import com.morris.opensquare.models.digitalfootprints.UrlRequest;
-import com.morris.opensquare.models.digitalfootprints.WhoIsFootPrint;
+import com.morris.opensquare.models.digitalfootprints.*;
 import com.morris.opensquare.services.DigitalFootPrintService;
 import com.morris.opensquare.utils.ApplicationConfigurationUtil;
 import org.json.JSONArray;
@@ -44,7 +41,7 @@ class DigitFootprintControllerTest {
 
     private static WhoIsFootPrint whoIsFootPrint;
     private static NSLookupFootPrintList nsLookupFootPrintList;
-    private static List<Result> backLinksResult;
+    private static List<GoogleResultWrapper> backLinksResult;
     private static JSONObject whoisJSON;
     private static String nslookupString;
     private static String whoisString;
@@ -138,8 +135,8 @@ class DigitFootprintControllerTest {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Result> getBackLinksResult() throws IOException {
-        return (List<Result>) TestHelper.convertModelFromFile(BACK_LINKS_RESULT_JSON, List.class, Result.class);
+    private List<GoogleResultWrapper> getBackLinksResult() throws IOException {
+        return (List<GoogleResultWrapper>) TestHelper.convertModelFromFile(BACK_LINKS_RESULT_JSON, List.class, Result.class);
     }
 
     private UrlRequest getUrlRequest() {

@@ -2,7 +2,13 @@ package com.morris.opensquare.models.digitalfootprints;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class NSLookupFootPrint {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class NSLookupFootPrint implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty("name")
     private String name;
