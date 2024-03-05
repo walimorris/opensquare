@@ -126,7 +126,10 @@ export default function Dashboard(props) {
     };
 
     const toggleNotifications = () => {
-        setShowNotifications(!showNotifications);
+        // can't show notifications if there aren't any
+        if ( getNotificationCount() > 0 ) {
+            setShowNotifications(!showNotifications);
+        }
     }
 
     const getNotificationCount = () => {
