@@ -35,6 +35,7 @@ public class PythonScriptEngine {
 
     private static final String PYTHON = "python3";
     private static final String PYTHON_RESOURCE_PATH = "backend/src/main/resources/python/";
+    private static final String TEMP_VIDEO_PATH = "backend/src/main/resources/videos/";
     private final LoggerService loggerService;
 
     @Autowired
@@ -42,20 +43,23 @@ public class PythonScriptEngine {
         this.loggerService = loggerService;
     }
 
-    public String processPython(String pyFile) {
+    // TODO: Parse possible python errors and ensure those are propagated to Spring error handling
+    public List<String> processPython(String pyFile, Object o) {
         List<String> results = null;
+        String arg1 = "";
         String resolvedPytonFile = resolvePythonScriptPath(pyFile);
+        String resolvedVideoTempPath = resolvePath(TEMP_VIDEO_PATH);
+
+        if (o !=  null) {
+            arg1 = (String) o;
+        }
+
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile);
+            ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, arg1, resolvedVideoTempPath);
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
             results = readProcessOutput(process.getInputStream());
-            int i = 0;
-            for (String result : results) {
-                LOGGER.info("Line[{}]: {}", i, result);
-                i++;
-            }
         } catch (IOException e) {
             loggerService.saveLog(
                     e.getClass().getName(),
@@ -63,12 +67,17 @@ public class PythonScriptEngine {
                     Optional.of(LOGGER)
             );
         }
-        return results != null ? results.get(0) : null;
+        return results;
     }
 
     private String resolvePythonScriptPath(String filename) {
         File file = new File(PYTHON_RESOURCE_PATH + filename);
         return file.getAbsolutePath();
+    }
+
+    private String resolvePath(String filename) {
+        File file = new File(filename);
+        return  file.getAbsolutePath();
     }
 
     private List<String> readProcessOutput(InputStream inputStream) throws IOException {
