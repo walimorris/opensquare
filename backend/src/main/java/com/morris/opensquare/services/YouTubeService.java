@@ -1,7 +1,12 @@
 package com.morris.opensquare.services;
 
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.*;
+import com.google.api.services.youtube.model.Channel;
+import com.google.api.services.youtube.model.CommentSnippet;
+import com.google.api.services.youtube.model.CommentThreadListResponse;
+import com.morris.opensquare.utils.PythonScriptEngine;
+import com.google.api.services.youtube.model.PageInfo;
+import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YoutubeComment;
 import org.apache.commons.csv.CSVRecord;
 import org.json.JSONObject;
@@ -140,6 +145,16 @@ public interface YouTubeService {
      * @return {@link CommentThreadListResponse}
      */
     List<CommentSnippet> getTopLevelCommentsFromYouTubeVideo(String applicationName, String key, String videoId);
+
+    /**
+     * Utilizes Opensquare's {@link PythonScriptEngine} to transcribe YouTube video and return
+     * a {@link List} of transcribed segments depicting the timestamp and text.
+     *
+     * @param videoId {@link String} YouTuve videoId
+     *
+     * @return {@link List<YouTubeTranscribeSegment>}
+     */
+    List<YouTubeTranscribeSegment> getYouTubeTranscribeSegmentsFromVideoId(String videoId);
 
     /**
      * Used within CSVHeaders to unwrap and marshall {@link YoutubeComment} in CSV files.

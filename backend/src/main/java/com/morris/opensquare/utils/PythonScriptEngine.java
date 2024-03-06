@@ -40,6 +40,7 @@ public class PythonScriptEngine {
     private static final String PYTHON = "python3";
     private static final String PYTHON_RESOURCE_PATH = "backend/src/main/resources/python/";
     private static final String TEMP_VIDEO_PATH = "backend/src/main/resources/videos/";
+    private static final String YOUTUBE_TRANSCRIBE_SCRIPT = "transcribe_youtube_video.py";
     private final LoggerService loggerService;
 
     @Autowired
@@ -48,11 +49,12 @@ public class PythonScriptEngine {
     }
 
     // TODO: Parse possible python errors and ensure those are propagated to Spring error handling
-    public List<YouTubeTranscribeSegment> processPythonTranscribeScript(String pyFile, String url) {
+    public List<YouTubeTranscribeSegment> processPythonTranscribeScript(String url) {
+        LOGGER.info("Hit PythonScriptEngine");
         List<String> results;
         List<YouTubeTranscribeSegment> output = null;
         String urlArg = "";
-        String resolvedPytonFile = resolvePythonScriptPath(pyFile);
+        String resolvedPytonFile = resolvePythonScriptPath(YOUTUBE_TRANSCRIBE_SCRIPT);
         String resolvedVideoTempPath = resolvePath(TEMP_VIDEO_PATH);
 
         if (url !=  null) {

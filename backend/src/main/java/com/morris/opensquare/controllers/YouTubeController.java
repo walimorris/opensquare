@@ -1,6 +1,7 @@
 package com.morris.opensquare.controllers;
 
 import com.google.api.services.youtube.model.CommentSnippet;
+import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.utils.ApplicationConfigurationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,13 @@ public class YouTubeController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(topLevelComments);
+    }
+
+    @GetMapping("/en/transcribe")
+    public ResponseEntity<List<YouTubeTranscribeSegment>> getYouTubeVideoTranscriptSegments(@RequestParam String videoId) {
+        List<YouTubeTranscribeSegment> segments = youTubeService.getYouTubeTranscribeSegmentsFromVideoId(videoId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(segments);
     }
 }

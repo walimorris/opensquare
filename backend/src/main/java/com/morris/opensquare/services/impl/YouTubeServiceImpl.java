@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
+import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YoutubeComment;
 import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.loggers.LoggerService;
 import com.morris.opensquare.utils.Constants;
 import com.morris.opensquare.utils.ExternalServiceUtil;
+import com.morris.opensquare.utils.PythonScriptEngine;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +26,19 @@ public class YouTubeServiceImpl implements YouTubeService {
 
     private static final String SNIPPET = "snippet";
     private static final String SNIPPET_REPLIES = "snippet,replies";
+    private static final String YOUTUBE_URL_WITH_VIDEO_PARAM = "https://www.youtube.com/watch?v=";
 
     private final ExternalServiceUtil externalServiceUtil;
     private final LoggerService loggerService;
+    private final PythonScriptEngine pythonScriptEngine;
 
     @Autowired
-    public YouTubeServiceImpl(ExternalServiceUtil externalServiceUtil, LoggerService loggerService) {
+    public YouTubeServiceImpl(ExternalServiceUtil externalServiceUtil, LoggerService loggerService,
+                              PythonScriptEngine pythonScriptEngine) {
+
         this.externalServiceUtil = externalServiceUtil;
         this.loggerService = loggerService;
+        this.pythonScriptEngine = pythonScriptEngine;
     }
 
     @Override
@@ -218,8 +225,13 @@ public class YouTubeServiceImpl implements YouTubeService {
         } catch (IOException e) {
             loggerService.saveLog(e.getClass().getName(), "Error searching YouTube video for user commments for video:  " + videoId + e.getMessage(), Optional.of(LOGGER));
         }
-
         return allTopLevelComments;
+    }
+
+    @Override
+    public List<YouTubeTranscribeSegment> getYouTubeTranscribeSegmentsFromVideoId(String videoId) {
+        String videoUrl = YOUTUBE_URL_WITH_VIDEO_PARAM + videoId;
+        return pythonScriptEngine.processPythonTranscribeScript(videoUrl);
     }
 
     private void call(CommentThread commentThread, List<CommentSnippet> topLevelComments, String name) {

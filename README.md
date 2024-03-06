@@ -22,7 +22,7 @@
     <img src="backend/src/main/resources/images/social-media.jpeg" alt="Logo" width="400" height="140">
   </a>
 
-<h3 align="center">OpenSquare</h3>
+<h3 align="center">Opensquare</h3>
 
   <p align="center">
     Opensource social media intelligence and OSINT
@@ -154,6 +154,35 @@ and will allow Opensquare to provide massive productivity boosts to users.
   </a>
 </div>
 
+### Video Transcription with OpenAI's Whisper
+Opensquare utilizes [Whisper](https://github.com/openai/whisper): a general-purpose speech recognition model.  It is trained on a large dataset of diverse audio and is also a
+multitasking model that can perform multilingual speech recognition, speech translation, and language identification.
+
+Using Opensquare's available API's, you can query and transcribe YouTube videos. Transcripts will report time and text properties. This API is used to build features on Opensquare , but will also be available to the public as an easy to use API. 
+
+`opensquare/api/youtube/en/transcribe?videoId=l9AzO1FMgM8`
+
+produces: 
+
+`[
+{
+"time": "0.0",
+"text": "Java, a high-level multi-paradigm programming language famous for its ability to compile"
+},
+{
+"time": "5.2",
+"text": "to platform independent bytecode."
+},
+{
+"time": "7.44",
+"text": "It was designed by James Gosling in 1990 at Sun Microsystems."
+},
+{
+"time": "11.700000000000001",
+"text": "One of its first demonstrations was the Star 7 PDA, which gave birth to the Java mascot"
+},...
+]`
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -233,18 +262,6 @@ See the [open issues](https://github.com/walimorris/opensquare) for a full list 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-[Contribution Documentation](https://james-armistead.atlassian.net/wiki/spaces/OD/pages/33111/Pull+Request+Guide)
-
-1. Create your Feature Branch (`git checkout -b feature/OP-1-feature-name`)
-2. Commit your Changes (`git commit -m 'OP-1 Add some feature'`)
-3. Push to the Branch (`git push origin feature/OP-1-feature-name`)
-4. Open a Pull Request
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
@@ -268,6 +285,7 @@ Project Link: [GitHub](https://github.com/walimorris/opensquare)
 * [webpack](https://webpack.js.org/)
 * [Babel](https://babeljs.io/)
 * [Eirik Sletteberg & Frontend-Maven-Plugin](https://github.com/eirslett/frontend-maven-plugin)
+* [Whisper](https://github.com/openai/whisper)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
