@@ -45,6 +45,9 @@ public class ApplicationPropertiesConfiguration {
     @Value("${secrets.engineCx}")
     private String engineCx;
 
+    @Value("${secrets.openAI}")
+    private String openAI;
+
     @Bean
     public String region() {
         return this.region;
@@ -88,5 +91,8 @@ public class ApplicationPropertiesConfiguration {
 
     @Bean
     public String appName() { return this.appName; }
+
+    @Bean
+    public String openAI() { return this.openAI; }
 
 }
