@@ -1,5 +1,6 @@
 package com.morris.opensquare;
 
+import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.utils.PythonScriptEngine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,10 +16,10 @@ public class OpensquareApplication {
 		PythonScriptEngine pythonScriptEngine = applicationContext.getBean(PythonScriptEngine.class);
 
 		// example of using PythonScriptEngine and receiving youtube video transcript
-		List<String> output = pythonScriptEngine.processPython(
+		List<YouTubeTranscribeSegment> output = pythonScriptEngine.processPythonTranscribeScript(
 				"transcribe_youtube_video.py",
 				"https://www.youtube.com/watch?v=l9AzO1FMgM8"
 		);
-		System.out.println(output);
+		output.forEach(segment -> System.out.println("time: " + segment.getTime() + ", text: " + segment.getText()));
 	}
 }

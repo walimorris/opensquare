@@ -8,7 +8,6 @@ import java.io.IOException;
  * of OpenSearch or the data being loaded. Review the methods associated with index load.
  *
  * @see IOException
- * @see OpenSentPlatform
  */
 public class OpenSquareYouTubeIndexLoadException extends RuntimeException {
     public OpenSquareYouTubeIndexLoadException(String errorMessage, Throwable err) {

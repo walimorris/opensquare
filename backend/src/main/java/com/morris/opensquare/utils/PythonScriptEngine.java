@@ -1,5 +1,8 @@
 package com.morris.opensquare.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.morris.opensquare.models.exceptions.PythonScriptEngineRunTimeException;
+import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.services.loggers.LoggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,22 +48,26 @@ public class PythonScriptEngine {
     }
 
     // TODO: Parse possible python errors and ensure those are propagated to Spring error handling
-    public List<String> processPython(String pyFile, Object o) {
-        List<String> results = null;
-        String arg1 = "";
+    public List<YouTubeTranscribeSegment> processPythonTranscribeScript(String pyFile, String url) {
+        List<String> results;
+        List<YouTubeTranscribeSegment> output = null;
+        String urlArg = "";
         String resolvedPytonFile = resolvePythonScriptPath(pyFile);
         String resolvedVideoTempPath = resolvePath(TEMP_VIDEO_PATH);
 
-        if (o !=  null) {
-            arg1 = (String) o;
+        if (url !=  null) {
+            urlArg = url;
         }
 
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, arg1, resolvedVideoTempPath);
+            ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, urlArg, resolvedVideoTempPath);
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
             results = readProcessOutput(process.getInputStream());
+            throwPossibleErrorAndPrintStatements(results);
+            output = getSegments(results);
+
         } catch (IOException e) {
             loggerService.saveLog(
                     e.getClass().getName(),
@@ -67,7 +75,55 @@ public class PythonScriptEngine {
                     Optional.of(LOGGER)
             );
         }
-        return results;
+        return output;
+    }
+
+    // {'time': 141.44, 'text': ' Thanks for watching, and I will see you in the next one.'}
+    private List<YouTubeTranscribeSegment> getSegments(List<String> pythonOutputStream) {
+        List<YouTubeTranscribeSegment> segments = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        for (String line : pythonOutputStream) {
+            if (containsSegment(line)) {
+                line = exchangeTranscribeSegmentQuotes(line);
+                try {
+                    YouTubeTranscribeSegment segment = mapper.readValue(line, YouTubeTranscribeSegment.class);
+                    segment.setText(segment.getText().trim());
+                    segments.add(segment);
+                } catch (IOException e) {
+                    loggerService.saveLog(
+                            e.getClass().getName(),
+                            "Python Script Engine Error: " + e.getMessage(),
+                            Optional.of(LOGGER)
+                    );
+                }
+            }
+        }
+        return segments;
+    }
+
+    private boolean containsSegment(String line) {
+        return line.contains("time") && line.contains("text");
+    }
+
+    private String exchangeTranscribeSegmentQuotes(String line) {
+        return line.replace("'time'", "\"time\"")
+                .replace("'text'", "\"text\"")
+                .replace("' ", "\"")
+                .replace("'}", "\"}");
+    }
+
+    private void throwPossibleErrorAndPrintStatements(List<String> pythonOutputStream) {
+        StringBuilder builder = new StringBuilder();
+        boolean error = false;
+        for (String line : pythonOutputStream) {
+            builder.append(line).append("\n");
+            if (line.contains("Traceback")) {
+                error = true;
+            }
+        }
+        if (error) {
+            throw new PythonScriptEngineRunTimeException(builder.toString(), new IOException());
+        }
     }
 
     private String resolvePythonScriptPath(String filename) {

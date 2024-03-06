@@ -7,7 +7,7 @@ from pytube import YouTube
 
 def format_item(item):
     return {
-        "time": item['start'],
+        'time': item['start'],
         'text': item['text']
     }
 
