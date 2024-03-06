@@ -8,7 +8,7 @@ import java.util.Map;
 public class GoogleResultWrapper implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -6377573678240024862L;
+    private static final long serialVersionUID = 2L;
     private transient String kind;
     private transient String htmlTitle;
     private transient String displayLink;

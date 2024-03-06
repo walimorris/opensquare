@@ -1,6 +1,7 @@
 package com.morris.opensquare;
 
 import com.morris.opensquare.services.WatchStreamService;
+import com.morris.opensquare.utils.PythonScriptEngine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +12,7 @@ public class OpensquareApplication {
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = SpringApplication.run(OpensquareApplication.class, args);
 		WatchStreamService watchStreamService = applicationContext.getBean(WatchStreamService.class);
+		PythonScriptEngine pythonScriptEngine = applicationContext.getBean(PythonScriptEngine.class);
 
 		/*
 		 * Watch streams is a good way to monitor for Change Data Capture (CDC). In MongoDB, you
@@ -20,6 +22,7 @@ public class OpensquareApplication {
 		 * gives us granular level of insight into what data has changed. From the WatchStreamService,
 		 * we can monitor on collection level.
 		 */
-		watchStreamService.watchAll();
+//		watchStreamService.watchAll();
+
 	}
 }
