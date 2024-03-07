@@ -162,12 +162,11 @@ public interface YouTubeService {
      *
      * @param videoId {@link String} YouTube videoId
      * @param key {@link String} YouTube API key
-     * @param parts {@link String} parts parameters in youtube api request
      * @param transcriptSegments {@link List<YouTubeTranscribeSegment>}
      *
      * @return {@link YouTubeVideo}
      */
-    YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, String parts, List<YouTubeTranscribeSegment> transcriptSegments);
+    YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, List<YouTubeTranscribeSegment> transcriptSegments);
 
     /**
      * Get a continuous string with no formatting from a List of {@link YouTubeTranscribeSegment}. The only
@@ -189,4 +188,22 @@ public interface YouTubeService {
      * @return String[]
      */
     String[] getYouTubeCommentCSVHeaders();
+
+    /**
+     * Insert {@link YouTubeVideo} to MongoDB youtube_videos collection.
+     *
+     * @param video {@link YouTubeVideo}
+     *
+     * @return {@link YouTubeVideo}
+     */
+    YouTubeVideo insertYouTubeVideo(YouTubeVideo video);
+
+    /**
+     * Find one {@link YouTubeVideo} by videoId.
+     *
+     * @param videoId {@link String} YouTube videoId
+     *
+     * @return {@link YouTubeVideo}
+     */
+    YouTubeVideo findOneYouTubeVideoByVideoId(String videoId);
 }

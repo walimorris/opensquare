@@ -1,26 +1,45 @@
 package com.morris.opensquare.models.youtube;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN;
+import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_TIME_PATTERN;
 
 /**
  * An Opensquare YouTubeVideo object contains metadata about a YouTube video. The purpose of this class is to allow
  * users to search upon the various fields. These YouTubeVideo objects will be indexed to MongoDB Atlas Search and
  * this will allow various search capabilities on YouTube videos indexed on the Opensquare platform.
  */
+@Document("youtube_videos")
 public class YouTubeVideo {
+
+    @Id
+    private ObjectId id;
     private String videoUrl;
     private String title;
     private String author;
+
+    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime publishDate;
     private long viewCount;
     private long likeCount;
-    private long dislikeCount;
     private String length;
     private String thumbnail;
     private String transcript;
     private String description;
     private String channelId;
     private String videoId;
+    private List<YouTubeTranscribeSegment> transcriptSegments;
 
     public YouTubeVideo() {}
 
@@ -31,13 +50,21 @@ public class YouTubeVideo {
         this.publishDate = builder.publishDate;
         this.viewCount = builder.viewCount;
         this.likeCount = builder.likeCount;
-        this.dislikeCount = builder.dislikeCount;
         this.length = builder.length;
         this.thumbnail = builder.thumbnail;
         this.transcript = builder.transcript;
         this.description = builder.description;
         this.channelId = builder.channelId;
         this.videoId = builder.videoId;
+        this.transcriptSegments = builder.transcriptSegments;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getVideoUrl() {
@@ -64,8 +91,11 @@ public class YouTubeVideo {
         this.author = author;
     }
 
+    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     public LocalDateTime getPublishDate() {
-        return publishDate;
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN);
+        System.out.println("parsing: " + this.publishDate.toString());
+        return LocalDateTime.parse(this.publishDate.toString().split("\\.")[0], dateTimeFormatter);
     }
 
     public void setPublishDate(LocalDateTime publishDate) {
@@ -86,14 +116,6 @@ public class YouTubeVideo {
 
     public void setLikeCount(long likeCount) {
         this.likeCount = likeCount;
-    }
-
-    public long getDislikeCount() {
-        return dislikeCount;
-    }
-
-    public void setDislikeCount(long dislikeCount) {
-        this.dislikeCount = dislikeCount;
     }
 
     public String getLength() {
@@ -144,16 +166,24 @@ public class YouTubeVideo {
         this.videoId = videoId;
     }
 
+    public List<YouTubeTranscribeSegment> getTranscriptSegments() {
+        return transcriptSegments;
+    }
+
+    public void setTranscriptSegments(List<YouTubeTranscribeSegment> transcriptSegments) {
+        this.transcriptSegments = transcriptSegments;
+    }
+
     @Override
     public String toString() {
         return "YouTubeVideo{" +
-                "videoUrl='" + videoUrl + '\'' +
+                "id='" + id + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", publishDate='" + publishDate + '\'' +
                 ", viewCount=" + viewCount +
                 ", likeCount=" + likeCount +
-                ", dislikeCount=" + dislikeCount +
                 ", length='" + length + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", transcript='" + transcript + '\'' +
@@ -164,21 +194,27 @@ public class YouTubeVideo {
     }
 
     public static class Builder {
+        private ObjectId id;
         private String videoUrl;
         private String title;
         private String author;
         private LocalDateTime publishDate;
         private long viewCount;
         private long likeCount;
-        private long dislikeCount;
         private String length;
         private String thumbnail;
         private String transcript;
         private String description;
         private String channelId;
         private String videoId;
+        private List<YouTubeTranscribeSegment> transcriptSegments;
 
         public Builder() {}
+
+        public Builder id(ObjectId id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder videoUrl(String videoUrl) {
             this.videoUrl = videoUrl;
@@ -210,11 +246,6 @@ public class YouTubeVideo {
             return this;
         }
 
-        public Builder dislikeCount(long dislikeCount) {
-            this.dislikeCount = dislikeCount;
-            return this;
-        }
-
         public Builder length(String length) {
             this.length = length;
             return this;
@@ -242,6 +273,11 @@ public class YouTubeVideo {
 
         public Builder videoId(String videoId) {
             this.videoId = videoId;
+            return this;
+        }
+
+        public Builder transcriptSegments(List<YouTubeTranscribeSegment> transcribeSegments) {
+            this.transcriptSegments = transcribeSegments;
             return this;
         }
 

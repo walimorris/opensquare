@@ -7,6 +7,7 @@ import com.google.api.services.youtube.model.*;
 import com.morris.opensquare.models.youtube.YouTubeComment;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
+import com.morris.opensquare.repositories.YouTubeVideoRepository;
 import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.loggers.LoggerService;
 import com.morris.opensquare.utils.Constants;
@@ -38,14 +39,16 @@ public class YouTubeServiceImpl implements YouTubeService {
     private final ExternalServiceUtil externalServiceUtil;
     private final LoggerService loggerService;
     private final PythonScriptEngine pythonScriptEngine;
+    private final YouTubeVideoRepository youTubeVideoRepository;
 
     @Autowired
     public YouTubeServiceImpl(ExternalServiceUtil externalServiceUtil, LoggerService loggerService,
-                              PythonScriptEngine pythonScriptEngine) {
+                              PythonScriptEngine pythonScriptEngine, YouTubeVideoRepository youTubeVideoRepository) {
 
         this.externalServiceUtil = externalServiceUtil;
         this.loggerService = loggerService;
         this.pythonScriptEngine = pythonScriptEngine;
+        this.youTubeVideoRepository = youTubeVideoRepository;
     }
 
     @Override
@@ -109,12 +112,16 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
-    public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, String parts, List<YouTubeTranscribeSegment> transcriptSegments) {
+    public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, List<YouTubeTranscribeSegment> transcriptSegments) {
         Video video = videoFromVideoId(videoId, key, SNIPPER_CONTENT_DETAILS_STATISTICS);
         VideoSnippet snippet = video.getSnippet();
         VideoContentDetails contentDetails = video.getContentDetails();
         VideoStatistics statistics = video.getStatistics();
         String transcript = getContinuousTranscriptFromYouTubeTranscribeSegments(transcriptSegments);
+
+        // handle null stat values
+        long viewCount = statistics.getViewCount() == null ? 0 : statistics.getViewCount().longValue();
+        long likeCount = statistics.getLikeCount() == null ? 0 : statistics.getLikeCount().longValue();
 
         // build item
         return new YouTubeVideo.Builder()
@@ -122,16 +129,26 @@ public class YouTubeServiceImpl implements YouTubeService {
                 .title(snippet.getTitle())
                 .author(snippet.getChannelTitle())
                 .publishDate(LocalDateTime.ofInstant(Instant.parse(snippet.getPublishedAt().toString()), ZoneId.systemDefault()))
-                .viewCount(statistics.getViewCount().longValue())
-                .likeCount(statistics.getLikeCount().longValue())
-                .dislikeCount(statistics.getDislikeCount().longValue())
+                .viewCount(viewCount)
+                .likeCount(likeCount)
                 .length(contentDetails.getDuration())
                 .thumbnail((String) snippet.getThumbnails().get(URL))
                 .transcript(transcript)
                 .description(snippet.getDescription())
                 .channelId(snippet.getChannelId())
                 .videoId(videoId)
+                .transcriptSegments(transcriptSegments)
                 .build();
+    }
+
+    @Override
+    public YouTubeVideo insertYouTubeVideo(YouTubeVideo video) {
+        return youTubeVideoRepository.insert(video);
+    }
+
+    @Override
+    public YouTubeVideo findOneYouTubeVideoByVideoId(String videoId) {
+        return youTubeVideoRepository.findOneByVideoId(videoId);
     }
 
     @Override
