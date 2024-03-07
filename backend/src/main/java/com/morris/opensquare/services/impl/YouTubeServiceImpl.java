@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
+import com.morris.opensquare.models.youtube.YouTubeComment;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
-import com.morris.opensquare.models.youtube.YoutubeComment;
+import com.morris.opensquare.models.youtube.YouTubeVideo;
 import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.loggers.LoggerService;
 import com.morris.opensquare.utils.Constants;
@@ -18,16 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
+
+import static com.morris.opensquare.utils.Constants.REGEX_EMPTY;
 
 @Service
 public class YouTubeServiceImpl implements YouTubeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeServiceImpl.class);
 
+    private static final String URL = "url";
     private static final String SNIPPET = "snippet";
     private static final String SNIPPET_REPLIES = "snippet,replies";
+    private static final String SNIPPER_CONTENT_DETAILS_STATISTICS = "snippet,contentDetails,statistics";
     private static final String YOUTUBE_URL_WITH_VIDEO_PARAM = "https://www.youtube.com/watch?v=";
-
     private final ExternalServiceUtil externalServiceUtil;
     private final LoggerService loggerService;
     private final PythonScriptEngine pythonScriptEngine;
@@ -49,10 +56,10 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
-    public YoutubeComment marshallYoutubeComment(JSONObject object) {
-        YoutubeComment youtubeComment = null;
+    public YouTubeComment marshallYoutubeComment(JSONObject object) {
+        YouTubeComment youtubeComment = null;
         try {
-            youtubeComment = new ObjectMapper().readValue(object.toString(), YoutubeComment.class);
+            youtubeComment = new ObjectMapper().readValue(object.toString(), YouTubeComment.class);
         } catch (JsonProcessingException e) {
             loggerService.saveLog(e.getClass().getName(), "Error marshalling json object referencing YouTube comment to it's model class: " + e.getMessage(), Optional.of(LOGGER));
         }
@@ -67,6 +74,7 @@ public class YouTubeServiceImpl implements YouTubeService {
                 .trim();
     }
 
+    @Override
     public Channel channelFromChannelId(String channelId, String key) {
         Channel channel = null;
         try {
@@ -84,20 +92,62 @@ public class YouTubeServiceImpl implements YouTubeService {
         return channel;
     }
 
-    @Override
-    public String channelIdFromVideoId(String videoId, String key) {
-        VideoSnippet videoSnippet = null;
+    private Video videoFromVideoId(String videoId, String key, String parts) {
+        Video video = null;
         try {
             YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
             YouTube.Videos.List request = youTubeService.videos()
-                    .list(SNIPPET);
+                    .list(parts);
             VideoListResponse response = request.setKey(key)
                     .setId(videoId)
                     .execute();
-            videoSnippet = response.getItems().get(0).getSnippet();
+            video = response.getItems().get(0);
         } catch (IOException e) {
-            loggerService.saveLog(e.getClass().getName(), "Error parsing YouTube channel id from given videoId of " + videoId + e.getMessage(), Optional.of(LOGGER));
+            loggerService.saveLog(e.getClass().getName(), "Error parsing YouTube video from given videoId of " + videoId + e.getMessage(), Optional.of(LOGGER));
         }
+        return video;
+    }
+
+    @Override
+    public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, String parts, List<YouTubeTranscribeSegment> transcriptSegments) {
+        Video video = videoFromVideoId(videoId, key, SNIPPER_CONTENT_DETAILS_STATISTICS);
+        VideoSnippet snippet = video.getSnippet();
+        VideoContentDetails contentDetails = video.getContentDetails();
+        VideoStatistics statistics = video.getStatistics();
+        String transcript = getContinuousTranscriptFromYouTubeTranscribeSegments(transcriptSegments);
+
+        // build item
+        return new YouTubeVideo.Builder()
+                .videoUrl(YOUTUBE_URL_WITH_VIDEO_PARAM + videoId)
+                .title(snippet.getTitle())
+                .author(snippet.getChannelTitle())
+                .publishDate(LocalDateTime.ofInstant(Instant.parse(snippet.getPublishedAt().toString()), ZoneId.systemDefault()))
+                .viewCount(statistics.getViewCount().longValue())
+                .likeCount(statistics.getLikeCount().longValue())
+                .dislikeCount(statistics.getDislikeCount().longValue())
+                .length(contentDetails.getDuration())
+                .thumbnail((String) snippet.getThumbnails().get(URL))
+                .transcript(transcript)
+                .description(snippet.getDescription())
+                .channelId(snippet.getChannelId())
+                .videoId(videoId)
+                .build();
+    }
+
+    @Override
+    public String getContinuousTranscriptFromYouTubeTranscribeSegments(List<YouTubeTranscribeSegment> segments) {
+        StringBuilder continuousTranscriptBuilder = new StringBuilder();
+        for (YouTubeTranscribeSegment segment: segments) {
+            String segmentText = segment.getText();
+            continuousTranscriptBuilder.append(segmentText).append(REGEX_EMPTY);
+        }
+        return continuousTranscriptBuilder.toString();
+    }
+
+    @Override
+    public String channelIdFromVideoId(String videoId, String key) {
+        Video video = videoFromVideoId(videoId, key, SNIPPET);
+        VideoSnippet videoSnippet = video.getSnippet();
         if (videoSnippet != null) {
             return videoSnippet.getChannelId();
         }

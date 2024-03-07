@@ -4,10 +4,11 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.CommentSnippet;
 import com.google.api.services.youtube.model.CommentThreadListResponse;
+import com.morris.opensquare.models.youtube.YouTubeVideo;
 import com.morris.opensquare.utils.PythonScriptEngine;
 import com.google.api.services.youtube.model.PageInfo;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
-import com.morris.opensquare.models.youtube.YoutubeComment;
+import com.morris.opensquare.models.youtube.YouTubeComment;
 import org.apache.commons.csv.CSVRecord;
 import org.json.JSONObject;
 
@@ -33,9 +34,9 @@ public interface YouTubeService {
      *
      * @param object {@link JSONObject}
      *
-     * @return {@link YoutubeComment}
+     * @return {@link YouTubeComment}
      */
-    YoutubeComment marshallYoutubeComment(JSONObject object);
+    YouTubeComment marshallYoutubeComment(JSONObject object);
 
     /**
      * Removes the JSON-String decor from the author property from a YouTube comment.
@@ -157,7 +158,29 @@ public interface YouTubeService {
     List<YouTubeTranscribeSegment> getYouTubeTranscribeSegmentsFromVideoId(String videoId);
 
     /**
-     * Used within CSVHeaders to unwrap and marshall {@link YoutubeComment} in CSV files.
+     * Creates a {@link YouTubeVideo} object from given youtube videoId and transcribe segments.
+     *
+     * @param videoId {@link String} YouTube videoId
+     * @param key {@link String} YouTube API key
+     * @param parts {@link String} parts parameters in youtube api request
+     * @param transcriptSegments {@link List<YouTubeTranscribeSegment>}
+     *
+     * @return {@link YouTubeVideo}
+     */
+    YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, String parts, List<YouTubeTranscribeSegment> transcriptSegments);
+
+    /**
+     * Get a continuous string with no formatting from a List of {@link YouTubeTranscribeSegment}. The only
+     * change would be proper spacing, with no line breaks.
+     *
+     * @param segments {@link List<YouTubeTranscribeSegment>}
+     *
+     * @return {@link String}
+     */
+    String getContinuousTranscriptFromYouTubeTranscribeSegments(List<YouTubeTranscribeSegment> segments);
+
+    /**
+     * Used within CSVHeaders to unwrap and marshall {@link YouTubeComment} in CSV files.
      * NOTE: The CSVHeader properties should read in the same order as they appear in the
      * actual CSV file.
      *

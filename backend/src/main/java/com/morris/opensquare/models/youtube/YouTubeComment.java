@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class YoutubeComment implements Serializable {
+public class YouTubeComment implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -39,9 +39,9 @@ public class YoutubeComment implements Serializable {
     @JsonProperty("likeCount")
     private int likeCount;
 
-    public YoutubeComment() {}
+    public YouTubeComment() {}
 
-    public YoutubeComment(Builder builder) {
+    public YouTubeComment(Builder builder) {
         this.commentId = builder.commentId;
         this.authorChannelId = builder.authorChannelId;
         this.videoId = builder.videoId;
@@ -233,8 +233,8 @@ public class YoutubeComment implements Serializable {
             return this;
         }
 
-        public YoutubeComment build() {
-            return new YoutubeComment(this);
+        public YouTubeComment build() {
+            return new YouTubeComment(this);
         }
     }
 }

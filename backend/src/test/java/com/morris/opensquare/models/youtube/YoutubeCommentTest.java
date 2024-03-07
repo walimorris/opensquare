@@ -51,11 +51,11 @@ class YoutubeCommentTest {
 
     private static final String YOUTUBE_COMMENT_JSON_FILE = "backend/src/test/resources/models/YoutubeComment.json";
 
-    private static YoutubeComment youtubeComment;
+    private static YouTubeComment youtubeComment;
 
     @BeforeEach
     void setUp() throws IOException {
-        youtubeComment = (YoutubeComment) TestHelper.convertModelFromFile(YOUTUBE_COMMENT_JSON_FILE, YoutubeComment.class, null);
+        youtubeComment = (YouTubeComment) TestHelper.convertModelFromFile(YOUTUBE_COMMENT_JSON_FILE, YouTubeComment.class, null);
         System.out.println(youtubeComment.toString());
     }
 
@@ -171,7 +171,7 @@ class YoutubeCommentTest {
 
     @Test
     void youtubeCommentBuilder() {
-        YoutubeComment youtubeCommentBuild = new YoutubeComment.Builder()
+        YouTubeComment youtubeCommentBuild = new YouTubeComment.Builder()
                 .commentId(YOUTUBE_COMMENT_ID_BUILDER)
                 .authorChannelId(YOUTUBE_AUTHOR_CHANNEL_ID_BUILDER)
                 .videoId(YOUTUBE_VIDEO_ID_BUILDER)
