@@ -21,7 +21,6 @@ def get_text_embeddings_ada_002(key, text_input):
 openai_key = sys.argv[1]
 text = sys.argv[2]
 
-print('key : ', openai_key)
 print('text: ', text)
 
 get_text_embeddings_ada_002(openai_key, text)
