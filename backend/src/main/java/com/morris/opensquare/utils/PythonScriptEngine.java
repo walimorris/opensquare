@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,11 +42,59 @@ public class PythonScriptEngine {
     private static final String PYTHON_RESOURCE_PATH = "backend/src/main/resources/python/";
     private static final String TEMP_VIDEO_PATH = "backend/src/main/resources/videos/";
     private static final String YOUTUBE_TRANSCRIBE_SCRIPT = "transcribe_youtube_video.py";
+    private static final String OPENAI_TEXT_EMBEDDING_ADA_002_SCRIPT = "text_embedding_ada_002.py";
     private final LoggerService loggerService;
 
     @Autowired
     private PythonScriptEngine(LoggerService loggerService) {
         this.loggerService = loggerService;
+    }
+
+    public List<Double> processPythonOpenAiAda002TextEmbeddingScript(String key, String text) {
+        LOGGER.info("Hit PythonScriptEngine: Text-Embedding-ADA-002");
+        String resolvedPytonFile = resolvePythonScriptPath(OPENAI_TEXT_EMBEDDING_ADA_002_SCRIPT);
+        List<String> results;
+        if (key != null && text != null) {
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, key, text);
+                processBuilder.redirectErrorStream(true);
+
+                Process process = processBuilder.start();
+                results = readProcessOutput(process.getInputStream());
+                throwPossibleErrorAndPrintStatements(results);
+                return getAda002Embeddings(results);
+
+            } catch (IOException e) {
+                loggerService.saveLog(
+                        e.getClass().getName(),
+                        "Script Engine Error with file[" + resolvedPytonFile + "]: " + e.getMessage(),
+                        Optional.of(LOGGER)
+                );
+            }
+        }
+        return null;
+    }
+
+    private List<Double> getAda002Embeddings(List<String> stream) {
+        List<Double> embeddingResults = new ArrayList<>();
+        String embeddingStr = null;
+        for (String line: stream) {
+            LOGGER.info("{}", line);
+            if (line.charAt(0) == '[') {
+                embeddingStr = line;
+            }
+        }
+        if (embeddingStr != null) {
+            embeddingStr = embeddingStr
+                    .replace("[", "")
+                    .replace("]", "").trim();
+
+            List<String> embeddingsWithStrNumbers = new ArrayList<>(Arrays.asList(embeddingStr.split(",")));
+            if (!embeddingsWithStrNumbers.isEmpty()) {
+                embeddingsWithStrNumbers.forEach(strNumber -> embeddingResults.add(Double.valueOf(strNumber)));
+            }
+        }
+        return embeddingResults;
     }
 
     // TODO: Parse possible python errors and ensure those are propagated to Spring error handling
@@ -79,6 +128,7 @@ public class PythonScriptEngine {
         }
         return output;
     }
+
 
     // {'time': 141.44, 'text': ' Thanks for watching, and I will see you in the next one.'}
     private List<YouTubeTranscribeSegment> getSegments(List<String> pythonOutputStream) {

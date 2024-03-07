@@ -40,6 +40,7 @@ public class YouTubeVideo {
     private String channelId;
     private String videoId;
     private List<YouTubeTranscribeSegment> transcriptSegments;
+    private List<Double> transcriptEmbeddings;
 
     public YouTubeVideo() {}
 
@@ -57,6 +58,7 @@ public class YouTubeVideo {
         this.channelId = builder.channelId;
         this.videoId = builder.videoId;
         this.transcriptSegments = builder.transcriptSegments;
+        this.transcriptEmbeddings = builder.transcriptEmbeddings;
     }
 
     public ObjectId getId() {
@@ -174,6 +176,14 @@ public class YouTubeVideo {
         this.transcriptSegments = transcriptSegments;
     }
 
+    public List<Double> getTranscriptEmbeddings() {
+        return transcriptEmbeddings;
+    }
+
+    public void setTranscriptEmbeddings(List<Double> transcriptEmbeddings) {
+        this.transcriptEmbeddings = transcriptEmbeddings;
+    }
+
     @Override
     public String toString() {
         return "YouTubeVideo{" +
@@ -208,6 +218,7 @@ public class YouTubeVideo {
         private String channelId;
         private String videoId;
         private List<YouTubeTranscribeSegment> transcriptSegments;
+        private List<Double> transcriptEmbeddings;
 
         public Builder() {}
 
@@ -278,6 +289,11 @@ public class YouTubeVideo {
 
         public Builder transcriptSegments(List<YouTubeTranscribeSegment> transcribeSegments) {
             this.transcriptSegments = transcribeSegments;
+            return this;
+        }
+
+        public Builder transcriptEmbeddings(List<Double> transcriptEmbeddings) {
+            this.transcriptEmbeddings = transcriptEmbeddings;
             return this;
         }
 

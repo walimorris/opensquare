@@ -161,12 +161,13 @@ public interface YouTubeService {
      * Creates a {@link YouTubeVideo} object from given youtube videoId and transcribe segments.
      *
      * @param videoId {@link String} YouTube videoId
-     * @param key {@link String} YouTube API key
+     * @param googleKey {@link String} YouTube API key
+     * @param openaiKey {@link String} OpenAI API key
      * @param transcriptSegments {@link List<YouTubeTranscribeSegment>}
      *
      * @return {@link YouTubeVideo}
      */
-    YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, List<YouTubeTranscribeSegment> transcriptSegments);
+    YouTubeVideo youTubeVideoTranscribeItem(String videoId, String googleKey, String openaiKey, List<YouTubeTranscribeSegment> transcriptSegments);
 
     /**
      * Get a continuous string with no formatting from a List of {@link YouTubeTranscribeSegment}. The only
@@ -177,6 +178,16 @@ public interface YouTubeService {
      * @return {@link String}
      */
     String getContinuousTranscriptFromYouTubeTranscribeSegments(List<YouTubeTranscribeSegment> segments);
+
+    /**
+     * Gets embeddings from openai text-embedding-ada-002 model.
+     *
+     * @param key {@link String} openai key
+     * @param text {@link String} text to embed
+     *
+     * @return {@link List<Double>}
+     */
+    List<Double> getTextEmbeddingsAda002(String key, String text);
 
     /**
      * Used within CSVHeaders to unwrap and marshall {@link YouTubeComment} in CSV files.

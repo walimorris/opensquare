@@ -26,7 +26,8 @@ public class YouTubeController {
     private static final String SNIPPET_REPLIES = "snippet,replies";
     private final YouTubeService youTubeService;
     private final ApplicationConfigurationUtil applicationConfigurationUtil;
-    private final String key;
+    private final String googleKey;
+    private final String openaiKey;
     private final String app;
 
     @Autowired
@@ -34,13 +35,14 @@ public class YouTubeController {
 
         this.youTubeService = youTubeService;
         this.applicationConfigurationUtil = applicationConfigurationUtil;
-        this.key = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().googleApiKey();
+        this.googleKey = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().googleApiKey();
+        this.openaiKey = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().openAI();
         this.app = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().appName();
     }
 
     @GetMapping("/topLevelComments")
     public ResponseEntity<List<CommentSnippet>> getAllTopLevelCommentsFromVideo(@RequestParam String videoId) {
-        List<CommentSnippet> topLevelComments = youTubeService.getTopLevelCommentsFromYouTubeVideo(app, key, videoId);
+        List<CommentSnippet> topLevelComments = youTubeService.getTopLevelCommentsFromYouTubeVideo(app, googleKey, videoId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(topLevelComments);
@@ -57,13 +59,14 @@ public class YouTubeController {
                     .body(initialVideoSearchResult);
         }
         List<YouTubeTranscribeSegment> transcribeSegments = youTubeService.getYouTubeTranscribeSegmentsFromVideoId(videoId);
-        YouTubeVideo youTubeVideoFromTranscribeSegments = youTubeService.youTubeVideoTranscribeItem(videoId, key, transcribeSegments);
+        YouTubeVideo youTubeVideoFromTranscribeSegments = youTubeService.youTubeVideoTranscribeItem(videoId, googleKey, openaiKey, transcribeSegments);
         YouTubeVideo youTubeVideoResult = youTubeService.insertYouTubeVideo(youTubeVideoFromTranscribeSegments);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(youTubeVideoResult);
     }
 
+    // TODO: create video and persist if it does not exist?
     @GetMapping("/en/transcribe")
     public ResponseEntity<List<YouTubeTranscribeSegment>> getYouTubeVideoTranscriptSegments(@RequestParam String videoId) {
         //Ensure the video doesn't already exist. if it does, pull the transcript segments from the object.

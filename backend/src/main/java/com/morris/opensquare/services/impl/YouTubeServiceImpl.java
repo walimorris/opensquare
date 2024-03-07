@@ -112,12 +112,13 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
-    public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String key, List<YouTubeTranscribeSegment> transcriptSegments) {
-        Video video = videoFromVideoId(videoId, key, SNIPPER_CONTENT_DETAILS_STATISTICS);
+    public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String googleKey, String openaiKey, List<YouTubeTranscribeSegment> transcriptSegments) {
+        Video video = videoFromVideoId(videoId, googleKey, SNIPPER_CONTENT_DETAILS_STATISTICS);
         VideoSnippet snippet = video.getSnippet();
         VideoContentDetails contentDetails = video.getContentDetails();
         VideoStatistics statistics = video.getStatistics();
         String transcript = getContinuousTranscriptFromYouTubeTranscribeSegments(transcriptSegments);
+        List<Double> embeddings = getTextEmbeddingsAda002(openaiKey, transcript);
 
         // handle null stat values
         long viewCount = statistics.getViewCount() == null ? 0 : statistics.getViewCount().longValue();
@@ -138,6 +139,7 @@ public class YouTubeServiceImpl implements YouTubeService {
                 .channelId(snippet.getChannelId())
                 .videoId(videoId)
                 .transcriptSegments(transcriptSegments)
+                .transcriptEmbeddings(embeddings)
                 .build();
     }
 
@@ -299,6 +301,11 @@ public class YouTubeServiceImpl implements YouTubeService {
     public List<YouTubeTranscribeSegment> getYouTubeTranscribeSegmentsFromVideoId(String videoId) {
         String videoUrl = YOUTUBE_URL_WITH_VIDEO_PARAM + videoId;
         return pythonScriptEngine.processPythonTranscribeScript(videoUrl);
+    }
+
+    @Override
+    public List<Double> getTextEmbeddingsAda002(String key, String text) {
+        return pythonScriptEngine.processPythonOpenAiAda002TextEmbeddingScript(key, text);
     }
 
     private void call(CommentThread commentThread, List<CommentSnippet> topLevelComments, String name) {

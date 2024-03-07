@@ -15,9 +15,8 @@ def format_item(item):
 #################################################################################################
 # Download video - use MD5 to hash the file name when saving the video that has been downloaded.#
 # This file we go to the 'temp_video_path' on project. This will later change to the YouTube    #
-# videoId as the file name.
-
-# note: brew install ffmpeg
+# videoId as the file name.                                                                     #
+# note: brew install ffmpeg                                                                     #
 #################################################################################################
 
 def download_video(url, temp_path):

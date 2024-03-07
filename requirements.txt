@@ -3,3 +3,4 @@ git+https://github.com/openai/whisper.git
 pytube
 fastapi
 uvicorn
+openai
