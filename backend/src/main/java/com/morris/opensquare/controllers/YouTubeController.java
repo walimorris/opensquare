@@ -1,10 +1,10 @@
 package com.morris.opensquare.controllers;
 
 import com.google.api.services.youtube.model.CommentSnippet;
+import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
 import com.morris.opensquare.services.YouTubeService;
-import com.morris.opensquare.utils.ApplicationConfigurationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +25,19 @@ public class YouTubeController {
     private static final String SNIPPET = "snippet";
     private static final String SNIPPET_REPLIES = "snippet,replies";
     private final YouTubeService youTubeService;
-    private final ApplicationConfigurationUtil applicationConfigurationUtil;
+    private final ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
     private final String googleKey;
     private final String openaiKey;
     private final String app;
 
     @Autowired
-    public YouTubeController(YouTubeService youTubeService, ApplicationConfigurationUtil applicationConfigurationUtil) {
+    public YouTubeController(YouTubeService youTubeService, ApplicationPropertiesConfiguration applicationPropertiesConfiguration) {
 
         this.youTubeService = youTubeService;
-        this.applicationConfigurationUtil = applicationConfigurationUtil;
-        this.googleKey = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().googleApiKey();
-        this.openaiKey = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().openAI();
-        this.app = this.applicationConfigurationUtil.getApplicationPropertiesConfiguration().appName();
+        this.applicationPropertiesConfiguration = applicationPropertiesConfiguration;
+        this.googleKey = this.applicationPropertiesConfiguration.googleApiKey();
+        this.openaiKey = this.applicationPropertiesConfiguration.openAI();
+        this.app = this.applicationPropertiesConfiguration.appName();
     }
 
     @GetMapping("/topLevelComments")
