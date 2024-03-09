@@ -2,24 +2,7 @@
   "topLevelComment": {
     "etag":"NM0FDtNEpc6UJ-6DypqspDB1wEU",
     "id":"Ugz-A2KxCasbowF12qd4AaABAg",
-    "kind":"youtube#comment",
-    "snippet": {
-      "authorChannelId": {
-        "value":"UCF85zUCCNlH9FTo-gFVlzRg"
-      },
-      "authorChannelUrl":"http://www.youtube.com/@user-yt6my8sd5n",
-      "authorDisplayName":"@user-yt6my8sd5n",
-      "authorProfileImageUrl":"https://yt3.ggpht.com/zQC0A3S3tIRyj4IPI5SEQ0FRl_4I0AOs6eQiL3jU10SM0VepXwUzV2Sj1M83DBwa8gz0-Fr60Q=s48-c-k-c0x00ffffff-no-rj",
-      "canRate":true,
-      "channelId":"UCsBjURrPoezykLs9EqgamOA",
-      "likeCount":0,
-      "publishedAt":"2024-03-03T06:36:52.000Z",
-      "textDisplay":"bro got nowhere close to 100k likes",
-      "textOriginal":"bro got nowhere close to 100k likes",
-      "updatedAt":"2024-03-03T06:36:52.000Z",
-      "videoId":"l9AzO1FMgM8",
-      "viewerRating":"none"
-    }
+    "kind":"youtube#comment"
   },
   "totalReplyCount":0,
   "videoId":"l9AzO1FMgM8"

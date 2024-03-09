@@ -95,8 +95,10 @@ public class YouTubeVideo {
 
     @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     public LocalDateTime getPublishDate() {
+        if (this.publishDate == null) {
+            return null;
+        }
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN);
-        System.out.println("parsing: " + this.publishDate.toString());
         return LocalDateTime.parse(this.publishDate.toString().split("\\.")[0], dateTimeFormatter);
     }
 

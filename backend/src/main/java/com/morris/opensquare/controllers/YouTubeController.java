@@ -26,22 +26,18 @@ public class YouTubeController {
     private static final String SNIPPET_REPLIES = "snippet,replies";
     private final YouTubeService youTubeService;
     private final ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
-    private final String googleKey;
-    private final String openaiKey;
-    private final String app;
 
     @Autowired
     public YouTubeController(YouTubeService youTubeService, ApplicationPropertiesConfiguration applicationPropertiesConfiguration) {
 
         this.youTubeService = youTubeService;
         this.applicationPropertiesConfiguration = applicationPropertiesConfiguration;
-        this.googleKey = this.applicationPropertiesConfiguration.googleApiKey();
-        this.openaiKey = this.applicationPropertiesConfiguration.openAI();
-        this.app = this.applicationPropertiesConfiguration.appName();
     }
 
     @GetMapping("/topLevelComments")
     public ResponseEntity<List<CommentSnippet>> getAllTopLevelCommentsFromVideo(@RequestParam String videoId) {
+        String googleKey = applicationPropertiesConfiguration.googleApiKey();
+        String app = applicationPropertiesConfiguration.appName();
         List<CommentSnippet> topLevelComments = youTubeService.getTopLevelCommentsFromYouTubeVideo(app, googleKey, videoId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -50,6 +46,8 @@ public class YouTubeController {
 
     @GetMapping("/en/video")
     public ResponseEntity<YouTubeVideo> getYouTubeVideo(@RequestParam String videoId) {
+        String googleKey = applicationPropertiesConfiguration.googleApiKey();
+        String openaiKey = applicationPropertiesConfiguration.openAI();
         // Quick retrieval, if the video already exists return it or else create new YouTubeVideo
         // object and persist with transcript segments
         YouTubeVideo initialVideoSearchResult = youTubeService.findOneYouTubeVideoByVideoId(videoId);
