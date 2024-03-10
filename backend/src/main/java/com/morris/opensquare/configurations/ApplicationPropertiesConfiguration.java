@@ -42,6 +42,9 @@ public class ApplicationPropertiesConfiguration {
     @Value("${secrets.googleApiKey}")
     private String googleApiKey;
 
+    @Value("${secrets.googleMapsApiKey}")
+    private String googleMapsApiKey;
+
     @Value("${secrets.engineCx}")
     private String engineCx;
 
@@ -82,6 +85,9 @@ public class ApplicationPropertiesConfiguration {
 
     @Bean
     public String googleApiKey() { return this.googleApiKey; }
+
+    @Bean
+    public String googleMapsApiKey() { return this.googleMapsApiKey; }
 
     @Bean
     public String googleAppName() { return this.googleAppName; }
