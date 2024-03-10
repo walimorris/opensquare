@@ -93,7 +93,6 @@ public class YouTubeVideo {
         this.author = author;
     }
 
-    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     public LocalDateTime getPublishDate() {
         if (this.publishDate == null) {
             return null;

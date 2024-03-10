@@ -4,6 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.search.FieldSearchPath;
+import com.mongodb.client.model.search.SearchPath;
 import com.morris.opensquare.models.youtube.YouTubeComment;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
@@ -13,10 +18,15 @@ import com.morris.opensquare.services.loggers.LoggerService;
 import com.morris.opensquare.utils.Constants;
 import com.morris.opensquare.utils.ExternalServiceUtil;
 import com.morris.opensquare.utils.PythonScriptEngine;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,7 +35,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.mongodb.client.model.Aggregates.project;
+import static com.mongodb.client.model.Aggregates.vectorSearch;
+import static com.mongodb.client.model.Projections.*;
 import static com.morris.opensquare.utils.Constants.REGEX_EMPTY;
+import static java.util.Arrays.asList;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Service
 public class YouTubeServiceImpl implements YouTubeService {
@@ -36,19 +52,25 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String SNIPPET_REPLIES = "snippet,replies";
     private static final String SNIPPER_CONTENT_DETAILS_STATISTICS = "snippet,contentDetails,statistics";
     private static final String YOUTUBE_URL_WITH_VIDEO_PARAM = "https://www.youtube.com/watch?v=";
+    private static final String YOUTUBE_VECTOR_SEARCH_INDEX = "youtube_vector_search";
+    private static final String YOUTUBE_VECTOR_SEARCH_PATH = "transcriptEmbeddings";
+    private static final String YOUTUBE_VIDEOS_COLLECTION = "youtube_videos";
     private final ExternalServiceUtil externalServiceUtil;
     private final LoggerService loggerService;
     private final PythonScriptEngine pythonScriptEngine;
     private final YouTubeVideoRepository youTubeVideoRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
     public YouTubeServiceImpl(ExternalServiceUtil externalServiceUtil, LoggerService loggerService,
-                              PythonScriptEngine pythonScriptEngine, YouTubeVideoRepository youTubeVideoRepository) {
+                              PythonScriptEngine pythonScriptEngine, YouTubeVideoRepository youTubeVideoRepository,
+                              MongoTemplate mongoTemplate) {
 
         this.externalServiceUtil = externalServiceUtil;
         this.loggerService = loggerService;
         this.pythonScriptEngine = pythonScriptEngine;
         this.youTubeVideoRepository = youTubeVideoRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -295,6 +317,64 @@ public class YouTubeServiceImpl implements YouTubeService {
             loggerService.saveLog(e.getClass().getName(), "Error searching YouTube video for user commments for video:  " + videoId + e.getMessage(), Optional.of(LOGGER));
         }
         return allTopLevelComments;
+    }
+
+    @Override
+    public List<YouTubeVideo> getYouTubeVideosFromVectorSearch(@NonNull String key, @NonNull String searchQuery) {
+        List<YouTubeVideo> videoResults = new ArrayList<>();
+        if (!searchQuery.isEmpty()) {
+            List<Double> searchQueryEmbeddings = getTextEmbeddingsAda002(key, searchQuery);
+            if (!searchQueryEmbeddings.isEmpty()) {
+
+                // TODO: refactor registry to config
+                CodecRegistry myRegistry = fromRegistries(
+                        MongoClientSettings.getDefaultCodecRegistry(),
+                        fromProviders(
+                                PojoCodecProvider.builder()
+                                        .register(YouTubeVideo.class, YouTubeTranscribeSegment.class)
+                                        .build()
+                        )
+                );
+                MongoDatabase db = mongoTemplate.getDb().withCodecRegistry(myRegistry);
+                MongoCollection<YouTubeVideo> collection = db.getCollection(YOUTUBE_VIDEOS_COLLECTION, YouTubeVideo.class);
+                FieldSearchPath fieldSearchPath = SearchPath.fieldPath(YOUTUBE_VECTOR_SEARCH_PATH);
+                int candidates = 200, limit = 10;
+
+                // TODO: add criteria on UI - such as gte or lte publishDate field
+                List<Bson> pipeline = asList(
+                        vectorSearch(
+                                fieldSearchPath,
+                                searchQueryEmbeddings,
+                                YOUTUBE_VECTOR_SEARCH_INDEX,
+                                candidates,
+                                limit),
+
+                        project(
+                                fields(metaVectorSearchScore("score"),
+                                        include("_id"),
+                                        include("videoUrl"),
+                                        include("title"),
+                                        include("author"),
+                                        include("publishDate"),
+                                        include("viewCount"),
+                                        include("likeCount"),
+                                        include("length"),
+                                        include("thumbnail"),
+                                        include("transcript"),
+                                        include("description"),
+                                        include("channelId"),
+                                        include("videoId"),
+                                        include("transcriptSegments"),
+                                        include("transcriptEmbeddings"))));
+
+                // run query and marshall results
+                collection.aggregate(pipeline).forEach(video -> {
+                    LOGGER.info("{}", video.toString());
+                    videoResults.add(video);
+                });
+            }
+        }
+        return videoResults;
     }
 
     @Override

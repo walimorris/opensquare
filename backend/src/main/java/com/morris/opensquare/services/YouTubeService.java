@@ -11,6 +11,7 @@ import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeComment;
 import org.apache.commons.csv.CSVRecord;
 import org.json.JSONObject;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -188,6 +189,16 @@ public interface YouTubeService {
      * @return {@link List<Double>}
      */
     List<Double> getTextEmbeddingsAda002(String key, String text);
+
+    /**
+     * Get YouTube videos from vector index search on stored {@link YouTubeVideo}.
+     *
+     * @param key {@link String} openai api key
+     * @param searchQuery {@link String} search query
+     *
+     * @return {@link List<YouTubeVideo>}
+     */
+    List<YouTubeVideo> getYouTubeVideosFromVectorSearch(@NonNull String key, @NonNull String searchQuery);
 
     /**
      * Used within CSVHeaders to unwrap and marshall {@link YouTubeComment} in CSV files.
