@@ -55,6 +55,22 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String YOUTUBE_VECTOR_SEARCH_INDEX = "youtube_vector_search";
     private static final String YOUTUBE_VECTOR_SEARCH_PATH = "transcriptEmbeddings";
     private static final String YOUTUBE_VIDEOS_COLLECTION = "youtube_videos";
+    private static final String SCORE = "score";
+    private static final String _ID = "_id";
+    private static final String VIDEO_URL = "videoUrl";
+    private static final String TITLE = "title";
+    private static final String AUTHOR = "author";
+    private static final String PUBLISH_DATE = "publishDate";
+    private static final String VIEW_COUNT = "viewCount";
+    private static final String LIKE_COUNT = "likeCount";
+    private static final String LENGTH = "length";
+    private static final String THUMB_NAIL = "thumbnail";
+    private static final String TRANSCRIPT = "transcript";
+    private static final String DESCRIPTION = "description";
+    private static final String CHANNEL_ID = "channelId";
+    private static final String VIDEO_ID = "videoId";
+    private static final String TRANSCRIPT_SEGMENTS = "transcriptSegments";
+    private static final String TRANSCRIPT_EMBEDDINGS = "transcriptEmbeddings";
     private final ExternalServiceUtil externalServiceUtil;
     private final LoggerService loggerService;
     private final PythonScriptEngine pythonScriptEngine;
@@ -350,22 +366,22 @@ public class YouTubeServiceImpl implements YouTubeService {
                                 limit),
 
                         project(
-                                fields(metaVectorSearchScore("score"),
-                                        include("_id"),
-                                        include("videoUrl"),
-                                        include("title"),
-                                        include("author"),
-                                        include("publishDate"),
-                                        include("viewCount"),
-                                        include("likeCount"),
-                                        include("length"),
-                                        include("thumbnail"),
-                                        include("transcript"),
-                                        include("description"),
-                                        include("channelId"),
-                                        include("videoId"),
-                                        include("transcriptSegments"),
-                                        include("transcriptEmbeddings"))));
+                                fields(metaVectorSearchScore(SCORE),
+                                        include(_ID),
+                                        include(VIDEO_URL),
+                                        include(TITLE),
+                                        include(AUTHOR),
+                                        include(PUBLISH_DATE),
+                                        include(VIEW_COUNT),
+                                        include(LIKE_COUNT),
+                                        include(LENGTH),
+                                        include(THUMB_NAIL),
+                                        include(TRANSCRIPT),
+                                        include(DESCRIPTION),
+                                        include(CHANNEL_ID),
+                                        include(VIDEO_ID),
+                                        include(TRANSCRIPT_SEGMENTS),
+                                        include(TRANSCRIPT_EMBEDDINGS))));
 
                 // run query and marshall results
                 collection.aggregate(pipeline).forEach(video -> {
