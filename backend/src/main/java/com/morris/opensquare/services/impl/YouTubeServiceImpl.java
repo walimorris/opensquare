@@ -356,7 +356,7 @@ public class YouTubeServiceImpl implements YouTubeService {
                 FieldSearchPath fieldSearchPath = SearchPath.fieldPath(YOUTUBE_VECTOR_SEARCH_PATH);
                 int candidates = 200, limit = 10;
 
-                // TODO: add criteria on UI - such as gte or lte publishDate field
+                // TODO: add criteria on UI - such as gte or lte publishDate field and pull highest scored results
                 List<Bson> pipeline = asList(
                         vectorSearch(
                                 fieldSearchPath,

@@ -148,12 +148,13 @@ class YouTubeControllerTest {
 
     @Test
     void getYouTubeVideoTranscriptSegmentsWithNoHit() throws Exception {
-        List<YouTubeTranscribeSegment> segments = parseTranscribeSegments(TRANSCRIBE_SEGMENTS_1);
-        String segmentsString = TestHelper.writeValueAsString(segments);
+        YouTubeVideo youTubeVideo = parseYouTubeVideo(YOUTUBE_VIDEO_1);
+        List<YouTubeTranscribeSegment> segments = youTubeVideo.getTranscriptSegments();
         Assertions.assertEquals(42, segments.size());
+        String segmentsString = TestHelper.writeValueAsString(segments);
 
-        when(youTubeService.findOneYouTubeVideoByVideoId(VIDEO_ID_1)).thenReturn(null);
-        when(youTubeService.getYouTubeTranscribeSegmentsFromVideoId(VIDEO_ID_1)).thenReturn(segments);
+        when(youTubeService.findOneYouTubeVideoByVideoId(VIDEO_ID_1)).thenReturn(youTubeVideo);
+        when(youTubeService.getYouTubeTranscribeSegmentsFromVideoId(VIDEO_ID_1)).thenReturn(youTubeVideo.getTranscriptSegments());
 
         this.mockModelViewController.perform(get(TRANSCRIBE_REQUEST).param(VIDEO_PARAM, VIDEO_ID_1))
                 .andExpect(status().is2xxSuccessful())

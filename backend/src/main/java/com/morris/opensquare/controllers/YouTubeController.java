@@ -21,15 +21,11 @@ import java.util.List;
 @RequestMapping("/opensquare/api/youtube")
 public class YouTubeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeController.class);
-
-    private static final String SNIPPET = "snippet";
-    private static final String SNIPPET_REPLIES = "snippet,replies";
     private final YouTubeService youTubeService;
     private final ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
 
     @Autowired
     public YouTubeController(YouTubeService youTubeService, ApplicationPropertiesConfiguration applicationPropertiesConfiguration) {
-
         this.youTubeService = youTubeService;
         this.applicationPropertiesConfiguration = applicationPropertiesConfiguration;
     }
@@ -46,8 +42,6 @@ public class YouTubeController {
 
     @GetMapping("/en/video")
     public ResponseEntity<YouTubeVideo> getYouTubeVideo(@RequestParam String videoId) {
-        String googleKey = applicationPropertiesConfiguration.googleApiKey();
-        String openaiKey = applicationPropertiesConfiguration.openAI();
         // Quick retrieval, if the video already exists return it or else create new YouTubeVideo
         // object and persist with transcript segments
         YouTubeVideo initialVideoSearchResult = youTubeService.findOneYouTubeVideoByVideoId(videoId);
@@ -56,15 +50,12 @@ public class YouTubeController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(initialVideoSearchResult);
         }
-        List<YouTubeTranscribeSegment> transcribeSegments = youTubeService.getYouTubeTranscribeSegmentsFromVideoId(videoId);
-        YouTubeVideo youTubeVideoFromTranscribeSegments = youTubeService.youTubeVideoTranscribeItem(videoId, googleKey, openaiKey, transcribeSegments);
-        YouTubeVideo youTubeVideoResult = youTubeService.insertYouTubeVideo(youTubeVideoFromTranscribeSegments);
+        YouTubeVideo youTubeVideoResult = insertYouTubeVideoWithTranscribeSegments(videoId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(youTubeVideoResult);
     }
 
-    // TODO: create video and persist if it does not exist?
     @GetMapping("/en/transcribe")
     public ResponseEntity<List<YouTubeTranscribeSegment>> getYouTubeVideoTranscriptSegments(@RequestParam String videoId) {
         //Ensure the video doesn't already exist. if it does, pull the transcript segments from the object.
@@ -75,9 +66,38 @@ public class YouTubeController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(transcriptSegments);
         }
-        List<YouTubeTranscribeSegment> segments = youTubeService.getYouTubeTranscribeSegmentsFromVideoId(videoId);
+        YouTubeVideo youTubeVideoResult = insertYouTubeVideoWithTranscribeSegments(videoId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(segments);
+                .body(youTubeVideoResult.getTranscriptSegments());
+    }
+
+    /**
+     * API allows clients to search embedded transcriptions based on search query. For now, results
+     * are limited to 10. Requires OpenAI key. Results with the highest relevance will appear first.
+     * TODO: Add tests
+     */
+    @GetMapping("/en/transcripts/search")
+    public ResponseEntity<List<YouTubeVideo>> searchEmbeddedTranscripts(@RequestParam String q) {
+        String openaiKey = applicationPropertiesConfiguration.openAI();
+        List<YouTubeVideo> results = youTubeService.getYouTubeVideosFromVectorSearch(openaiKey, q);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(results);
+    }
+
+    /**
+     * Conducts transcribe process and appends transcribe segments to {@link YouTubeVideo} and persists
+     * video to collect.
+     *
+     * @param videoId {@link String} YouTube videoId
+     * @return {@link YouTubeVideo}
+     */
+    private YouTubeVideo insertYouTubeVideoWithTranscribeSegments(String videoId) {
+        String googleKey = applicationPropertiesConfiguration.googleApiKey();
+        String openaiKey = applicationPropertiesConfiguration.openAI();
+        List<YouTubeTranscribeSegment> transcribeSegments = youTubeService.getYouTubeTranscribeSegmentsFromVideoId(videoId);
+        YouTubeVideo youTubeVideoFromTranscribeSegments = youTubeService.youTubeVideoTranscribeItem(videoId, googleKey, openaiKey, transcribeSegments);
+        return youTubeService.insertYouTubeVideo(youTubeVideoFromTranscribeSegments);
     }
 }

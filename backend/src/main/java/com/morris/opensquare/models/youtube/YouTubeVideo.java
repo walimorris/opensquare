@@ -8,11 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN;
-import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_TIME_PATTERN;
 
 /**
  * An Opensquare YouTubeVideo object contains metadata about a YouTube video. The purpose of this class is to allow
@@ -28,7 +26,7 @@ public class YouTubeVideo {
     private String title;
     private String author;
 
-    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime publishDate;
     private long viewCount;
@@ -94,11 +92,7 @@ public class YouTubeVideo {
     }
 
     public LocalDateTime getPublishDate() {
-        if (this.publishDate == null) {
-            return null;
-        }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN);
-        return LocalDateTime.parse(this.publishDate.toString().split("\\.")[0], dateTimeFormatter);
+        return this.publishDate;
     }
 
     public void setPublishDate(LocalDateTime publishDate) {
