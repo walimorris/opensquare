@@ -1,0 +1,104 @@
+{
+  "$jsonSchema": {
+    "title": "YouTubeVideo Record",
+    "description": "YouTubeVideo records with audio transcript and embeddings",
+    "type": "object",
+    "properties": {
+      "_id": {
+        "description": "document id - always ",
+        "bsonType": "objectId"
+      },
+      "videoUrl": {
+        "description": "YouTubeVideo url",
+        "bsonType": "string"
+      },
+      "title": {
+        "description": "YouTubeVideo title",
+        "bsonType": "string"
+      },
+      "author": {
+        "description": "YouTubeVideo author - channel author",
+        "bsonType": "string"
+      },
+      "publishDate": {
+        "description": "YouTubeVideo publish date",
+        "bsonType": "date"
+      },
+      "viewCount": {
+        "description": "Number of views on YouTubeVideo",
+        "bsonType": "long"
+      },
+      "likeCount": {
+        "description": "Number of likes on YouTubeVideo",
+        "bsonType": "long"
+      },
+      "length": {
+        "description": "length of YouTubeVideo",
+        "bsonType": "string"
+      },
+      "transcript": {
+        "description": "YouTubeVideo audio transcript",
+        "bsonType": "string"
+      },
+      "description": {
+        "description": "YouTubeVideo description",
+        "type": "string"
+      },
+      "channelId": {
+        "description": "YouTubeVideo channelId of channel owner",
+        "bsonType": "string"
+      },
+      "videoId": {
+        "description": "YouTubeVideo videoId",
+        "bsonType": "string"
+      },
+      "transcriptSegments": {
+        "description": "Segment consist of a single line of transcribed audio",
+        "bsonType": "array",
+        "items": {
+          "description": "An object consists of transcribed text and it\"s time in video",
+          "bsonType": "object",
+          "properties": {
+            "time": {
+              "description": "Time of transcribed text segment",
+              "bsonType": "string"
+            },
+            "text": {
+              "description": "Transcribed text segment",
+              "bsonType": "string"
+            }
+          },
+          "required": [
+            "time",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "transcriptEmbeddings": {
+        "description": "Vector Embedding of the transcribed YouTubeVideo",
+        "bsonType": "array",
+        "items": {
+          "description": "List of transcript embeddings of double types",
+          "bsonType": "double"
+        }
+      }
+    },
+    "required": [
+      "videoUrl",
+      "title",
+      "author",
+      "publishDate",
+      "viewCount",
+      "likeCount",
+      "length",
+      "transcript",
+      "description",
+      "channelId",
+      "videoId",
+      "transcriptSegments",
+      "transcriptEmbeddings"
+    ],
+    "additionalProperties": false
+  }
+}

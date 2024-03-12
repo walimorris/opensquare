@@ -357,6 +357,7 @@ public class YouTubeServiceImpl implements YouTubeService {
                 int candidates = 200, limit = 10;
 
                 // TODO: add criteria on UI - such as gte or lte publishDate field and pull highest scored results
+                // TODO: add schema validation method before sending off pipeline
                 List<Bson> pipeline = asList(
                         vectorSearch(
                                 fieldSearchPath,
