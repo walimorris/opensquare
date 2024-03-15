@@ -38,7 +38,6 @@ public class JsonValidationUtil {
      * @return boolean - if the object is valid or not valid
      */
     public boolean isValidJsonSchema(String schemaPath, Object o, Class<?> clazz) {
-        System.out.println(resolvePath(schemaPath));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         JSONObject jsonObject = null;
@@ -47,7 +46,7 @@ public class JsonValidationUtil {
                 jsonObject = new JSONObject(objectMapper.writeValueAsString(o));
             }
         } catch (JsonProcessingException e) {
-            System.out.println(e.getMessage());
+            loggerService.saveLog(e.getClass().getName(), e.getMessage(), Optional.of(LOGGER));
         }
 
         if (jsonObject != null) {
