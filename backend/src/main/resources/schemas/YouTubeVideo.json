@@ -37,6 +37,10 @@
       "description": "length of YouTubeVideo",
       "bsonType": "string"
     },
+    "thumbnail": {
+      "description": "video thumbnail",
+      "bsonType": "string"
+    },
     "transcript": {
       "description": "YouTubeVideo audio transcript",
       "bsonType": "string"
@@ -93,6 +97,7 @@
     "viewCount",
     "likeCount",
     "length",
+    "thumbnail",
     "transcript",
     "description",
     "channelId",

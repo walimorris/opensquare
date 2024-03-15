@@ -13,10 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.Optional;
 import java.util.Set;
 
 @Component("JsonValidationUtil")
@@ -30,6 +28,15 @@ public class JsonValidationUtil {
         this.loggerService = loggerService;
     }
 
+    /**
+     * Ensures that any given object is valid against a given schema validation model.
+     *
+     * @param schemaPath {@link String} path to schema validation model
+     * @param o {@link Object} The object to validate
+     * @param clazz {@link Class} the object's class
+     *
+     * @return boolean - if the object is valid or not valid
+     */
     public boolean isValidJsonSchema(String schemaPath, Object o, Class<?> clazz) {
         System.out.println(resolvePath(schemaPath));
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,31 +51,33 @@ public class JsonValidationUtil {
         }
 
         if (jsonObject != null) {
-            System.out.println(jsonObject.toString());
-            try (InputStream jsonStream = inputStreamFromJSONObject(jsonObject)) {
-                JsonNode json = objectMapper.readTree(jsonStream);
-                JsonSchemaFactory validatorFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
+            JsonSchemaFactory validatorFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
 
-                try (InputStream schemaStream = inputStreamFromSchemaPath(resolvePath(schemaPath))) {
-                    JsonSchema schema = validatorFactory.getSchema(schemaStream);
-                    Set<ValidationMessage> validationResult = schema.validate(json);
-                    if (validationResult.isEmpty()) {
-                        System.out.println("no validation errors :-)");
-                        return true;
-                    } else {
-                        System.out.println("validation result size: " + validationResult.size());
-                        validationResult.forEach(vm -> System.out.println(vm.getMessage()));
-                    }
+            try (InputStream schemaStream = inputStreamFromSchemaPath(schemaPath)) {
+                JsonSchema schema = validatorFactory.getSchema(schemaStream);
+                JsonNode objectJsonFinal = objectMapper.readTree(inputStreamFromJSONObject(jsonObject));
+                Set<ValidationMessage> validationResult = schema.validate(objectJsonFinal);
+                if (validationResult.isEmpty()) {
+                    return true;
+                } else {
+                    LOGGER.info("Validation Results on object class: {}", o.getClass());
+                    validationResult.forEach(vm -> LOGGER.info(vm.getMessage()));
+                    return false;
                 }
             } catch (IOException e) {
-                System.out.println("Some Error occurred validating schema= " + schemaPath + ": " + e.getMessage());
+                loggerService.saveLog(e.getClass().getName(), e.getMessage(), Optional.of(LOGGER));
             }
         }
         return false;
     }
 
-    private InputStream inputStreamFromSchemaPath(String path) {
-        return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+    private InputStream inputStreamFromSchemaPath(String path) throws FileNotFoundException {
+        if (found(path)) {
+            String p = resolvePath(path);
+            File resolvedFile = new File(p);
+            return new FileInputStream(resolvedFile);
+        }
+        return null;
     }
 
     private InputStream inputStreamFromJSONObject(JSONObject jsonObject) {
@@ -78,6 +87,12 @@ public class JsonValidationUtil {
     private String resolvePath(String filename) {
         File file = new File(filename);
         return  file.getAbsolutePath();
+    }
+
+    private boolean found(String path) {
+        String p = resolvePath(path);
+        File file = new File(p);
+        return file.exists();
     }
 }
 

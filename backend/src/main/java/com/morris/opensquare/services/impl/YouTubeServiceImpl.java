@@ -17,10 +17,12 @@ import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.loggers.LoggerService;
 import com.morris.opensquare.utils.Constants;
 import com.morris.opensquare.utils.ExternalServiceUtil;
+import com.morris.opensquare.utils.JsonValidationUtil;
 import com.morris.opensquare.utils.PythonScriptEngine;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String TRANSCRIPT_SEGMENTS = "transcriptSegments";
     private static final String TRANSCRIPT_EMBEDDINGS = "transcriptEmbeddings";
     private final ExternalServiceUtil externalServiceUtil;
+    private final JsonValidationUtil jsonValidationUtil;
     private final LoggerService loggerService;
     private final PythonScriptEngine pythonScriptEngine;
     private final YouTubeVideoRepository youTubeVideoRepository;
@@ -81,9 +84,10 @@ public class YouTubeServiceImpl implements YouTubeService {
     @Autowired
     public YouTubeServiceImpl(ExternalServiceUtil externalServiceUtil, LoggerService loggerService,
                               PythonScriptEngine pythonScriptEngine, YouTubeVideoRepository youTubeVideoRepository,
-                              MongoTemplate mongoTemplate) {
+                              MongoTemplate mongoTemplate, JsonValidationUtil jsonValidationUtil) {
 
         this.externalServiceUtil = externalServiceUtil;
+        this.jsonValidationUtil = jsonValidationUtil;
         this.loggerService = loggerService;
         this.pythonScriptEngine = pythonScriptEngine;
         this.youTubeVideoRepository = youTubeVideoRepository;
@@ -164,7 +168,8 @@ public class YouTubeServiceImpl implements YouTubeService {
         long likeCount = statistics.getLikeCount() == null ? 0 : statistics.getLikeCount().longValue();
 
         // build item
-        return new YouTubeVideo.Builder()
+        YouTubeVideo videoResult = new YouTubeVideo.Builder()
+                .id(getObjectId())
                 .videoUrl(YOUTUBE_URL_WITH_VIDEO_PARAM + videoId)
                 .title(snippet.getTitle())
                 .author(snippet.getChannelTitle())
@@ -172,7 +177,7 @@ public class YouTubeServiceImpl implements YouTubeService {
                 .viewCount(viewCount)
                 .likeCount(likeCount)
                 .length(contentDetails.getDuration())
-                .thumbnail((String) snippet.getThumbnails().get(URL))
+                .thumbnail(snippet.getThumbnails().getDefault().getUrl())
                 .transcript(transcript)
                 .description(snippet.getDescription())
                 .channelId(snippet.getChannelId())
@@ -180,11 +185,19 @@ public class YouTubeServiceImpl implements YouTubeService {
                 .transcriptSegments(transcriptSegments)
                 .transcriptEmbeddings(embeddings)
                 .build();
+
+        if (jsonValidationUtil.isValidJsonSchema(YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA, videoResult, YouTubeVideo.class)) {
+            return videoResult;
+        }
+        return null;
     }
 
     @Override
     public YouTubeVideo insertYouTubeVideo(YouTubeVideo video) {
-        return youTubeVideoRepository.insert(video);
+        if (video != null) {
+            return youTubeVideoRepository.insert(video);
+        }
+        return null;
     }
 
     @Override
@@ -358,7 +371,6 @@ public class YouTubeServiceImpl implements YouTubeService {
                 int candidates = 200, limit = 10;
 
                 // TODO: add criteria on UI - such as gte or lte publishDate field and pull highest scored results
-                // TODO: add schema validation method before sending off pipeline
                 List<Bson> pipeline = asList(
                         vectorSearch(
                                 fieldSearchPath,
@@ -444,5 +456,10 @@ public class YouTubeServiceImpl implements YouTubeService {
                 Constants.YOUTUBE_PROPERTY_PARENT_ID,
                 Constants.YOUTUBE_PROPERTY_CHANNEL_TITLE
         };
+    }
+
+    private ObjectId getObjectId() {
+        Date date = new Date();
+        return new ObjectId(date);
     }
 }
