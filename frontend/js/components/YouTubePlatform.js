@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from "axios";
 import '../../css/platform-options.css';
 import {styled} from "@mui/material/styles";
@@ -14,6 +14,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import PropTypes from 'prop-types';
+import YouTubeVideoCard from "./YouTubeVideoCard";
 
 const React = require('react');
 
@@ -24,6 +25,11 @@ const YouTubePlatform = ({isSelected}) => {
     const [kafkaProgress, setKafkaProgress] = useState('STARTING');
     const [kafkaPercentage, setKafkaPercentage] = useState(0);
     const [inProgress, setInProgress] = useState(false);
+
+    // search
+    const [vectorSearchQuery, setVectorSearchQuery] = useState('');
+    const [updatedVectorSearchQuery, setUpdatedVectorSearchQuery] = useState(vectorSearchQuery);
+    const [vectorYouTubeSearchResults, setVectorYouTubeSearchResults] = useState([]);
 
     const UNDER_SCORE = '_';
     const EMPTY_SPACE = ' ';
@@ -56,6 +62,12 @@ const YouTubePlatform = ({isSelected}) => {
             backgroundColor: theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8',
         },
     }));
+
+    async function onVectorYouTubeSearchSubmit() {
+        setVectorSearchQuery(vectorSearchQuery);
+        document.getElementById('youtubeSearch').value = '';
+        const vectorSearchResults = await handleVectorYouTubeSearch();
+    }
 
 
     async function onInputSubmit() {
@@ -117,7 +129,7 @@ const YouTubePlatform = ({isSelected}) => {
     }
 
     function onChange(e) {
-        setVideoId(e.target.value);
+        setVectorSearchQuery(e.target.value);
     }
 
     function getAxiosConfiguration() {
@@ -125,6 +137,31 @@ const YouTubePlatform = ({isSelected}) => {
             timeout: 3000,
             signal: AbortSignal.timeout(6000)
         };
+    }
+
+    useEffect(() => {
+        console.log(vectorYouTubeSearchResults.data);
+    }, [vectorYouTubeSearchResults.data]);
+
+    async function handleVectorYouTubeSearch() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(
+                    axios.get(`/opensquare/api/youtube/en/transcripts/search?q=${vectorSearchQuery}`, getAxiosConfiguration())
+                        .then(response => {
+                            console.log(response.data);
+                            setVectorYouTubeSearchResults(response.data);
+                            if (response.data !== null) {
+                                return response;
+                            }
+                            console.log(`passed data: ${vectorSearchQuery}`);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                );
+            }, 1000);
+        });
     }
 
     async function handleKafkaPoll(location) {
@@ -206,22 +243,15 @@ const YouTubePlatform = ({isSelected}) => {
                         onChange={onChange}
                         inputProps={{ 'aria-label': 'youtube video search' }}
                     />
-                    <IconButton onClick={onInputSubmit} type="button" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={onVectorYouTubeSearchSubmit} type="button" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
                 </Paper>
-                { inProgress && <Box
-                    sx={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Stack spacing={1} direction="column" marginTop="3%">
-                        <LinearProgressWithLabel value={kafkaPercentage} />
-                        <Typography sx={{ color: '#BEBEBE' }}><b>{formatKafkaMessage(kafkaProgress)}</b></Typography>
-                    </Stack>
-                </Box> }
+                { vectorYouTubeSearchResults.length > 0 && <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                    { vectorYouTubeSearchResults.map(video => (
+                        <YouTubeVideoCard video={video} />))}
+                </Box>}
             </Grid>
         </React.Fragment>
     )
