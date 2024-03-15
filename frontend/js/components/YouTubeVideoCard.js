@@ -27,13 +27,11 @@ export default function YouTubeVideoCard(props) {
     }));
 
     const [expanded, setExpanded] = React.useState(false);
+    const video = props.video;
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
-    console.log('inside youtube video card')
-    const video = props.video;
 
     // properties
     const author = video.author;
@@ -45,9 +43,6 @@ export default function YouTubeVideoCard(props) {
     const transcript = video.transcript;
     const videoUrl = video.videoUrl;
     const viewCount = video.viewCount;
-
-    // enhanced properties
-
 
     return (
         <Card sx={{ height: '80%', width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
