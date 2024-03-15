@@ -1,11 +1,14 @@
 package com.morris.opensquare.models.youtube;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +24,9 @@ import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_JSON
 public class YouTubeVideo {
 
     @Id
+    @BsonId
+    @JsonProperty("_id")
+    @Field(name = "_id")
     private ObjectId id;
     private String videoUrl;
     private String title;

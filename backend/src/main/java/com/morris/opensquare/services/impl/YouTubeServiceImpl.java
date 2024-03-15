@@ -55,6 +55,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String YOUTUBE_VECTOR_SEARCH_INDEX = "youtube_vector_search";
     private static final String YOUTUBE_VECTOR_SEARCH_PATH = "transcriptEmbeddings";
     private static final String YOUTUBE_VIDEOS_COLLECTION = "youtube_videos";
+    private static final String YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA = "backend/src/main/resources/schemas/YouTubeVideo.json";
     private static final String SCORE = "score";
     private static final String _ID = "_id";
     private static final String VIDEO_URL = "videoUrl";
