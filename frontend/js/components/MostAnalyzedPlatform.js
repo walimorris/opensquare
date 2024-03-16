@@ -3,6 +3,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Title from './Title';
 import '../../css/platform-options.css';
+import FunctionUtil from "../utils/FunctionUtil";
 
 const images = ['/images/youtube.png', '/images/vkontakte.png', '/images/twitter.png'];
 const YOUTUBE = 'youtube';
@@ -12,43 +13,6 @@ const PLATFORM_ANALYSIS_TRACKER_PROPERTY = 'platformAnalysisTracker';
 
 function preventDefault(event) {
     event.preventDefault();
-}
-
-function getCurrentDate() {
-    const date = new Date();
-    let day = date.getDate();
-    let month = getMonthString(date.getMonth());
-    let year = date.getFullYear();
-    return `as of ${day} ${month}, ${year}`;
-}
-
-function getMonthString(monthInt) {
-    switch (monthInt) {
-        case 0:
-            return 'January';
-        case 1:
-            return 'February';
-        case 2:
-            return 'March';
-        case 3:
-            return 'April';
-        case 4:
-            return 'May';
-        case 5:
-            return 'June';
-        case 6:
-            return 'July';
-        case 7:
-            return 'August';
-        case 8:
-            return 'September';
-        case 9:
-            return 'October';
-        case 10:
-            return 'November';
-        default:
-            return 'December';
-    }
 }
 
 /**
@@ -111,7 +75,7 @@ export default function MostAnalyzedPlatform({userDetails}) {
                  src={getMostAnalyzedPlatformImage(userDetails[PLATFORM_ANALYSIS_TRACKER_PROPERTY])}
                  alt='platform-image'/>
             <Typography color="text.secondary" sx={{ flex: 1 }}>
-                {getCurrentDate()}
+                {FunctionUtil.getCurrentDate()}
             </Typography>
             <div>
                 <Link color="primary" href="#" onClick={preventDefault}>

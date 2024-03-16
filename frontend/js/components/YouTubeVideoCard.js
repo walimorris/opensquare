@@ -12,7 +12,10 @@ import {red} from "@mui/material/colors";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from "@mui/material/Collapse";
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {styled} from "@mui/material/styles";
+import FunctionUtil from "../utils/FunctionUtil";
 
 export default function YouTubeVideoCard(props) {
     const ExpandMore = styled((props) => {
@@ -44,25 +47,36 @@ export default function YouTubeVideoCard(props) {
     const videoUrl = video.videoUrl;
     const viewCount = video.viewCount;
 
+    // enhanced properties
+    const publishedDate = FunctionUtil.getPublishDate(publishDate);
+
     return (
-        <Card sx={{ height: '80%', width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
-            <CardHeader
+        <Card sx={{ height: '80%', width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto', font: 'Proxima Nova'}}>
+            <CardHeader sx={{ font: 'Proxima Nova' }}
                 avatar={ <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">YT</Avatar>}
                 title={title}
-                subheader={publishDate} />
+                subheader={publishedDate} />
             <CardMedia
                 sx={{ width: '30%', height: 100, marginLeft: '35%' }}
                 component={"img"}
                 alt={"youtube image thumbnail"}
                 image={thumbnail} />
             <CardContent>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" fontFamily="Proxima Nova" fontSize=".95rem">
                     {description}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
                 <Button target='_blank' href={videoUrl} size="small">Navigate</Button>
-                <ExpandMore
+                <IconButton sx={{ marginLeft: '3%', font: 'Proxima Nova', fontSize:'.75rem', fontWeight: '400' }} aria-label="like count">
+                    <ThumbUpOffAltIcon />
+                    {likeCount}
+                </IconButton>
+                <IconButton sx={{ marginLeft: '3%', font: 'Proxima Nova', fontSize:'.75rem', fontWeight: '400' }} aria-label="view count">
+                    <VisibilityIcon />
+                    {viewCount}
+                </IconButton>
+                <ExpandMore sx={{ marginLeft: '55%' }}
                     expand={expanded}
                     onClick={handleExpandClick}
                     aria-expanded={expanded}
@@ -75,8 +89,8 @@ export default function YouTubeVideoCard(props) {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>Video Transcript:</Typography>
-                    <Typography paragraph>
+                    <Typography paragraph fontFamily={'Proxima Nova'} fontSize=".95rem" fontWeight="800">Video Transcript:</Typography>
+                    <Typography paragraph fontFamily={'Proxima Nova'} fontSize=".95rem" fontWeight="800">
                         {transcript}
                     </Typography>
                 </CardContent>
