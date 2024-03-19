@@ -5,8 +5,6 @@ import ListItemText from '@mui/material/ListItemText';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import ListSubheader from '@mui/material/ListSubheader';
 import SettingsModal from "./SettingsModal";
-import {useEffect, useState} from "react";
-import axios from "axios";
 
 export default function TertiaryListItems(props) {
 

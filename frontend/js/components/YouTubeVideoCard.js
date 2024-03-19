@@ -53,7 +53,7 @@ export default function YouTubeVideoCard(props) {
     return (
         <Card sx={{ height: '80%', width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto', font: 'Proxima Nova'}}>
             <CardHeader sx={{ font: 'Proxima Nova' }}
-                avatar={ <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">YT</Avatar>}
+                avatar={ <Avatar sx={{ bgcolor: red[500], width: 76, height: 76, fontSize: '10px' }} aria-label="recipe">{author}</Avatar>}
                 title={title}
                 subheader={publishedDate} />
             <CardMedia
