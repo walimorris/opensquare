@@ -9,7 +9,6 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.*;
-import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,23 +26,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles({"coverage"})
 class JsonValidationUtilTest {
     private static YouTubeVideo youtubeVideo;
-    private static Map<String, Object> tertiaryMap;
-    private static final String _ID = "_id";
-    private static final String PUBLISH_DATE = "publishDate";
     private static final String YOUTUBE_VIDEO_1 = "backend/src/test/resources/youtube/YouTubeVideo_1.json";
     private static final String YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA = "backend/src/test/resources/schemas/YouTubeVideo.json";
 
     @BeforeEach
     void setUp() throws IOException {
         youtubeVideo = (YouTubeVideo) TestHelper.convertModelFromFile(YOUTUBE_VIDEO_1, YouTubeVideo.class, null);
-        tertiaryMap = TestHelper.getYouTubeVideoObjectIdAndPublishDateMap();
     }
 
     @Test
     void isValidJsonSchema() throws IOException, JSONException {
-        youtubeVideo.setId((ObjectId) tertiaryMap.get(_ID));
-        youtubeVideo.setPublishDate((LocalDateTime) tertiaryMap.get(PUBLISH_DATE));
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 

@@ -3,6 +3,8 @@ package com.morris.opensquare.models.youtube;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
@@ -27,6 +29,7 @@ public class YouTubeVideo {
     @BsonId
     @JsonProperty("_id")
     @Field(name = "_id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     private String videoUrl;
     private String title;

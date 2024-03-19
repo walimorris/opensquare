@@ -9,7 +9,6 @@ import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
 import com.morris.opensquare.services.YouTubeService;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,10 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,12 +47,8 @@ class YouTubeControllerTest {
     private static CommentSnippet commentSnippet;
     private static List<CommentSnippet> commentSnippetList;
     private static String commentSnippetListString;
-    private static Map<String, Object> tertiaryMap;
     private static final String VIDEO_PARAM = "videoId";
     private static final String VIDEO_ID_1 = "l9AzO1FMgM8";
-    private static final String _ID = "_id";
-    private static final String PUBLISH_DATE = "publishDate";
-
     private static final String COMMENT_THREAD = "backend/src/test/resources/youtube/commentThread.json";
     private static final String COMMENT_THREAD_WITH_SNIPPET = "backend/src/test/resources/youtube/commentThreadSnippet.json";
     private static final String TOP_LEVEL_COMMENT_JSON = "backend/src/test/resources/youtube/topLevelComment.json";
@@ -85,7 +78,6 @@ class YouTubeControllerTest {
 
         commentSnippetList = getCommentSnippetList(commentThread);
         commentSnippetListString = TestHelper.writeValueAsString(commentSnippetList);
-        tertiaryMap = TestHelper.getYouTubeVideoObjectIdAndPublishDateMap();
     }
 
     @Test
@@ -107,10 +99,6 @@ class YouTubeControllerTest {
         when(applicationPropertiesConfiguration.openAI()).thenReturn(openaiKey);
 
         YouTubeVideo youTubeVideo = parseYouTubeVideo(YOUTUBE_VIDEO_1);
-
-
-        youTubeVideo.setId((ObjectId) tertiaryMap.get(_ID));
-        youTubeVideo.setPublishDate((LocalDateTime) tertiaryMap.get(PUBLISH_DATE));
         String youTubeVideoString = TestHelper.writeValueAsString(youTubeVideo);
 
         when(youTubeService.findOneYouTubeVideoByVideoId(VIDEO_ID_1)).thenReturn(youTubeVideo);
@@ -129,8 +117,6 @@ class YouTubeControllerTest {
         when(youTubeService.findOneYouTubeVideoByVideoId(VIDEO_ID_1)).thenReturn(null);
 
         YouTubeVideo youTubeVideo = parseYouTubeVideo(YOUTUBE_VIDEO_1);
-        youTubeVideo.setId((ObjectId) tertiaryMap.get(_ID));
-        youTubeVideo.setPublishDate((LocalDateTime) tertiaryMap.get(PUBLISH_DATE));
 
         String youTubeVideoString = TestHelper.writeValueAsString(youTubeVideo);
         List<YouTubeTranscribeSegment> segments = parseTranscribeSegments(TRANSCRIBE_SEGMENTS_1);
@@ -148,8 +134,6 @@ class YouTubeControllerTest {
     @Test
     void getYouTubeVideoTranscriptSegmentsWithHit() throws Exception {
         YouTubeVideo youTubeVideo = parseYouTubeVideo(YOUTUBE_VIDEO_1);
-        youTubeVideo.setId((ObjectId) tertiaryMap.get(_ID));
-        youTubeVideo.setPublishDate((LocalDateTime) tertiaryMap.get(PUBLISH_DATE));
 
         List<YouTubeTranscribeSegment> segments = youTubeVideo.getTranscriptSegments();
         Assertions.assertEquals(42, segments.size());
@@ -167,8 +151,6 @@ class YouTubeControllerTest {
     @Test
     void getYouTubeVideoTranscriptSegmentsWithNoHit() throws Exception {
         YouTubeVideo youTubeVideo = parseYouTubeVideo(YOUTUBE_VIDEO_1);
-        youTubeVideo.setId((ObjectId) tertiaryMap.get(_ID));
-        youTubeVideo.setPublishDate((LocalDateTime) tertiaryMap.get(PUBLISH_DATE));
 
         List<YouTubeTranscribeSegment> segments = youTubeVideo.getTranscriptSegments();
         Assertions.assertEquals(42, segments.size());

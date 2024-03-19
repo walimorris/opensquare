@@ -8,15 +8,13 @@ import com.google.api.services.customsearch.model.Result;
 import com.morris.opensquare.models.DropDownOptions;
 import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
-import org.bson.types.ObjectId;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The TestHelper class exposes various methods used to help in Unit Tests. Some methods include: converting
@@ -145,23 +143,6 @@ public class TestHelper {
                 .professions(getProfessions())
                 .organizations(getOrganizations())
                 .build();
-    }
-
-    public static Map<String, Object> getYouTubeVideoObjectIdAndPublishDateMap() {
-        Map<String, Object> tertiaryMap = new HashMap<>();
-
-        // create date
-        Date date = new Date();
-        ObjectId objectIdDate = new ObjectId(date);
-        tertiaryMap.put("_id", objectIdDate);
-
-        // create publishDate
-        String str = "1986-04-08T12:30:00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-        tertiaryMap.put("publishDate", dateTime);
-
-        return tertiaryMap;
     }
 
     private static List<String> getOrganizations() {
