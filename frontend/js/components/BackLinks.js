@@ -14,7 +14,6 @@ import BackLinkCard from "./BackLinkCard";
 
 export default function BackLinks() {
     const [backlinks, setBacklinks] = React.useState([]);
-    const metaImage = getFirstAvailableImage();
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#d8ecf3',
@@ -61,37 +60,6 @@ export default function BackLinks() {
         await handleBacklinksSearch(query);
     }
 
-
-    /**
-     * todo: create list of possible image blocking parts (s3, fbsbx, etc)
-     *
-     * Getting the first available image is meant for the purpose of rendering a generic
-     * valid image returned from the backlink results.
-     *
-     * Valid images contain https, are defined, and are publicly available.
-     *
-     * @return {*}
-     */
-    function getFirstAvailableImage() {
-        let image;
-        if (backlinks !== undefined) {
-            backlinks.forEach(backlink => {
-                const pagemap = backlink.pagemap;
-                if (pagemap !== undefined && pagemap.metatags !== undefined && pagemap.metatags[0] !== undefined) {
-                    let metatags = pagemap.metatags[0];
-                    let ogImage = metatags['og:image'];
-                    if (ogImage !== undefined && !ogImage.includes('s3') && !ogImage.includes('fbsbx')) {
-                        if (ogImage.includes('https')) {
-                            image = ogImage;
-                        }
-                    }
-                }
-            })
-        }
-        console.log("this is image: " + image)
-        return image;
-    }
-
     return (
         <React.Fragment>
             <Grid item xs={12} justifyContent='center' alignItems='center'>
@@ -114,7 +82,7 @@ export default function BackLinks() {
                 </Paper>
                 { backlinks.length > 0 && <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
                     { backlinks.map(backlink => (
-                        <BackLinkCard backlink={backlink} metaImage={metaImage} />))}
+                        <BackLinkCard backlink={backlink} />))}
                 </Box>}
             </Grid>
         </React.Fragment>

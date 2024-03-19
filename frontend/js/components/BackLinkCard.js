@@ -12,34 +12,32 @@ export default function BackLinkCard(props) {
 
     const backlinkDescription = backlink.snippet;
     const backlinkTitle = backlink.title;
-    const link = backlink.link;
-    const image = props.metaImage;
+    const link = backlink.formattedUrl;
 
     const metaDescription =  meta !== undefined ? meta['og:description'] : undefined;
-    const metaImage = meta !== undefined ? meta['og:image'] : props.metaImage;
     const metaTitle = meta !== undefined ? meta['og:title'] : undefined;
+    const DEFAULT_IMAGE = '/images/default-image-thumbnail.png';
 
-    /**
-     * Checks if the image from the 'meta' property returned from the backlink object
-     * is a valid image.
-     *
-     * Valid image sources contain https, are explicitly defined and
-     * are publicly available.
-     *
-     * @return {boolean}
-     */
-    function isValidMetaImage() {
-        if (metaImage === undefined || !metaImage.includes('https')) {
-            return false;
+    function renderImage() {
+        if (backlink.pageMap.cse_image !== undefined) {
+            const cse = backlink.pageMap.cse_image;
+            const cseLength = cse.length;
+            if (cseLength > 0) {
+                const src = cse[0].src;
+                console.log(src);
+                if (!src.includes('x-raw-image')) {
+                    return src;
+                }
+            }
         }
-        return !metaImage.includes('s3') && !metaImage.includes('fbsbx');
+        return DEFAULT_IMAGE;
     }
 
     return (
         <Card sx={{ height: '80%', width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
                 sx={{ width: '60%', height: 200, marginLeft: '20%' }}
-                image={isValidMetaImage() ? metaImage : image}
+                image={renderImage()}
                 title={metaTitle !== undefined ? metaTitle : backlinkTitle}
             />
             <CardContent>
