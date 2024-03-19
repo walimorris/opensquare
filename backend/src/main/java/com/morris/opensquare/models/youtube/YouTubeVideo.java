@@ -52,6 +52,7 @@ public class YouTubeVideo {
     public YouTubeVideo() {}
 
     public YouTubeVideo(Builder builder) {
+        this.id = builder.id;
         this.videoUrl = builder.videoUrl;
         this.title = builder.title;
         this.author = builder.author;

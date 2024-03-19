@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,6 +47,8 @@ class YouTubeVideoTest {
     private static final String YOUTUBE_VIDEO_CHANNEL_ID_2 = "AOmaggE9sLkyzeoPrRUjBsCU";
     private static final String YOUTUBE_VIDEO_VIDEO_ID_1 = "l9AzO1FMgM8";
     private static final String YOUTUBE_VIDEO_VIDEO_ID_2 = "8MgMF10zA9l";
+    private static final String TRANSCRIPT_SEGMENT_TIME = "0.1";
+    private static final String TRANSCRIPT_SEGMENT_TEXT = "In the beginning...";
 
 
     @BeforeEach
@@ -220,5 +223,52 @@ class YouTubeVideoTest {
     void setTranscriptEmbeddings() {
         youtubeVideo.setTranscriptEmbeddings(new ArrayList<>());
         assertEquals(0, youtubeVideo.getTranscriptEmbeddings().size());
+    }
+
+    @Test
+    void YouTubeVideoBuilder() {
+        YouTubeTranscribeSegment youTubeTranscribeSegment = new YouTubeTranscribeSegment();
+        youTubeTranscribeSegment.setTime(TRANSCRIPT_SEGMENT_TIME);
+        youTubeTranscribeSegment.setText(TRANSCRIPT_SEGMENT_TEXT);
+        List<YouTubeTranscribeSegment> segments = List.of(youTubeTranscribeSegment);
+        List<Double> embeddings = List.of(1.00000, -1.00000);
+        ObjectId newId = new ObjectId(OBJECT_ID_1);
+
+        YouTubeVideo YouTubeVideoBuilder = new YouTubeVideo.Builder()
+                .id(newId)
+                .videoUrl(YOUTUBE_VIDEO_URL_1)
+                .title(YOUTUBE_VIDEO_TITLE_1)
+                .author(YOUTUBE_VIDEO_AUTHOR_1)
+                .publishDate(LocalDateTime.parse(YOUTUBE_PUBLISH_DATE_STRING_FORMAT))
+                .viewCount(YOUTUBE_VIDEO_VIEW_COUNT_1)
+                .likeCount(YOUTUBE_VIDEO_LIKE_COUNT_1)
+                .length(YOUTUBE_VIDEO_LENGTH_1)
+                .thumbnail(YOUTUBE_VIDEO_THUMBNAIL_1)
+                .transcript(YOUTUBE_TRANSCRIPT_2)
+                .description(YOUTUBE_DESCRIPTION_2)
+                .channelId(YOUTUBE_VIDEO_CHANNEL_ID_1)
+                .videoId(YOUTUBE_VIDEO_VIDEO_ID_1)
+                .transcriptSegments(segments)
+                .transcriptEmbeddings(embeddings)
+                .build();
+
+        assertAll(
+                () -> assertEquals(OBJECT_ID_1, YouTubeVideoBuilder.getId().toString()),
+                () -> assertEquals(YOUTUBE_VIDEO_URL_1, YouTubeVideoBuilder.getVideoUrl()),
+                () -> assertEquals(YOUTUBE_VIDEO_TITLE_1, YouTubeVideoBuilder.getTitle()),
+                () -> assertEquals(YOUTUBE_VIDEO_AUTHOR_1, YouTubeVideoBuilder.getAuthor()),
+                () -> assertEquals(YOUTUBE_PUBLISH_DATE_STRING_2, YouTubeVideoBuilder.getPublishDate().toString()),
+                () -> assertEquals(YOUTUBE_VIDEO_VIEW_COUNT_1, YouTubeVideoBuilder.getViewCount()),
+                () -> assertEquals(YOUTUBE_VIDEO_LIKE_COUNT_1, YouTubeVideoBuilder.getLikeCount()),
+                () -> assertEquals(YOUTUBE_VIDEO_LENGTH_1, YouTubeVideoBuilder.getLength()),
+                () -> assertEquals(YOUTUBE_VIDEO_THUMBNAIL_1, YouTubeVideoBuilder.getThumbnail()),
+                () -> assertEquals(YOUTUBE_TRANSCRIPT_2, YouTubeVideoBuilder.getTranscript()),
+                () -> assertEquals(YOUTUBE_DESCRIPTION_2, YouTubeVideoBuilder.getDescription()),
+                () -> assertEquals(YOUTUBE_VIDEO_CHANNEL_ID_1, YouTubeVideoBuilder.getChannelId()),
+                () -> assertEquals(YOUTUBE_VIDEO_VIDEO_ID_1, YouTubeVideoBuilder.getVideoId()),
+                () -> assertEquals(TRANSCRIPT_SEGMENT_TIME, YouTubeVideoBuilder.getTranscriptSegments().get(0).getTime()),
+                () -> assertEquals(TRANSCRIPT_SEGMENT_TEXT, YouTubeVideoBuilder.getTranscriptSegments().get(0).getText()),
+                () -> assertEquals(2, YouTubeVideoBuilder.getTranscriptEmbeddings().size())
+        );
     }
 }
