@@ -39,7 +39,7 @@ function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" target="_blank" href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/">
+            <Link color="inherit" target="_blank" href="https://github.com/walimorris/opensquare">
                 OpenSquare
             </Link>{' '}
             {new Date().getFullYear()}
