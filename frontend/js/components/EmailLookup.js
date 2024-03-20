@@ -56,9 +56,12 @@ export default function EmailLookup() {
 
     async function handleSearch(e){
         e.preventDefault();
-        const query = document.getElementById('emailLookupSearch').value;
-        document.getElementById('emailLookupSearch').value = '';
-        await handleEmailLookupSearch(query);
+        let queryElement = document.getElementById('emailLookupSearch');
+        let query = queryElement.value.trim();
+        if (query !== null && query.length > 0) {
+            queryElement.value = '';
+            await handleEmailLookupSearch(query);
+        }
     }
 
     return (
@@ -76,7 +79,7 @@ export default function EmailLookup() {
                         id={'emailLookupSearch'}
                         inputProps={{ 'aria-label': 'email lookup search' }}
                     />
-                    <IconButton onClick={handleSearch} type="button" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={e => handleSearch(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

@@ -63,10 +63,15 @@ const YouTubePlatform = ({isSelected}) => {
         },
     }));
 
-    async function onVectorYouTubeSearchSubmit() {
+    async function onVectorYouTubeSearchSubmit(e) {
+        e.preventDefault();
         setVectorSearchQuery(vectorSearchQuery);
-        document.getElementById('youtubeSearch').value = '';
-        const vectorSearchResults = await handleVectorYouTubeSearch();
+        let queryElement = document.getElementById('youtubeSearch');
+        let query = queryElement.value.trim();
+        if (query !== null && query.length > 0) {
+            queryElement.value = '';
+            const vectorSearchResults = await handleVectorYouTubeSearch();
+        }
     }
 
 
@@ -243,7 +248,7 @@ const YouTubePlatform = ({isSelected}) => {
                         onChange={onChange}
                         inputProps={{ 'aria-label': 'youtube video search' }}
                     />
-                    <IconButton onClick={onVectorYouTubeSearchSubmit} type="button" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={e => onVectorYouTubeSearchSubmit(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

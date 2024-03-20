@@ -56,9 +56,13 @@ export default function Nslookup() {
 
     async function handleSearch(e){
         e.preventDefault();
-        const query = document.getElementById('nslookupSearch').value;
-        document.getElementById('nslookupSearch').value = '';
-        await handleNslookupSearch(query);
+        let queryElement = document.getElementById('nslookupSearch');
+        let query = queryElement.value.trim();
+        if (query !== null && query.length > 0) {
+            queryElement.value = '';
+            await handleNslookupSearch(query);
+
+        }
     }
 
     return (
@@ -76,7 +80,7 @@ export default function Nslookup() {
                         id={'nslookupSearch'}
                         inputProps={{ 'aria-label': 'nslookup lookup search' }}
                     />
-                    <IconButton onClick={handleSearch} type="button" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={e => handleSearch(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

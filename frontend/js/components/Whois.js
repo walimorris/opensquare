@@ -57,9 +57,12 @@ export default function Whois() {
 
     async function handleSearch(e){
         e.preventDefault();
-        const query = document.getElementById('whoisSearch').value;
-        document.getElementById('whoisSearch').value = '';
-        await handleWhoisDomainSearch(query);
+        let queryElement = document.getElementById('whoisSearch');
+        let query = queryElement.value.trim();
+        if (query !== null && query.length > 0) {
+            queryElement.value = '';
+            await handleWhoisDomainSearch(query);
+        }
     }
 
     function handleBrowserOpener(e) {
@@ -90,7 +93,7 @@ export default function Whois() {
                         id={'whoisSearch'}
                         inputProps={{ 'aria-label': 'whois lookup search' }}
                     />
-                    <IconButton onClick={handleSearch} type="button" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={e => handleSearch(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

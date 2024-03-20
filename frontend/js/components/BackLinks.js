@@ -55,9 +55,13 @@ export default function BackLinks() {
 
     async function handleSearch(e){
         e.preventDefault();
-        const query = document.getElementById('backlinksSearch').value;
-        document.getElementById('backlinksSearch').value = '';
-        await handleBacklinksSearch(query);
+        let queryElement = document.getElementById('backlinksSearch');
+        let query = queryElement.value.trim();
+        if (query !== null && query.length > 0) {
+            queryElement.value = '';
+            await handleBacklinksSearch(query);
+
+        }
     }
 
     return (
@@ -75,7 +79,7 @@ export default function BackLinks() {
                         id={'backlinksSearch'}
                         inputProps={{ 'aria-label': 'backlink search' }}
                     />
-                    <IconButton onClick={handleSearch} type="button" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={e => handleSearch(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
