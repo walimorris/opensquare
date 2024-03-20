@@ -10,13 +10,12 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import PropTypes from 'prop-types';
 import YouTubeVideoCard from "./YouTubeVideoCard";
-
-const React = require('react');
+import {Checkbox, FormControlLabel} from "@mui/material";
+import * as React from 'react';
 
 const YouTubePlatform = ({isSelected}) => {
     const kafkaTask = "video-search";
@@ -27,9 +26,12 @@ const YouTubePlatform = ({isSelected}) => {
     const [inProgress, setInProgress] = useState(false);
 
     // search
-    const [vectorSearchQuery, setVectorSearchQuery] = useState('');
-    const [updatedVectorSearchQuery, setUpdatedVectorSearchQuery] = useState(vectorSearchQuery);
-    const [vectorYouTubeSearchResults, setVectorYouTubeSearchResults] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [youTubeSearchResults, setYouTubeSearchResults] = useState([]);
+
+    // checkbox
+    const [checked, setChecked] = React.useState(true);
+    const [searchHint, setSearchHint] = React.useState('Enter VideoId');
 
     const UNDER_SCORE = '_';
     const EMPTY_SPACE = ' ';
@@ -63,14 +65,20 @@ const YouTubePlatform = ({isSelected}) => {
         },
     }));
 
-    async function onVectorYouTubeSearchSubmit(e) {
+    async function onSearchSubmit(e) {
         e.preventDefault();
-        setVectorSearchQuery(vectorSearchQuery);
         let queryElement = document.getElementById('youtubeSearch');
         let query = queryElement.value.trim();
         if (query !== null && query.length > 0) {
+            setSearchQuery(searchQuery);
             queryElement.value = '';
-            const vectorSearchResults = await handleVectorYouTubeSearch();
+            if (!checked) {
+                await handleVectorYouTubeSearch();
+            } else {
+                // TODO: need to handle searches with kafka when video is not present in storage.
+                // because of long process of creating embeddings, transcript and segments.
+                await handleOpenSearchForYouTubeVideoId();
+            }
         }
     }
 
@@ -134,7 +142,7 @@ const YouTubePlatform = ({isSelected}) => {
     }
 
     function onChange(e) {
-        setVectorSearchQuery(e.target.value);
+        setSearchQuery(e.target.value);
     }
 
     function getAxiosConfiguration() {
@@ -145,21 +153,29 @@ const YouTubePlatform = ({isSelected}) => {
     }
 
     useEffect(() => {
-        console.log(vectorYouTubeSearchResults.data);
-    }, [vectorYouTubeSearchResults.data]);
+        console.log(youTubeSearchResults.data);
+    }, [youTubeSearchResults.data]);
+
+    const handleChange = (e) => {
+        let isChecked = e.target.checked;
+        setChecked(isChecked);
+        if (isChecked) {
+            setSearchHint('Enter VideoId');
+        } else {
+            setSearchHint('Enter Search Query');
+        }
+    };
 
     async function handleVectorYouTubeSearch() {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(
-                    axios.get(`/opensquare/api/youtube/en/transcripts/search?q=${vectorSearchQuery}`, getAxiosConfiguration())
+                    axios.get(`/opensquare/api/youtube/en/transcripts/search?q=${searchQuery}`, getAxiosConfiguration())
                         .then(response => {
-                            console.log(response.data);
-                            setVectorYouTubeSearchResults(response.data);
+                            setYouTubeSearchResults(response.data);
                             if (response.data !== null) {
                                 return response;
                             }
-                            console.log(`passed data: ${vectorSearchQuery}`);
                         })
                         .catch(error => {
                             console.log(error);
@@ -193,13 +209,13 @@ const YouTubePlatform = ({isSelected}) => {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(
-                    axios.get(`/opensentop/api/youtube/video_search?videoId=${videoId}&name=${kafkaTask}`, getAxiosConfiguration())
+                    axios.get(`/opensquare/api/youtube/en/video?videoId=${searchQuery}`, getAxiosConfiguration())
                         .then(response => {
-                            console.log(response.data);
+                            const singletonList = [response.data];
+                            setYouTubeSearchResults(singletonList);
                             if (response.data !== null) {
                                 return response;
                             }
-                            console.log(`passed data: ${videoId}`);
                         })
                         .catch(error => {
                             console.log(error);
@@ -243,18 +259,28 @@ const YouTubePlatform = ({isSelected}) => {
                     <InputBase
                         fullWidth={true}
                         sx={{ ml: 1, flex: 1 }}
-                        placeholder="Video Search"
+                        placeholder={searchHint}
                         id={'youtubeSearch'}
                         onChange={onChange}
                         inputProps={{ 'aria-label': 'youtube video search' }}
                     />
-                    <IconButton onClick={e => onVectorYouTubeSearchSubmit(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={e => onSearchSubmit(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
+                    <FormControlLabel
+                        label="Search by VideoId"
+                        control={
+                            <Checkbox
+                                checked={checked}
+                                onChange={handleChange}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                        }
+                    />
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
                 </Paper>
-                { vectorYouTubeSearchResults.length > 0 && <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
-                    { vectorYouTubeSearchResults.map(video => (
+                { youTubeSearchResults.length > 0 && <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                    { youTubeSearchResults.map(video => (
                         <YouTubeVideoCard video={video} />))}
                 </Box>}
             </Grid>
