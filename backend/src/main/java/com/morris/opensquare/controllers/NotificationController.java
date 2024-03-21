@@ -23,7 +23,7 @@ public class NotificationController {
     private final LoggerService loggerService;
     private final NotificationService notificationService;
 
-    private final static long REEVALUATE = 2;
+    private final static long REEVALUATION_IN_MINUTES = 15;
     private final static String GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS = "global-notification-insert-time-millis";
     private final static String GLOBAL_NOTIFICATIONS = "global-notifications";
 
@@ -91,7 +91,7 @@ public class NotificationController {
             long runningTimeInMinutes = (runningTime / 1000) / 60;
             LOGGER.info("Global Notifications last evaluated '{}' minutes ago", runningTimeInMinutes);
 
-            if (runningTimeInMinutes >= REEVALUATE) {
+            if (runningTimeInMinutes >= REEVALUATION_IN_MINUTES) {
                 session.removeAttribute(GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS);
                 return true;
             }
