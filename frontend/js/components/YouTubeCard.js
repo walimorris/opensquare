@@ -25,7 +25,7 @@ export default function YouTubeCard() {
                     <br></br>
                     <br></br>
                     Opensquare's YouTube Platform allows agents to search within our databases for
-                    video's, providing detailed information about the channel and it's content.
+                    videos, providing detailed information about the channel and it's content.
                     Searched video results provide a full detailed log and transcripts. You have
                     the option to search videos based on terms, and the most relevant video's will
                     be provided. This is powered by a strong vector database that creates text

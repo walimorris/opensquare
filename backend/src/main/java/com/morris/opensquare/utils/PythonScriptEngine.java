@@ -96,8 +96,6 @@ public class PythonScriptEngine {
         }
         return embeddingResults;
     }
-
-    // TODO: Parse possible python errors and ensure those are propagated to Spring error handling
     public List<YouTubeTranscribeSegment> processPythonTranscribeScript(String url) {
         LOGGER.info("Hit PythonScriptEngine");
         List<String> results;
