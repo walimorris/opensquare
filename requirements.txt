@@ -4,3 +4,9 @@ pytube
 fastapi
 uvicorn
 openai
+datasets
+langchain
+langchain-mongodb
+langchain-openai
+pymongo
+pandas
