@@ -5,6 +5,7 @@ import com.morris.opensquare.models.exceptions.PythonScriptEngineRunTimeExceptio
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.services.loggers.LoggerService;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +54,10 @@ public class PythonScriptEngine {
         this.loggerService = loggerService;
     }
 
-    // TODO: return something about throwing possible error because it can return the actual error string
-    // TODO: which is a logic error
     public String processYouTubeRAGChain(@NonNull YouTubeRagChainProperties properties) {
         LOGGER.info("Hit PythonScriptEngine: YouTubeRAGChain");
         String resolvedScript = resolvePythonScriptPath(YOUTUBE_RAG_CHAIN_SCRIPT);
+        List<String> result;
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(
                     PYTHON, resolvedScript,
@@ -68,9 +68,13 @@ public class PythonScriptEngine {
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
-            String result = readProcessOutputToString(process.getInputStream());
-            throwPossibleErrorAndPrintStatements(result);
-            return result;
+            result = readProcessOutput(process.getInputStream());
+            boolean isError = thrownPossibleErrorAndPrintStatements(result);
+
+            if (isError) {
+                return null;
+            }
+            return String.join("", result);
         } catch (IOException e) {
             loggerService.saveLog(
                     e.getClass().getName(),
@@ -84,16 +88,11 @@ public class PythonScriptEngine {
     public List<Double> processPythonOpenAiAda002TextEmbeddingScript(String key, String text) {
         LOGGER.info("Hit PythonScriptEngine: Text-Embedding-ADA-002");
         String resolvedPytonFile = resolvePythonScriptPath(OPENAI_TEXT_EMBEDDING_ADA_002_SCRIPT);
-        List<String> results;
+        List<String> results = null;
         if (key != null && text != null) {
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, key, text);
-                processBuilder.redirectErrorStream(true);
-
-                Process process = processBuilder.start();
-                results = readProcessOutput(process.getInputStream());
-                throwPossibleErrorAndPrintStatements(results);
-                return getAda002Embeddings(results);
+                results = getStrings(key, resolvedPytonFile, text);
+                if (results == null) return null;
 
             } catch (IOException e) {
                 loggerService.saveLog(
@@ -103,7 +102,34 @@ public class PythonScriptEngine {
                 );
             }
         }
-        return null;
+        return results != null ? getAda002Embeddings(results) : null;
+    }
+
+    public List<YouTubeTranscribeSegment> processPythonTranscribeScript(String url) {
+        LOGGER.info("Hit PythonScriptEngine");
+        List<String> results;
+        List<YouTubeTranscribeSegment> output = null;
+        String urlArg = "";
+        String resolvedPytonFile = resolvePythonScriptPath(YOUTUBE_TRANSCRIBE_SCRIPT);
+        String resolvedVideoTempPath = resolvePath(TEMP_VIDEO_PATH);
+
+        if (url !=  null) {
+            urlArg = url;
+        }
+
+        try {
+            results = getStrings(urlArg, resolvedPytonFile, resolvedVideoTempPath);
+            if (results == null) return null;
+            output = getSegments(results);
+
+        } catch (IOException e) {
+            loggerService.saveLog(
+                    e.getClass().getName(),
+                    "Script Engine Error with file[" + resolvedPytonFile + "]: " + e.getMessage(),
+                    Optional.of(LOGGER)
+            );
+        }
+        return output;
     }
 
     private List<Double> getAda002Embeddings(List<String> stream) {
@@ -127,37 +153,21 @@ public class PythonScriptEngine {
         }
         return embeddingResults;
     }
-    public List<YouTubeTranscribeSegment> processPythonTranscribeScript(String url) {
-        LOGGER.info("Hit PythonScriptEngine");
+
+    @Nullable
+    private List<String> getStrings(String urlArg, String resolvedPytonFile, String resolvedVideoTempPath) throws IOException {
         List<String> results;
-        List<YouTubeTranscribeSegment> output = null;
-        String urlArg = "";
-        String resolvedPytonFile = resolvePythonScriptPath(YOUTUBE_TRANSCRIBE_SCRIPT);
-        String resolvedVideoTempPath = resolvePath(TEMP_VIDEO_PATH);
+        ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, urlArg, resolvedVideoTempPath);
+        processBuilder.redirectErrorStream(true);
 
-        if (url !=  null) {
-            urlArg = url;
+        Process process = processBuilder.start();
+        results = readProcessOutput(process.getInputStream());
+        boolean isError = thrownPossibleErrorAndPrintStatements(results);
+        if (isError) {
+            return null;
         }
-
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedPytonFile, urlArg, resolvedVideoTempPath);
-            processBuilder.redirectErrorStream(true);
-
-            Process process = processBuilder.start();
-            results = readProcessOutput(process.getInputStream());
-            throwPossibleErrorAndPrintStatements(results);
-            output = getSegments(results);
-
-        } catch (IOException e) {
-            loggerService.saveLog(
-                    e.getClass().getName(),
-                    "Script Engine Error with file[" + resolvedPytonFile + "]: " + e.getMessage(),
-                    Optional.of(LOGGER)
-            );
-        }
-        return output;
+        return results;
     }
-
 
     // {'time': 141.44, 'text': ' Thanks for watching, and I will see you in the next one.'}
     private List<YouTubeTranscribeSegment> getSegments(List<String> pythonOutputStream) {
@@ -193,7 +203,7 @@ public class PythonScriptEngine {
                 .replace("'}", "\"}");
     }
 
-    private void throwPossibleErrorAndPrintStatements(List<String> pythonOutputStream) {
+    private boolean thrownPossibleErrorAndPrintStatements(List<String> pythonOutputStream) {
         StringBuilder builder = new StringBuilder();
         boolean error = false;
         for (String line : pythonOutputStream) {
@@ -205,13 +215,7 @@ public class PythonScriptEngine {
         if (error) {
             throw new PythonScriptEngineRunTimeException(builder.toString(), new IOException());
         }
-    }
-
-    private void throwPossibleErrorAndPrintStatements(String pythonOutputStreamString) {
-        boolean error = pythonOutputStreamString.contains("Traceback");
-        if (error) {
-            throw new PythonScriptEngineRunTimeException(pythonOutputStreamString, new IOException());
-        }
+        return error;
     }
 
     private String resolvePythonScriptPath(String filename) {
@@ -227,12 +231,6 @@ public class PythonScriptEngine {
     private List<String> readProcessOutput(InputStream inputStream) throws IOException {
         try (BufferedReader output = new BufferedReader(new InputStreamReader(inputStream))) {
             return output.lines().collect(Collectors.toList());
-        }
-    }
-
-    private String readProcessOutputToString(InputStream inputStream) throws IOException {
-        try (BufferedReader output = new BufferedReader(new InputStreamReader(inputStream))) {
-            return output.lines().collect(Collectors.joining());
         }
     }
 }
