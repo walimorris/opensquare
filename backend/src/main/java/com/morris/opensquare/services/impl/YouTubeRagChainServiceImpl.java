@@ -1,6 +1,7 @@
 package com.morris.opensquare.services.impl;
 
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
+import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 import com.morris.opensquare.services.RagChainService;
 import com.morris.opensquare.services.loggers.LoggerService;
 import com.morris.opensquare.utils.PythonScriptEngine;
@@ -27,8 +28,12 @@ public class YouTubeRagChainServiceImpl implements RagChainService {
 
     @Override
     public String promptResponse(String prompt) {
-        String mongodbUri = applicationPropertiesConfiguration.mongodbUri();
-        String openaiKey = applicationPropertiesConfiguration.openAI();
-        return pythonScriptEngine.processYouTubeRAGChain(mongodbUri, openaiKey, prompt);
+        return pythonScriptEngine.processYouTubeRAGChain(
+                new YouTubeRagChainProperties.Builder()
+                .mongodbUri(applicationPropertiesConfiguration.mongodbUri())
+                .openaiKey(applicationPropertiesConfiguration.openAI())
+                .prompt(prompt)
+                .build()
+        );
     }
 }

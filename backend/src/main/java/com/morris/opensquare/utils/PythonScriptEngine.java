@@ -2,11 +2,13 @@ package com.morris.opensquare.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.morris.opensquare.models.exceptions.PythonScriptEngineRunTimeException;
+import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.services.loggers.LoggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -53,25 +55,28 @@ public class PythonScriptEngine {
 
     // TODO: return something about throwing possible error because it can return the actual error string
     // TODO: which is a logic error
-    public String processYouTubeRAGChain(String mongodbUri, String key, String query) {
+    public String processYouTubeRAGChain(@NonNull YouTubeRagChainProperties properties) {
         LOGGER.info("Hit PythonScriptEngine: YouTubeRAGChain");
         String resolvedScript = resolvePythonScriptPath(YOUTUBE_RAG_CHAIN_SCRIPT);
-        if (mongodbUri != null && key != null && query != null) {
-            try {
-                ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedScript, mongodbUri, key, query);
-                processBuilder.redirectErrorStream(true);
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    PYTHON, resolvedScript,
+                    properties.getMongodbUri(),
+                    properties.getOpenaiKey(),
+                    properties.getPrompt()
+            );
+            processBuilder.redirectErrorStream(true);
 
-                Process process = processBuilder.start();
-                String result = readProcessOutputToString(process.getInputStream());
-                throwPossibleErrorAndPrintStatements(result);
-                return result;
-            } catch (IOException e) {
-                loggerService.saveLog(
-                        e.getClass().getName(),
-                        "Script Engine Error with file[" + resolvedScript + "]: " + e.getMessage(),
-                        Optional.of(LOGGER)
-                );
-            }
+            Process process = processBuilder.start();
+            String result = readProcessOutputToString(process.getInputStream());
+            throwPossibleErrorAndPrintStatements(result);
+            return result;
+        } catch (IOException e) {
+            loggerService.saveLog(
+                    e.getClass().getName(),
+                    "Script Engine Error with file[" + resolvedScript + "]: " + e.getMessage(),
+                    Optional.of(LOGGER)
+            );
         }
         return null;
     }
