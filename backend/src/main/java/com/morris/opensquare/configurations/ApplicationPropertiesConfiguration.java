@@ -51,6 +51,9 @@ public class ApplicationPropertiesConfiguration {
     @Value("${secrets.openAI}")
     private String openAI;
 
+    @Value("${secrets.mongodbUri}")
+    private String mongodbUri;
+
     @Bean
     public String region() {
         return this.region;
@@ -101,4 +104,6 @@ public class ApplicationPropertiesConfiguration {
     @Bean
     public String openAI() { return this.openAI; }
 
+    @Bean
+    public String mongodbUri() { return this.mongodbUri; }
 }

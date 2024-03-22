@@ -43,11 +43,37 @@ public class PythonScriptEngine {
     private static final String TEMP_VIDEO_PATH = "backend/src/main/resources/videos/";
     private static final String YOUTUBE_TRANSCRIBE_SCRIPT = "transcribe_youtube_video.py";
     private static final String OPENAI_TEXT_EMBEDDING_ADA_002_SCRIPT = "text_embedding_ada_002.py";
+    private static final String YOUTUBE_RAG_CHAIN_SCRIPT = "chatbot/youtube_vector_store_rag_chain.py";
     private final LoggerService loggerService;
 
     @Autowired
     private PythonScriptEngine(LoggerService loggerService) {
         this.loggerService = loggerService;
+    }
+
+    // TODO: return something about throwing possible error because it can return the actual error string
+    // TODO: which is a logic error
+    public String processYouTubeRAGChain(String mongodbUri, String key, String query) {
+        LOGGER.info("Hit PythonScriptEngine: YouTubeRAGChain");
+        String resolvedScript = resolvePythonScriptPath(YOUTUBE_RAG_CHAIN_SCRIPT);
+        if (mongodbUri != null && key != null && query != null) {
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder(PYTHON, resolvedScript, mongodbUri, key, query);
+                processBuilder.redirectErrorStream(true);
+
+                Process process = processBuilder.start();
+                String result = readProcessOutputToString(process.getInputStream());
+                throwPossibleErrorAndPrintStatements(result);
+                return result;
+            } catch (IOException e) {
+                loggerService.saveLog(
+                        e.getClass().getName(),
+                        "Script Engine Error with file[" + resolvedScript + "]: " + e.getMessage(),
+                        Optional.of(LOGGER)
+                );
+            }
+        }
+        return null;
     }
 
     public List<Double> processPythonOpenAiAda002TextEmbeddingScript(String key, String text) {
@@ -176,6 +202,13 @@ public class PythonScriptEngine {
         }
     }
 
+    private void throwPossibleErrorAndPrintStatements(String pythonOutputStreamString) {
+        boolean error = pythonOutputStreamString.contains("Traceback");
+        if (error) {
+            throw new PythonScriptEngineRunTimeException(pythonOutputStreamString, new IOException());
+        }
+    }
+
     private String resolvePythonScriptPath(String filename) {
         File file = new File(PYTHON_RESOURCE_PATH + filename);
         return file.getAbsolutePath();
@@ -189,6 +222,12 @@ public class PythonScriptEngine {
     private List<String> readProcessOutput(InputStream inputStream) throws IOException {
         try (BufferedReader output = new BufferedReader(new InputStreamReader(inputStream))) {
             return output.lines().collect(Collectors.toList());
+        }
+    }
+
+    private String readProcessOutputToString(InputStream inputStream) throws IOException {
+        try (BufferedReader output = new BufferedReader(new InputStreamReader(inputStream))) {
+            return output.lines().collect(Collectors.joining());
         }
     }
 }
