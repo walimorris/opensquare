@@ -16,6 +16,8 @@ import PropTypes from 'prop-types';
 import YouTubeVideoCard from "./YouTubeVideoCard";
 import {Checkbox, FormControlLabel} from "@mui/material";
 import * as React from 'react';
+import ChatDisplay from "./ChatDisplay";
+import ChatDisplayAnchor from "./ChatDisplayAnchor";
 
 const YouTubePlatform = ({isSelected}) => {
     const kafkaTask = "video-search";
@@ -252,6 +254,7 @@ const YouTubePlatform = ({isSelected}) => {
         <React.Fragment>
             <Grid item xs={12} justifyContent='center' alignItems='center'>
                 <YouTubeCard />
+                <ChatDisplayAnchor />
                 <Paper
                     component="form"
                     sx={{ p: '2px 4px', display: 'flex', width: '95%', marginLeft: '2.5%', marginTop: '5%', backgroundColor: 'tertiary' }}

@@ -14,6 +14,11 @@ const getCurrentDate = () => {
     return `as of ${day} ${month}, ${year}`;
 }
 
+const getCurrentTime = () => {
+    const time = new Date();
+    return time.toTimeString().split(" ")[0];
+}
+
 const getMonthString = (monthInt) => {
     switch (monthInt) {
         case 0:
@@ -46,5 +51,6 @@ const getMonthString = (monthInt) => {
 export default {
     getPublishDate,
     getCurrentDate,
-    getMonthString
+    getMonthString,
+    getCurrentTime
 };
