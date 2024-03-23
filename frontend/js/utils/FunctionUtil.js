@@ -19,6 +19,10 @@ const getCurrentTime = () => {
     return time.toTimeString().split(" ")[0];
 }
 
+const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+}
+
 const getMonthString = (monthInt) => {
     switch (monthInt) {
         case 0:
@@ -52,5 +56,6 @@ export default {
     getPublishDate,
     getCurrentDate,
     getMonthString,
-    getCurrentTime
+    getCurrentTime,
+    getRandomInt
 };
