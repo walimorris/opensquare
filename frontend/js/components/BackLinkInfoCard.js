@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import StringUtil from "../utils/StringUtil";
 
 export default function BackLinkInfoCard() {
     return (
@@ -19,11 +20,8 @@ export default function BackLinkInfoCard() {
                     Backlink Chain
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    OpenSquare digital targeting tools provides this backlink tool that gives you
-                    the ability to query a url and expose its backlinks. A backlink is a link from
-                    some other website (the referrer) to that web resource (the referent). A web
-                    resource may be (for example) a website, web page, or web directory. Opensquare
-                    uses <a target='_blank' href="https://support.google.com/webmasters/answer/9049606?hl=en">Google's</a> powerful indexing capabilities to provide this service.
+                    {StringUtil.backlinkInfo}
+                    <a target='_blank' href="https://support.google.com/webmasters/answer/9049606?hl=en">Google's</a> powerful indexing capabilities to provide this service.
                     <br></br>
                     <br></br>
                     <b>Tips for Inquiry:</b><br></br>

@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import StringUtil from "../utils/StringUtil";
 
 export default function NslookupCard() {
     return (
@@ -18,11 +19,7 @@ export default function NslookupCard() {
                 <Typography gutterBottom variant="h5" component="div">
                     NSLookup
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    OpenSquare digital targeting tools provides this lookup tool that gives you
-                    the ability to query the Domain Name System to obtain the mapping between
-                    domain name and IP address, or other DNS records.
-                </Typography>
+                <Typography variant="body2" color="text.secondary">{StringUtil.nslookupInfo}</Typography>
             </CardContent>
             <CardActions>
                 <Button target='_blank' href="https://docs.oracle.com/cd/E88353_01/html/E37839/nslookup-1.html" size="small">Learn More</Button>

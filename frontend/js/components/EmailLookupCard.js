@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import StringUtil from "../utils/StringUtil";
 
 export default function EmailLookupCard() {
     return (
@@ -18,12 +19,7 @@ export default function EmailLookupCard() {
                 <Typography gutterBottom variant="h5" component="div">
                     Email Lookup
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    OpenSquare digital targeting tools provides this lookup tool that gives you
-                    the ability to query our databases for disposable email domains. This feature
-                    also provides lookup capabilities for known malicious email addresses. If you
-                    have information for known domains or addresses that our databases don't have,
-                    please email our team at <b>opensentop@gmail.com</b>.
+                <Typography variant="body2" color="text.secondary">{StringUtil.emailLookupInfo}<b>opensentop@gmail.com</b>.
                 </Typography>
             </CardContent>
             <CardActions>

@@ -1,3 +1,5 @@
+import StringUtil from "./StringUtil";
+
 const getPublishDate = (dateStr) => {
     const date = new Date(Date.parse(dateStr));
     let day = date.getDate();
@@ -28,17 +30,9 @@ function random(mn, mx) {
 }
 
 function randomGreeting() {
-    return greetings[Math.floor(random(1, greetings.length + 1)) - 1];
+    const len = StringUtil.greetings.length;
+    return StringUtil.greetings[Math.floor(random(1, len + 1)) - 1];
 }
-
-const greetings = [
-    "How can I assist with your search today?",
-    "Back already?",
-    "Welcome back!",
-    "What can I do for you?",
-    "Miss me already, what's up?",
-    "Yo!"
-];
 
 const getMonthString = (monthInt) => {
     switch (monthInt) {

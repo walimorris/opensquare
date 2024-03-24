@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import StringUtil from "../utils/StringUtil";
 
 export default function WhoisCard() {
     return (
@@ -18,11 +19,7 @@ export default function WhoisCard() {
                 <Typography gutterBottom variant="h5" component="div">
                     Whois
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    OpenSquare digital targeting tools provides this lookup tool that gives you
-                    the ability to lookup the current registration data for domain names and
-                    internet number resources. This tool uses the WHOIS (port 43) protocol.
-                </Typography>
+                <Typography variant="body2" color="text.secondary">{StringUtil.whoisInfo}</Typography>
             </CardContent>
             <CardActions>
                 <Button target='_blank' href="https://lookup.icann.org/en" size="small">Learn More</Button>
