@@ -15,23 +15,6 @@ export default function ChatDisplay() {
     const [messages, setMessages] = useState([]);
     const [initialPromptRendered, setInitialPromptRendered] = useState(false);
 
-    const greetings = [
-        "How can I assist with your search today?",
-        "Back already?",
-        "Welcome back!",
-        "What can I do for you?",
-        "Miss me already, what's up?",
-        "Yo!"
-    ];
-
-    function random(mn, mx) {
-        return Math.random() * (mx - mn) + mn;
-    }
-
-    function randomGreeting() {
-        return greetings[Math.floor(random(1, greetings.length + 1)) - 1];
-    }
-
     /**
      * Each message is serialized into a plain JavaScript object before storing them in localStorage.
      * When retrieving messages from localStorage, each object is deserialized back into a React element
@@ -85,7 +68,7 @@ export default function ChatDisplay() {
 
     useEffect(() => {
         if (isAnchorOpen && !initialPromptRendered) {
-            createPromptResponse(randomGreeting());
+            createPromptResponse(FunctionUtil.randomGreeting());
             setInitialPromptRendered(true);
         }
     }, [isAnchorOpen, messages, initialPromptRendered]);
