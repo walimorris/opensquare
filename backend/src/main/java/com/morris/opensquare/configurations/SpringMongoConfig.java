@@ -1,11 +1,19 @@
 package com.morris.opensquare.configurations;
 
+import com.mongodb.MongoClientSettings;
+import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
+import com.morris.opensquare.models.youtube.YouTubeVideo;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Configuration
 public class SpringMongoConfig {
@@ -23,5 +31,17 @@ public class SpringMongoConfig {
     public MongoTemplate mongoTemplate(MongoDatabaseFactory databaseFactory, MappingMongoConverter converter) {
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         return new MongoTemplate(databaseFactory, converter);
+    }
+
+    @Bean
+    public CodecRegistry codecRegistry() {
+        return fromRegistries(
+                MongoClientSettings.getDefaultCodecRegistry(),
+                fromProviders(
+                        PojoCodecProvider.builder()
+                                .register(YouTubeVideo.class, YouTubeTranscribeSegment.class)
+                                .build()
+                )
+        );
     }
 }

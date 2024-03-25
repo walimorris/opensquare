@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.search.FieldSearchPath;
@@ -20,7 +19,6 @@ import com.morris.opensquare.utils.ExternalServiceUtil;
 import com.morris.opensquare.utils.JsonValidationUtil;
 import com.morris.opensquare.utils.PythonScriptEngine;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
@@ -42,8 +40,6 @@ import static com.mongodb.client.model.Aggregates.vectorSearch;
 import static com.mongodb.client.model.Projections.*;
 import static com.morris.opensquare.utils.Constants.REGEX_EMPTY;
 import static java.util.Arrays.asList;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Service
 public class YouTubeServiceImpl implements YouTubeService {
@@ -80,11 +76,12 @@ public class YouTubeServiceImpl implements YouTubeService {
     private final PythonScriptEngine pythonScriptEngine;
     private final YouTubeVideoRepository youTubeVideoRepository;
     private final MongoTemplate mongoTemplate;
+    private final CodecRegistry codecRegistry;
 
     @Autowired
     public YouTubeServiceImpl(ExternalServiceUtil externalServiceUtil, LoggerService loggerService,
                               PythonScriptEngine pythonScriptEngine, YouTubeVideoRepository youTubeVideoRepository,
-                              MongoTemplate mongoTemplate, JsonValidationUtil jsonValidationUtil) {
+                              MongoTemplate mongoTemplate, JsonValidationUtil jsonValidationUtil, CodecRegistry codecRegistry) {
 
         this.externalServiceUtil = externalServiceUtil;
         this.jsonValidationUtil = jsonValidationUtil;
@@ -92,6 +89,7 @@ public class YouTubeServiceImpl implements YouTubeService {
         this.pythonScriptEngine = pythonScriptEngine;
         this.youTubeVideoRepository = youTubeVideoRepository;
         this.mongoTemplate = mongoTemplate;
+        this.codecRegistry = codecRegistry;
     }
 
     @Override
@@ -355,17 +353,7 @@ public class YouTubeServiceImpl implements YouTubeService {
         if (!searchQuery.isEmpty()) {
             List<Double> searchQueryEmbeddings = getTextEmbeddingsAda002(key, searchQuery);
             if (!searchQueryEmbeddings.isEmpty()) {
-
-                // TODO: refactor registry to config
-                CodecRegistry myRegistry = fromRegistries(
-                        MongoClientSettings.getDefaultCodecRegistry(),
-                        fromProviders(
-                                PojoCodecProvider.builder()
-                                        .register(YouTubeVideo.class, YouTubeTranscribeSegment.class)
-                                        .build()
-                        )
-                );
-                MongoDatabase db = mongoTemplate.getDb().withCodecRegistry(myRegistry);
+                MongoDatabase db = mongoTemplate.getDb().withCodecRegistry(codecRegistry);
                 MongoCollection<YouTubeVideo> collection = db.getCollection(YOUTUBE_VIDEOS_COLLECTION, YouTubeVideo.class);
                 FieldSearchPath fieldSearchPath = SearchPath.fieldPath(YOUTUBE_VECTOR_SEARCH_PATH);
                 int candidates = 200, limit = 10;
