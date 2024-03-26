@@ -27,6 +27,9 @@ public class YouTubeRagChainController {
         this.ragChainService = youTubeRagChainService;
     }
 
+    // TODO: add a parameter that scans for some sort of trigger that allows user to prompt Viki
+    // TODO: to complete an adhoc video addition that'll collect the videoId and add the YouTube
+    // TODO: video to storage. Viki should also response accordingly
     @GetMapping("/chat")
     public ResponseEntity<String> getPromptResponse(@RequestParam String prompt) {
         String promptResponse = ragChainService.promptResponse(prompt);
