@@ -139,8 +139,8 @@ export default function ChatDisplay() {
 
     /**
      * Sets chatbox scroll to bottom when it's opened or a new message is appended.
-     * The opposite (default) effect is that the scroll is always set to the top.
-     * This is not a good user experience.
+     * It should be noted that this effects the scrollbar in the ChatDisplayAnchor
+     * element, which happens to be the parent element of the overall chatbox element.
      */
     function setChatScroll() {
         const chatboxDisplay = document.getElementById(CHAT_BOT_DISPLAY);
