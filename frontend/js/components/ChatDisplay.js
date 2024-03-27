@@ -101,7 +101,7 @@ export default function ChatDisplay() {
         const promptMessage = <MessageRight
             message={prompt}
             timestamp={FunctionUtil.getCurrentTime()}
-            photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+            photoURL="/images/professional_me.jpeg"
             displayName="Me"
             avatarDisp={true}
         />;
@@ -115,7 +115,7 @@ export default function ChatDisplay() {
         const promptResponse = <MessageLeft
             message={response}
             timestamp={FunctionUtil.getCurrentTime()}
-            photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+            photoURL="/images/viki-avatar.jpeg"
             displayName="Viki"
             avatarDisp={true}
         />;
