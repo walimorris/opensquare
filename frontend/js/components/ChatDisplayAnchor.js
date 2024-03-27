@@ -15,7 +15,7 @@ export default function ChatDisplayAnchor() {
     };
 
     const chat = (anchor) => (
-        <Box role="presentation">
+        <Box id="chatbox-display" role="presentation">
             <ChatDisplay />
         </Box>
     );

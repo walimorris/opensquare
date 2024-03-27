@@ -15,6 +15,8 @@ export default function ChatDisplay() {
     const [messages, setMessages] = useState([]);
     const [initialPromptRendered, setInitialPromptRendered] = useState(false);
 
+    const CHAT_BOT_DISPLAY = 'chatbox-display';
+
     /**
      * Each message is serialized into a plain JavaScript object before storing them in localStorage.
      * When retrieving messages from localStorage, each object is deserialized back into a React element
@@ -49,6 +51,7 @@ export default function ChatDisplay() {
                 }
             });
             setMessages(deserializedMessages);
+            setChatScroll();
         }
     }, []);
 
@@ -71,6 +74,7 @@ export default function ChatDisplay() {
             createPromptResponse(FunctionUtil.randomGreeting());
             setInitialPromptRendered(true);
         }
+        setChatScroll();
     }, [isAnchorOpen, messages, initialPromptRendered]);
 
     function getAxiosConfiguration() {
@@ -133,9 +137,20 @@ export default function ChatDisplay() {
         }
     }
 
+    /**
+     * Sets chatbox scroll to bottom when it's opened or a new message is appended.
+     * The opposite (default) effect is that the scroll is always set to the top.
+     * This is not a good user experience.
+     */
+    function setChatScroll() {
+        const chatboxDisplay = document.getElementById(CHAT_BOT_DISPLAY);
+        const chatToggleElement = chatboxDisplay.parentElement;
+        chatToggleElement.scrollTop = chatToggleElement.scrollHeight;
+    }
+
     return (
         <div style={{ width: "50vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Paper>
+            <Paper id="chatbox" onChange={setChatScroll}>
                 <Paper id="style-1" sx={{ width: "calc( 100% - 20px )", margin: 10, overflowY: "scroll", height: "calc( 100% - 80px )" }}>
                     {messages.map((message, index) => (
                         <div key={index}>{message}</div> // Wrap each message in a <div>
