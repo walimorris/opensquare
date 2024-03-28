@@ -1,6 +1,7 @@
 package com.morris.opensquare.controllers;
 
 import com.morris.opensquare.services.RagChainService;
+import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.impl.YouTubeRagChainServiceImpl;
 import com.morris.opensquare.services.loggers.LoggerService;
 import org.slf4j.Logger;
@@ -20,16 +21,15 @@ public class YouTubeRagChainController {
 
     private final LoggerService loggerService;
     private final RagChainService ragChainService;
+    private final YouTubeService youTubeService;
 
     @Autowired
-    public YouTubeRagChainController(LoggerService loggerService, YouTubeRagChainServiceImpl youTubeRagChainService) {
+    public YouTubeRagChainController(LoggerService loggerService, YouTubeService youTubeService, YouTubeRagChainServiceImpl youTubeRagChainService) {
         this.loggerService = loggerService;
+        this.youTubeService = youTubeService;
         this.ragChainService = youTubeRagChainService;
     }
 
-    // TODO: add a parameter that scans for some sort of trigger that allows user to prompt Viki
-    // TODO: to complete an adhoc video addition that'll collect the videoId and add the YouTube
-    // TODO: video to storage. Viki should also response accordingly
     @GetMapping("/chat")
     public ResponseEntity<String> getPromptResponse(@RequestParam String prompt) {
         String promptResponse = ragChainService.promptResponse(prompt);
