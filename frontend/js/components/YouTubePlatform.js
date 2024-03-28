@@ -79,17 +79,14 @@ const YouTubePlatform = ({isSelected}) => {
             } else {
                 // TODO: need to handle searches with kafka when video is not present in storage.
                 // because of long process of creating embeddings, transcript and segments.
-                await handleOpenSearchForYouTubeVideoId();
+                const youtubeSearchResponse = handleOpenSearchForYouTubeVideoId();
+                await pollYouTubeVideoResponse(youtubeSearchResponse);
             }
         }
     }
 
 
-    async function onInputSubmit() {
-        setUpdatedVideoId(videoId);
-        document.getElementById('youtubeSearch').value = '';
-        const youtubeSearchResponse = await handleOpenSearchForYouTubeVideoId();
-        setVideoId('');
+    async function pollYouTubeVideoResponse(youtubeSearchResponse) {
         const youtubePlatformObject = youtubeSearchResponse.data;
         let locationUrl = youtubeSearchResponse.headers.get("Location");
         console.log(locationUrl);
@@ -102,7 +99,7 @@ const YouTubePlatform = ({isSelected}) => {
             if (locationUrl) {
                 setInProgress(true);
 
-                locationUrl = locationUrl.replace("http://localhost:8081", "/opensentop/api");
+                locationUrl = locationUrl.replace("http://localhost:8081", "/opensquare/api");
                 let kafkaProgressResponse = await handleKafkaPoll(locationUrl);
                 let taskPercentage = kafkaProgressResponse.data['percentageComplete'];
                 let taskStatus = kafkaProgressResponse.data['status'];
