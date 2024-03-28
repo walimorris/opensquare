@@ -45,7 +45,7 @@ Question: {question}
 prompt = ChatPromptTemplate.from_template(template)
 
 # Define the model used for chat completion
-model = ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY)
+model = ChatOpenAI(temperature=1, openai_api_key=OPENAI_API_KEY)
 
 # Parse output as string
 parse_output = StrOutputParser()
