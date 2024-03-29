@@ -51,7 +51,9 @@ public class DisposableEmailDomain {
         @Field("domain_name")
         private String domainName;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder id(ObjectId id) {
             this.id = id;

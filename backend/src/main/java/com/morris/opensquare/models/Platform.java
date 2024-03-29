@@ -9,7 +9,7 @@ package com.morris.opensquare.models;
  * Enum as an API Request Param and the Platform will be marshalled to its exact String value.
  */
 public enum Platform {
-    YouTube,
-    Twitter,
-    Vkontakte
+    YOUTUBE,
+    TWITTER,
+    VKONTAKTE
 }

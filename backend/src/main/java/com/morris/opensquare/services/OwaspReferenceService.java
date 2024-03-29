@@ -1,6 +1,6 @@
 package com.morris.opensquare.services;
 
-import com.morris.opensquare.models.Notifications.OwaspBlogSnippet;
+import com.morris.opensquare.models.notifications.OwaspBlogSnippet;
 
 import java.io.IOException;
 

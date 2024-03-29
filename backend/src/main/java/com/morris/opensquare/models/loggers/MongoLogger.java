@@ -72,7 +72,9 @@ public class MongoLogger {
         @Field("created_at")
         private String createdAt;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder id(ObjectId id) {
             this.id = id;

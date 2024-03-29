@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.Notifications;
+package com.morris.opensquare.models.notifications;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -63,7 +63,6 @@ public class GlobalNotification implements Serializable {
     @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     public LocalDateTime getExpiration() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN);
-        System.out.println("parsing: " + this.expiration.toString());
         return LocalDateTime.parse(this.expiration.toString().split("\\.")[0], dateTimeFormatter);
     }
 
@@ -119,7 +118,9 @@ public class GlobalNotification implements Serializable {
         private String sender;
         private OwaspBlogReference owaspRef;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder id(ObjectId id) {
             this.id = id;

@@ -24,7 +24,7 @@ public class EmailValidationController {
 
     @GetMapping("/disposable")
     public ResponseEntity<DisposableEmailDomain> getDisposableEmail(@RequestParam String emailAddress, HttpServletRequest request) {
-        LOGGER.info("Verify Email: " + emailAddress);
+        LOGGER.info("Verify Email: {}", emailAddress);
         DisposableEmailDomain possibleDisposableEmailDomain = emailValidationService.findDisposableEmailDomain(emailAddress);
         if (possibleDisposableEmailDomain != null) {
             return ResponseEntity.ok()
@@ -36,7 +36,7 @@ public class EmailValidationController {
 
     @PostMapping("/add")
     public ResponseEntity<DisposableEmailDomain> addDisposableEmailDomain(@RequestParam String domain, HttpServletRequest request) {
-        LOGGER.info("Email Domain: " + domain);
+        LOGGER.info("Email Domain: {}", domain);
 
         // todo: sanitize
         DisposableEmailDomain disposableEmailDomainResult = emailValidationService.addDisposableEmailDomain(domain);

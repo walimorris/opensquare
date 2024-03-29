@@ -88,6 +88,7 @@ const YouTubePlatform = ({isSelected}) => {
 
     async function pollYouTubeVideoResponse(youtubeSearchResponse) {
         const youtubePlatformObject = youtubeSearchResponse.data;
+        console.log(youtubeSearchResponse)
         let locationUrl = youtubeSearchResponse.headers.get("Location");
         console.log(locationUrl);
 

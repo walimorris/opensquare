@@ -3,12 +3,9 @@ package com.morris.opensquare.services.impl;
 import com.morris.opensquare.models.Status;
 import com.morris.opensquare.models.kafka.OpenSquareTaskStatus;
 import com.morris.opensquare.models.youtube.YouTubeVideoSearchRequest;
-import com.morris.opensquare.services.*;
-import com.morris.opensquare.services.kafka.OpenSquareKafkaConsumerService;
+import com.morris.opensquare.services.TextAnalyzerService;
+import com.morris.opensquare.services.YouTubeTaskService;
 import com.morris.opensquare.services.kafka.OpenSquareKafkaProducerService;
-import com.morris.opensquare.services.trackers.PlatformAnalysisTrackerService;
-import com.morris.opensquare.utils.ApplicationConfigurationUtil;
-import com.morris.opensquare.utils.ExternalServiceUtil;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -29,28 +26,29 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.morris.opensquare.utils.Constants.ERROR_YOUTUBE_TASK_INTERRUPTED;
-import static com.morris.opensquare.utils.Constants.LOWERCASE_YOUTUBE;
 
 @Service
 public class YouTubeTaskServiceImpl implements YouTubeTaskService {
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeTaskServiceImpl.class);
 
-    @Autowired KafkaConsumer<String, OpenSquareTaskStatus> kafkaConsumer;
-    @Autowired OpenSquareKafkaProducerService kafkaProducerService;
-    @Autowired KafkaAdmin kafkaAdmin;
-    @Autowired YouTubeService youTubeService;
-    @Autowired TextAnalyzerService textAnalyzerService;
-    @Autowired FileService fileService;
-    @Autowired ExternalServiceUtil externalServiceUtil;
-    @Autowired ApplicationConfigurationUtil applicationConfigurationUtil;
-    @Autowired SecretsService secretsService;
-    @Autowired ObjectMapperService objectMapperService;
-    @Autowired OpenSquareKafkaConsumerService consumerService;
-    @Autowired PlatformAnalysisTrackerService platformAnalysisTracker;
+    private final KafkaConsumer<String, OpenSquareTaskStatus> kafkaConsumer;
+    private final OpenSquareKafkaProducerService kafkaProducerService;
+    private final KafkaAdmin kafkaAdmin;
+    private final TextAnalyzerService textAnalyzerService;
 
     private static final String TASKS_URL_FRAGMENT = "/tasks/";
     private static final String PROGRESS_URL_FRAGMENT = "/progress";
-    private static final String PLATFORM = LOWERCASE_YOUTUBE;
+
+    @Autowired
+    public YouTubeTaskServiceImpl(KafkaConsumer<String, OpenSquareTaskStatus> kafkaConsumer, OpenSquareKafkaProducerService kafkaProducerService,
+                                  KafkaAdmin kafkaAdmin, TextAnalyzerService textAnalyzerService) {
+
+        this.kafkaConsumer = kafkaConsumer;
+        this.kafkaProducerService = kafkaProducerService;
+        this.kafkaAdmin = kafkaAdmin;
+        this.textAnalyzerService = textAnalyzerService;
+
+    }
 
     @Async
     @Override

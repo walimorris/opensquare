@@ -1,7 +1,7 @@
 package com.morris.opensquare.services;
 
-import com.morris.opensquare.models.Notifications.GlobalNotification;
-import com.morris.opensquare.models.Notifications.OwaspBlogReference;
+import com.morris.opensquare.models.notifications.GlobalNotification;
+import com.morris.opensquare.models.notifications.OwaspBlogReference;
 
 import java.util.List;
 

@@ -16,7 +16,9 @@ client = MongoClient(MONGODB_URI)
 DB_NAME = "sample_restaurants"
 COLLECTION_NAME = "youtube_videos"
 ATLAS_VECTOR_SEARCH_INDEX_NAME = "youtube_vector_search"
+BOT_NAME = "Viki"
 collection = client[DB_NAME][COLLECTION_NAME]
+
 
 # Initialize Vector Store
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY, model="text-embedding-ada-002")
@@ -36,7 +38,7 @@ retrieve = {
     "question": RunnablePassthrough()
 }
 
-template = """Answer the question based only on the following context: \
+template = """Answer the question based only on the following context, your name is Viki: \
 {context}
 
 Question: {question}

@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.Notifications;
+package com.morris.opensquare.models.notifications;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,7 +33,9 @@ public class UserNotification extends GlobalNotification {
     public static class Builder {
         private boolean seen;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder seen(boolean seen) {
             this.seen = seen;

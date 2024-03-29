@@ -4,7 +4,9 @@ public class YouTubeTranscribeSegment {
     private String time;
     private String text;
 
-    public YouTubeTranscribeSegment() {}
+    public YouTubeTranscribeSegment() {
+        // nothing to complete inside Constructor
+    }
 
     public String getTime() {
         return time;

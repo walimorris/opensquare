@@ -3,8 +3,6 @@ package com.morris.opensquare.controllers;
 import com.morris.opensquare.services.DropDownService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/opensquare/api/dropdowns")
 public class DropDownController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DropDownController.class);
-
     private final DropDownService dropDownService;
     private static final String AGES = "ages";
     private static final String PROFESSIONS = "professions";

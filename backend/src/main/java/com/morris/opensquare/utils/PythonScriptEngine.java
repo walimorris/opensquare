@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * that won't have major side effects such as accessing/changing data while another process is attempting to access the
  * same data.
  */
-@Component("PythonScriptEngine")
+@Component("pythonScriptEngine")
 public class PythonScriptEngine {
     private static final Logger LOGGER = LoggerFactory.getLogger(PythonScriptEngine.class);
 
@@ -92,7 +92,7 @@ public class PythonScriptEngine {
         if (key != null && text != null) {
             try {
                 results = getStrings(key, resolvedPytonFile, text);
-                if (results == null) return null;
+                if (results == null) return new ArrayList<>();
 
             } catch (IOException e) {
                 loggerService.saveLog(
@@ -119,7 +119,7 @@ public class PythonScriptEngine {
 
         try {
             results = getStrings(urlArg, resolvedPytonFile, resolvedVideoTempPath);
-            if (results == null) return null;
+            if (results == null) return new ArrayList<>();
             output = getSegments(results);
 
         } catch (IOException e) {
@@ -169,7 +169,6 @@ public class PythonScriptEngine {
         return results;
     }
 
-    // {'time': 141.44, 'text': ' Thanks for watching, and I will see you in the next one.'}
     private List<YouTubeTranscribeSegment> getSegments(List<String> pythonOutputStream) {
         List<YouTubeTranscribeSegment> segments = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();

@@ -1,9 +1,8 @@
-package com.morris.opensquare.models.Notifications;
+package com.morris.opensquare.models.notifications;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import org.bson.types.ObjectId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -91,10 +90,8 @@ public class OwaspBlogReference implements Serializable {
         private String title;
         private String url;
 
-        public Builder() {}
-
-        public Builder id(ObjectId id) {
-            return this;
+        public Builder() {
+            // nothing to complete inside Builder
         }
 
         public Builder date(LocalDateTime date) {

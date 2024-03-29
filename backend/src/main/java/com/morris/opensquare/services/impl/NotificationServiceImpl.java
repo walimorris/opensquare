@@ -1,12 +1,9 @@
 package com.morris.opensquare.services.impl;
 
-import com.morris.opensquare.models.Notifications.GlobalNotification;
-import com.morris.opensquare.models.Notifications.OwaspBlogReference;
+import com.morris.opensquare.models.notifications.GlobalNotification;
+import com.morris.opensquare.models.notifications.OwaspBlogReference;
 import com.morris.opensquare.repositories.GlobalNotificationsRepository;
 import com.morris.opensquare.services.NotificationService;
-import com.morris.opensquare.services.loggers.LoggerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +13,14 @@ import java.util.List;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImpl.class);
-
     private static final String SENDER = "Opensquare Team";
     private static final long PLUS_DAYS = 5;
 
     private final GlobalNotificationsRepository globalNotificationsRepository;
-    private final LoggerService loggerService;
 
     @Autowired
-    public NotificationServiceImpl(GlobalNotificationsRepository globalNotificationsRepository, LoggerService loggerService) {
+    public NotificationServiceImpl(GlobalNotificationsRepository globalNotificationsRepository) {
         this.globalNotificationsRepository = globalNotificationsRepository;
-        this.loggerService = loggerService;
     }
 
     @Override

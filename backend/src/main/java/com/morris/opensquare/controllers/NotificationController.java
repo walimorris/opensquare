@@ -1,9 +1,8 @@
 package com.morris.opensquare.controllers;
 
-import com.morris.opensquare.models.Notifications.GlobalNotification;
-import com.morris.opensquare.models.Notifications.OwaspBlogReference;
+import com.morris.opensquare.models.notifications.GlobalNotification;
+import com.morris.opensquare.models.notifications.OwaspBlogReference;
 import com.morris.opensquare.services.NotificationService;
-import com.morris.opensquare.services.loggers.LoggerService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -19,17 +18,14 @@ import java.util.List;
 @RequestMapping("/opensquare")
 public class NotificationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationController.class);
-
-    private final LoggerService loggerService;
     private final NotificationService notificationService;
 
-    private final static long REEVALUATION_IN_MINUTES = 15;
-    private final static String GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS = "global-notification-insert-time-millis";
-    private final static String GLOBAL_NOTIFICATIONS = "global-notifications";
+    private static final long REEVALUATION_IN_MINUTES = 15;
+    private static final String GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS = "global-notification-insert-time-millis";
+    private static final String GLOBAL_NOTIFICATIONS = "global-notifications";
 
     @Autowired
-    public NotificationController(LoggerService loggerService, NotificationService notificationService) {
-        this.loggerService = loggerService;
+    public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
 
@@ -47,12 +43,10 @@ public class NotificationController {
         HttpSession httpSession = httpServletRequest.getSession();
         List<GlobalNotification> sessionAllNotifications = (List<GlobalNotification>) httpSession.getAttribute(GLOBAL_NOTIFICATIONS);
 
-        if (sessionAllNotifications != null) {
-            if (!shouldConductSessionContentEvaluation(httpSession)) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(sessionAllNotifications);
-            }
+        if (sessionAllNotifications != null && !shouldConductSessionContentEvaluation(httpSession)) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(sessionAllNotifications);
         }
         LOGGER.info("Reevaluating session content for notifications");
         List<GlobalNotification> allNotifications = notificationService.readAllGlobalNotifications();

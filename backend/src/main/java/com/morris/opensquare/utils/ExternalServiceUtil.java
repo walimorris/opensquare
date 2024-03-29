@@ -36,22 +36,6 @@ public class ExternalServiceUtil {
         this.loggerService = loggerService;
     }
 
-    /**
-     * Stops (sleeps) thread for opensent system processing.
-     *
-     * @param possibleErrorMessage {@link String} error message in case of error
-     * @param time thread pause time
-     */
-    public void sleep(String possibleErrorMessage, long time) {
-        StringBuilder err = new StringBuilder(possibleErrorMessage + ": {}");
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            loggerService.saveLog(e.getClass().getName(), e.getMessage(), Optional.of(LOGGER));
-            Thread.currentThread().interrupt();
-        }
-    }
-
     public Customsearch getGoogleCustomSearchService(String applicationName, String apiKey) {
         Customsearch customsearch = null;
         try {

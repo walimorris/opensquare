@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.Optional;
 import java.util.Set;
 
-@Component("JsonValidationUtil")
+@Component("jsonValidationUtil")
 public class JsonValidationUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonValidationUtil.class);
 

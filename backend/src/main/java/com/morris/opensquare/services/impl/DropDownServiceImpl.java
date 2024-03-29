@@ -17,8 +17,8 @@ public class DropDownServiceImpl implements DropDownService {
 
     @Autowired
     public DropDownServiceImpl(DropDownRepository dropDownRepository) {
-        DropDownOptions dropDownOptions = new DropDownOptions();
-        this.dropDownOptions = dropDownRepository.findOne(Example.of(dropDownOptions));
+        DropDownOptions options = new DropDownOptions();
+        this.dropDownOptions = dropDownRepository.findOne(Example.of(options));
     }
 
     @Override

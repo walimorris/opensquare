@@ -225,7 +225,9 @@ public class YouTubeVideo {
         private List<YouTubeTranscribeSegment> transcriptSegments;
         private List<Double> transcriptEmbeddings;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder id(ObjectId id) {
             this.id = id;

@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.Notifications;
+package com.morris.opensquare.models.notifications;
 
 public class OwaspBlogSnippet {
     private String path;

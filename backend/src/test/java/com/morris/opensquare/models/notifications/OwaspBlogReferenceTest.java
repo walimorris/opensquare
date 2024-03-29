@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.Notifications;
+package com.morris.opensquare.models.notifications;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;

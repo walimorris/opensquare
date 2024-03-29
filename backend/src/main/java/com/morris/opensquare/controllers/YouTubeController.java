@@ -8,8 +8,6 @@ import com.morris.opensquare.models.youtube.YouTubeVideoSearchRequest;
 import com.morris.opensquare.services.IdentityGenerator;
 import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.YouTubeTaskService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/opensquare/api/youtube")
 public class YouTubeController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeController.class);
     private final YouTubeService youTubeService;
     private final ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
     private final IdentityGenerator identityGenerator;
@@ -93,7 +90,6 @@ public class YouTubeController {
     /**
      * API allows clients to search embedded transcriptions based on search query. For now, results
      * are limited to 10. Requires OpenAI key. Results with the highest relevance will appear first.
-     * TODO: Add tests
      */
     @GetMapping("/en/transcripts/search")
     public ResponseEntity<List<YouTubeVideo>> searchEmbeddedTranscripts(@RequestParam String q) {

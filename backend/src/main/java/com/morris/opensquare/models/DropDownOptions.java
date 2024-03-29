@@ -47,7 +47,9 @@ public class DropDownOptions {
         private List<String> organizations;
         private List<String> professions;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder ages(List<String> ages) {
             this.ages = ages;

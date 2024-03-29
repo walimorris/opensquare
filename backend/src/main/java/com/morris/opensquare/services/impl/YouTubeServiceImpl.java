@@ -45,10 +45,10 @@ import static java.util.Arrays.asList;
 public class YouTubeServiceImpl implements YouTubeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeServiceImpl.class);
 
-    private static final String URL = "url";
+    private static final String APP = "opensentop";
     private static final String SNIPPET = "snippet";
     private static final String SNIPPET_REPLIES = "snippet,replies";
-    private static final String SNIPPER_CONTENT_DETAILS_STATISTICS = "snippet,contentDetails,statistics";
+    private static final String SNIPPET_CONTENT_DETAILS_STATISTICS = "snippet,contentDetails,statistics";
     private static final String YOUTUBE_URL_WITH_VIDEO_PARAM = "https://www.youtube.com/watch?v=";
     private static final String YOUTUBE_VECTOR_SEARCH_INDEX = "youtube_vector_search";
     private static final String YOUTUBE_VECTOR_SEARCH_PATH = "transcriptEmbeddings";
@@ -122,9 +122,9 @@ public class YouTubeServiceImpl implements YouTubeService {
     public Channel channelFromChannelId(String channelId, String key) {
         Channel channel = null;
         try {
-            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube youTubeService = externalServiceUtil.getYouTubeService(APP);
             YouTube.Channels.List request = youTubeService.channels()
-                    .list("snippet,contentDetails,statistics");
+                    .list(SNIPPET_CONTENT_DETAILS_STATISTICS);
             ChannelListResponse response = request.setKey(key)
                     .setId(channelId)
                     .setMaxResults(1L)
@@ -139,7 +139,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     private Video videoFromVideoId(String videoId, String key, String parts) {
         Video video = null;
         try {
-            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube youTubeService = externalServiceUtil.getYouTubeService(APP);
             YouTube.Videos.List request = youTubeService.videos()
                     .list(parts);
             VideoListResponse response = request.setKey(key)
@@ -154,7 +154,7 @@ public class YouTubeServiceImpl implements YouTubeService {
 
     @Override
     public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String googleKey, String openaiKey, List<YouTubeTranscribeSegment> transcriptSegments) {
-        Video video = videoFromVideoId(videoId, googleKey, SNIPPER_CONTENT_DETAILS_STATISTICS);
+        Video video = videoFromVideoId(videoId, googleKey, SNIPPET_CONTENT_DETAILS_STATISTICS);
         VideoSnippet snippet = video.getSnippet();
         VideoContentDetails contentDetails = video.getContentDetails();
         VideoStatistics statistics = video.getStatistics();
@@ -228,7 +228,7 @@ public class YouTubeServiceImpl implements YouTubeService {
         Channel channel = null;
 
         try {
-            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube youTubeService = externalServiceUtil.getYouTubeService(APP);
             YouTube.Channels.List request = youTubeService.channels()
                     .list("snippet,contentDetails,topicDetails");
             ChannelListResponse response = request.setKey(key)
@@ -264,7 +264,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     public List<Channel> getChannelsFromYouTubeByKeywordTopic(String keyword, String key) {
         SearchListResponse searchResponse = null;
         try {
-            YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+            YouTube youTubeService = externalServiceUtil.getYouTubeService(APP);
             YouTube.Search.List request = youTubeService.search()
                     .list(SNIPPET);
 
@@ -292,7 +292,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     @Override
     public List<CommentSnippet> getTopLevelCommentsFromUserOnYouTubeVideo(String user, String videoId, String key) {
         user = "@" + user; // youtube user-names start with @ symbol
-        List<CommentSnippet> allTopLevelComments = getTopLevelCommentsFromYouTubeVideo("opensentop", key, videoId);
+        List<CommentSnippet> allTopLevelComments = getTopLevelCommentsFromYouTubeVideo(APP, key, videoId);
         List<CommentSnippet> topLevelCommentSnippetsFromUser = new ArrayList<>();
 
         for (CommentSnippet currentSnippet : allTopLevelComments) {
@@ -319,9 +319,9 @@ public class YouTubeServiceImpl implements YouTubeService {
 
             List<CommentThread> comments = response.getItems();
             if (!comments.isEmpty()) {
-                comments.parallelStream().forEach(commentThread -> {
-                    call(commentThread, allTopLevelComments, Thread.currentThread().getName());
-                });
+                comments.parallelStream().forEach(commentThread -> call(
+                        commentThread, allTopLevelComments, Thread.currentThread().getName())
+                );
                 String nextPageToken = response.getNextPageToken();
                 int loop = 1;
 
@@ -332,9 +332,9 @@ public class YouTubeServiceImpl implements YouTubeService {
                             .setPageToken(nextPageToken)
                             .execute();
                     comments = response.getItems();
-                    comments.parallelStream().forEach(commentThread -> {
-                        call(commentThread, allTopLevelComments, Thread.currentThread().getName());
-                    });
+                    comments.parallelStream().forEach(commentThread -> call(
+                            commentThread, allTopLevelComments, Thread.currentThread().getName())
+                    );
 
                     nextPageToken = response.getNextPageToken();
                     loop++;
@@ -356,9 +356,10 @@ public class YouTubeServiceImpl implements YouTubeService {
                 MongoDatabase db = mongoTemplate.getDb().withCodecRegistry(codecRegistry);
                 MongoCollection<YouTubeVideo> collection = db.getCollection(YOUTUBE_VIDEOS_COLLECTION, YouTubeVideo.class);
                 FieldSearchPath fieldSearchPath = SearchPath.fieldPath(YOUTUBE_VECTOR_SEARCH_PATH);
-                int candidates = 200, limit = 10;
 
-                // TODO: add criteria on UI - such as gte or lte publishDate field and pull highest scored results
+                int candidates = 200;
+                int limit = 10;
+
                 List<Bson> pipeline = asList(
                         vectorSearch(
                                 fieldSearchPath,
@@ -387,7 +388,7 @@ public class YouTubeServiceImpl implements YouTubeService {
 
                 // run query and marshall results
                 collection.aggregate(pipeline).forEach(video -> {
-                    LOGGER.info("{}", video.toString());
+                    LOGGER.info("{}", video);
                     videoResults.add(video);
                 });
             }
@@ -413,7 +414,7 @@ public class YouTubeServiceImpl implements YouTubeService {
 
     @Override
     public Map<String, String> analyzeYoutubeChannelMetaData(String channelId, String key) throws IOException {
-        YouTube youTubeService = externalServiceUtil.getYouTubeService("opensentop");
+        YouTube youTubeService = externalServiceUtil.getYouTubeService(APP);
         YouTube.Channels.List request = youTubeService.channels().list(SNIPPET);
 
         ChannelListResponse response = request.setKey(key)

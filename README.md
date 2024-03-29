@@ -249,6 +249,35 @@ entry: path.resolve(__dirname, "/src/main/js/app.js"),
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Kafka Usage - Local
+If you're running kafka you should review the [Docs](https://kafka.apache.org/20/documentation.html). First ensure zoo-keeper server is running before running the kafka server. Sometimes zookeeper configs
+`/config` folder is not setup properly. If you need to, ensure `clientPort=2181` is set in the `zookeeper.properties` and to ensure non-conflicting ports make sure `admin.serverPort=8083` is set in the same file.
+We also want to ensure that `bootstrap.servers=9092` is configured in `producer.properties`: this is a list of brokers used for bootstrapping knowledge about the rest of the cluster format which is important for
+this project's springboot configuration below:
+```
+@Bean
+    public ConsumerFactory<String, OpenSentTaskStatus> consumerFactory() {
+        Map<String, Object> configurationProperties = new HashMap<>();
+        configurationProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configurationProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
+        configurationProperties.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        configurationProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configurationProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        configurationProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        return new DefaultKafkaConsumerFactory<>(configurationProperties);
+    }
+```
+```
+@Bean
+    public ProducerFactory<String, OpenSentTaskStatus> producerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+```
+
 
 
 <!-- ROADMAP -->

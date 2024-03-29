@@ -3,13 +3,11 @@ package com.morris.opensquare.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.morris.opensquare.models.Notifications.OwaspBlogSnippet;
+import com.morris.opensquare.models.notifications.OwaspBlogSnippet;
 import com.morris.opensquare.services.OwaspReferenceService;
 import com.morris.opensquare.services.loggers.LoggerService;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +20,6 @@ import java.util.List;
 
 @Service
 public class OwaspReferenceServiceImpl implements OwaspReferenceService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OwaspReferenceServiceImpl.class);
-
     private LoggerService loggerService;
 
     @Autowired

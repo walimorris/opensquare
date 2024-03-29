@@ -49,7 +49,9 @@ public class YouTubeRagChainProperties {
         private String openaiKey;
         private String prompt;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder mongodbUri(String mongodbUri) {
             this.mongodbUri = mongodbUri;

@@ -1,11 +1,9 @@
 package com.morris.opensquare.services.impl;
 
-import com.morris.opensquare.services.EmailValidationService;
-import org.bson.types.ObjectId;
 import com.morris.opensquare.models.validations.DisposableEmailDomain;
 import com.morris.opensquare.repositories.DisposableEmailDomainRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.morris.opensquare.services.EmailValidationService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +11,6 @@ import java.util.regex.Pattern;
 
 @Service
 public class EmailValidationServiceImpl implements EmailValidationService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailValidationServiceImpl.class);
-
     private final DisposableEmailDomainRepository disposableEmailDomainRepository;
 
     private static final String EMAIL_REGEX = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"

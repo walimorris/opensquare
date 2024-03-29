@@ -1,7 +1,6 @@
 package com.morris.opensquare.controllers;
 
 import com.morris.opensquare.services.OwaspReferenceService;
-import com.morris.opensquare.services.loggers.LoggerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +18,10 @@ import java.io.IOException;
 @RequestMapping("/opensquare")
 public class OwaspReferenceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OwaspReferenceController.class);
-
-    private final LoggerService loggerService;
     private final OwaspReferenceService owaspReferenceService;
 
     @Autowired
-    public OwaspReferenceController(LoggerService loggerService, OwaspReferenceService owaspReferenceService) {
-        this.loggerService = loggerService;
+    public OwaspReferenceController(OwaspReferenceService owaspReferenceService) {
         this.owaspReferenceService = owaspReferenceService;
     }
 

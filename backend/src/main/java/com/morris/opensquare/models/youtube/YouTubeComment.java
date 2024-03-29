@@ -181,7 +181,9 @@ public class YouTubeComment implements Serializable {
         @JsonProperty("likeCount")
         private int likeCount;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder commentId(String commentId) {
             this.commentId = commentId;

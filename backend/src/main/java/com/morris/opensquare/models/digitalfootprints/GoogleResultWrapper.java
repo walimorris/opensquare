@@ -9,16 +9,16 @@ public class GoogleResultWrapper implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2L;
-    private transient String kind;
-    private transient String htmlTitle;
-    private transient String displayLink;
-    private transient String htmlSnippet;
-    private transient String cacheId;
-    private transient String formattedUrl;
+    private String kind;
+    private String htmlTitle;
+    private String displayLink;
+    private String htmlSnippet;
+    private String cacheId;
+    private String formattedUrl;
     private transient Map<String, List<Map<String, Object>>> pageMap;
-    private transient String snippet;
-    private transient String title;
-    private transient String link;
+    private String snippet;
+    private String title;
+    private String link;
 
     public GoogleResultWrapper() {}
 
@@ -73,7 +73,7 @@ public class GoogleResultWrapper implements Serializable {
 
     public String getLink() { return link; }
 
-    public void setLink() { this.link = link; }
+    public void setLink(String link) { this.link = link; }
 
     public void setHtmlTitle(String htmlTitle) {
         this.htmlTitle = htmlTitle;
@@ -123,7 +123,9 @@ public class GoogleResultWrapper implements Serializable {
         private transient String formattedUrl;
         private transient String link;
 
-        public Builder() {}
+        public Builder() {
+            // nothing to complete inside Builder
+        }
 
         public Builder pageMap(Map<String, List<Map<String, Object>>> pageMap) {
             this.pageMap = pageMap;

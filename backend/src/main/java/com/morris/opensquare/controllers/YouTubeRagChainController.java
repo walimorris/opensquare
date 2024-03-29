@@ -1,11 +1,7 @@
 package com.morris.opensquare.controllers;
 
 import com.morris.opensquare.services.RagChainService;
-import com.morris.opensquare.services.YouTubeService;
 import com.morris.opensquare.services.impl.YouTubeRagChainServiceImpl;
-import com.morris.opensquare.services.loggers.LoggerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/opensquare/api/rag/youtube")
 public class YouTubeRagChainController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(YouTubeRagChainController.class);
-
-    private final LoggerService loggerService;
     private final RagChainService ragChainService;
-    private final YouTubeService youTubeService;
 
     @Autowired
-    public YouTubeRagChainController(LoggerService loggerService, YouTubeService youTubeService, YouTubeRagChainServiceImpl youTubeRagChainService) {
-        this.loggerService = loggerService;
-        this.youTubeService = youTubeService;
+    public YouTubeRagChainController(YouTubeRagChainServiceImpl youTubeRagChainService) {
         this.ragChainService = youTubeRagChainService;
     }
 
