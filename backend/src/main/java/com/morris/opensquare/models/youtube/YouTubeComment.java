@@ -182,7 +182,7 @@ public class YouTubeComment implements Serializable {
         private int likeCount;
 
         public Builder() {
-            // nothing to complete inside Builder
+            // nothing to complete inside Builder.
         }
 
         public Builder commentId(String commentId) {
