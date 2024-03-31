@@ -1,5 +1,6 @@
 package com.morris.opensquare.models;
 
+import com.morris.opensquare.models.exceptions.OpenSquareMultiPartFileException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +42,7 @@ public class OpensquareMultipartFile implements MultipartFile {
         try {
             return input.getBytes().length == 0;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new OpenSquareMultiPartFileException(e.getMessage(), e);
         }
     }
 
@@ -50,7 +51,7 @@ public class OpensquareMultipartFile implements MultipartFile {
         try {
             return input.getBytes().length;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new OpenSquareMultiPartFileException(e.getMessage(), e);
         }
     }
 

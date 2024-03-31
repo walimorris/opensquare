@@ -113,15 +113,15 @@ public class GoogleResultWrapper implements Serializable {
 
     public static class Builder {
         private transient Map<String, List<Map<String, Object>>> pageMap;
-        private transient String snippet;
-        private transient String title;
-        private transient String kind;
-        private transient String htmlTitle;
-        private transient String displayLink;
-        private transient String htmlSnippet;
-        private transient String cacheId;
-        private transient String formattedUrl;
-        private transient String link;
+        private String snippet;
+        private String title;
+        private String kind;
+        private String htmlTitle;
+        private String displayLink;
+        private String htmlSnippet;
+        private String cacheId;
+        private String formattedUrl;
+        private String link;
 
         public Builder() {
             // nothing to complete inside Builder

@@ -278,7 +278,7 @@ public class YouTubeServiceImpl implements YouTubeService {
         if (searchResponse != null) {
             return channelsFromSearchResults(searchResponse.getItems(), key);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     private List<Channel> channelsFromSearchResults(List<SearchResult> searchResults, String key) {

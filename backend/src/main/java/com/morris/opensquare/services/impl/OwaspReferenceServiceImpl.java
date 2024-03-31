@@ -5,10 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.morris.opensquare.models.notifications.OwaspBlogSnippet;
 import com.morris.opensquare.services.OwaspReferenceService;
-import com.morris.opensquare.services.loggers.LoggerService;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -20,12 +18,6 @@ import java.util.List;
 
 @Service
 public class OwaspReferenceServiceImpl implements OwaspReferenceService {
-    private LoggerService loggerService;
-
-    @Autowired
-    public OwaspReferenceServiceImpl(LoggerService loggerService) {
-        this.loggerService = loggerService;
-    }
 
     @Override
     public String getOwaspBlogSnippetsList() throws IOException, InterruptedException {
