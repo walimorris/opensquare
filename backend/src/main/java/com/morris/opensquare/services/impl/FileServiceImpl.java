@@ -43,7 +43,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public BufferedReader processBufferedReader(@NonNull String command) {
         try {
-            Process process = Runtime.getRuntime().exec(command);
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            Process process = processBuilder.start();
             return new BufferedReader(new InputStreamReader(process.getInputStream()));
         } catch (IOException e) {
             loggerService.saveLog(e.getClass().getName(), e.getMessage(), Optional.of(LOGGER));

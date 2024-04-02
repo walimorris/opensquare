@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -136,6 +137,7 @@ public class YouTubeServiceImpl implements YouTubeService {
         return channel;
     }
 
+    @Nullable
     private Video videoFromVideoId(String videoId, String key, String parts) {
         Video video = null;
         try {
@@ -155,37 +157,39 @@ public class YouTubeServiceImpl implements YouTubeService {
     @Override
     public YouTubeVideo youTubeVideoTranscribeItem(String videoId, String googleKey, String openaiKey, List<YouTubeTranscribeSegment> transcriptSegments) {
         Video video = videoFromVideoId(videoId, googleKey, SNIPPET_CONTENT_DETAILS_STATISTICS);
-        VideoSnippet snippet = video.getSnippet();
-        VideoContentDetails contentDetails = video.getContentDetails();
-        VideoStatistics statistics = video.getStatistics();
-        String transcript = getContinuousTranscriptFromYouTubeTranscribeSegments(transcriptSegments);
-        List<Double> embeddings = getTextEmbeddingsAda002(openaiKey, transcript);
+        if (video != null) {
+            VideoSnippet snippet = video.getSnippet();
+            VideoContentDetails contentDetails = video.getContentDetails();
+            VideoStatistics statistics = video.getStatistics();
+            String transcript = getContinuousTranscriptFromYouTubeTranscribeSegments(transcriptSegments);
+            List<Double> embeddings = getTextEmbeddingsAda002(openaiKey, transcript);
 
-        // handle null stat values
-        long viewCount = statistics.getViewCount() == null ? 0 : statistics.getViewCount().longValue();
-        long likeCount = statistics.getLikeCount() == null ? 0 : statistics.getLikeCount().longValue();
+            // handle null stat values
+            long viewCount = statistics.getViewCount() == null ? 0 : statistics.getViewCount().longValue();
+            long likeCount = statistics.getLikeCount() == null ? 0 : statistics.getLikeCount().longValue();
 
-        // build item
-        YouTubeVideo videoResult = new YouTubeVideo.Builder()
-                .id(getObjectId())
-                .videoUrl(YOUTUBE_URL_WITH_VIDEO_PARAM + videoId)
-                .title(snippet.getTitle())
-                .author(snippet.getChannelTitle())
-                .publishDate(LocalDateTime.ofInstant(Instant.parse(snippet.getPublishedAt().toString()), ZoneId.systemDefault()))
-                .viewCount(viewCount)
-                .likeCount(likeCount)
-                .length(contentDetails.getDuration())
-                .thumbnail(snippet.getThumbnails().getDefault().getUrl())
-                .transcript(transcript)
-                .description(snippet.getDescription())
-                .channelId(snippet.getChannelId())
-                .videoId(videoId)
-                .transcriptSegments(transcriptSegments)
-                .transcriptEmbeddings(embeddings)
-                .build();
+            // build item
+            YouTubeVideo videoResult = new YouTubeVideo.Builder()
+                    .id(getObjectId())
+                    .videoUrl(YOUTUBE_URL_WITH_VIDEO_PARAM + videoId)
+                    .title(snippet.getTitle())
+                    .author(snippet.getChannelTitle())
+                    .publishDate(LocalDateTime.ofInstant(Instant.parse(snippet.getPublishedAt().toString()), ZoneId.systemDefault()))
+                    .viewCount(viewCount)
+                    .likeCount(likeCount)
+                    .length(contentDetails.getDuration())
+                    .thumbnail(snippet.getThumbnails().getDefault().getUrl())
+                    .transcript(transcript)
+                    .description(snippet.getDescription())
+                    .channelId(snippet.getChannelId())
+                    .videoId(videoId)
+                    .transcriptSegments(transcriptSegments)
+                    .transcriptEmbeddings(embeddings)
+                    .build();
 
-        if (jsonValidationUtil.isValidJsonSchema(YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA, videoResult, YouTubeVideo.class)) {
-            return videoResult;
+            if (jsonValidationUtil.isValidJsonSchema(YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA, videoResult, YouTubeVideo.class)) {
+                return videoResult;
+            }
         }
         return null;
     }
@@ -216,9 +220,11 @@ public class YouTubeServiceImpl implements YouTubeService {
     @Override
     public String channelIdFromVideoId(String videoId, String key) {
         Video video = videoFromVideoId(videoId, key, SNIPPET);
-        VideoSnippet videoSnippet = video.getSnippet();
-        if (videoSnippet != null) {
-            return videoSnippet.getChannelId();
+        if (video != null) {
+            VideoSnippet videoSnippet = video.getSnippet();
+            if (videoSnippet != null) {
+                return videoSnippet.getChannelId();
+            }
         }
         return null;
     }

@@ -112,7 +112,7 @@ public class GoogleResultWrapper implements Serializable {
     }
 
     public static class Builder {
-        private transient Map<String, List<Map<String, Object>>> pageMap;
+        private Map<String, List<Map<String, Object>>> pageMap;
         private String snippet;
         private String title;
         private String kind;

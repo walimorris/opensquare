@@ -37,8 +37,6 @@ public class EmailValidationController {
     @PostMapping("/add")
     public ResponseEntity<DisposableEmailDomain> addDisposableEmailDomain(@RequestParam String domain, HttpServletRequest request) {
         LOGGER.info("Email Domain: {}", domain);
-
-        // todo: sanitize
         DisposableEmailDomain disposableEmailDomainResult = emailValidationService.addDisposableEmailDomain(domain);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

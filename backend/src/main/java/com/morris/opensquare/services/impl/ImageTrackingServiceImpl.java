@@ -9,6 +9,7 @@ import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
 import com.morris.opensquare.models.OpensquareMultipartFile;
 import com.morris.opensquare.models.exceptions.ImageTrackingServiceRunTimeException;
 import com.morris.opensquare.services.ImageTrackingService;
+import com.morris.opensquare.services.loggers.LoggerService;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.ImageMetadata;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ImageTrackingServiceImpl implements ImageTrackingService {
@@ -40,11 +42,14 @@ public class ImageTrackingServiceImpl implements ImageTrackingService {
     private static final String PLACE_ID = "placeId";
     private static final String COMPOUND_CODE = "compoundCode";
     private static final String GLOBAL_CODE = "globalCode";
+    private final LoggerService loggerService;
 
 
     @Autowired
-    public ImageTrackingServiceImpl(ApplicationPropertiesConfiguration applicationPropertiesConfiguration) {
+    public ImageTrackingServiceImpl(ApplicationPropertiesConfiguration applicationPropertiesConfiguration,
+                                    LoggerService loggerService) {
         this.applicationPropertiesConfiguration = applicationPropertiesConfiguration;
+        this.loggerService = loggerService;
     }
 
     @Override
@@ -80,16 +85,18 @@ public class ImageTrackingServiceImpl implements ImageTrackingService {
         if (exifImageMetaDataMap.containsKey(LATITUDE) && exifImageMetaDataMap.containsKey(LONGITUDE)) {
             GeocodingResult result = locateFromLatLong(exifImageMetaDataMap);
 
-            // properties
-            String formattedAddress = result.formattedAddress == null ? null : result.formattedAddress;
-            String placeId = result.placeId == null ? null : result.placeId;
-            String compoundCode = result.plusCode.compoundCode == null ? null : result.plusCode.compoundCode;
-            String globalCode = result.plusCode.globalCode == null ? null : result.plusCode.globalCode;
+            if (result != null) {
+                // properties
+                String formattedAddress = result.formattedAddress == null ? null : result.formattedAddress;
+                String placeId = result.placeId == null ? null : result.placeId;
+                String compoundCode = result.plusCode.compoundCode == null ? null : result.plusCode.compoundCode;
+                String globalCode = result.plusCode.globalCode == null ? null : result.plusCode.globalCode;
 
-            exifImageMetaDataMap.put(FORMATTED_ADDRESS, formattedAddress);
-            exifImageMetaDataMap.put(PLACE_ID, placeId);
-            exifImageMetaDataMap.put(COMPOUND_CODE, compoundCode);
-            exifImageMetaDataMap.put(GLOBAL_CODE, globalCode);
+                exifImageMetaDataMap.put(FORMATTED_ADDRESS, formattedAddress);
+                exifImageMetaDataMap.put(PLACE_ID, placeId);
+                exifImageMetaDataMap.put(COMPOUND_CODE, compoundCode);
+                exifImageMetaDataMap.put(GLOBAL_CODE, globalCode);
+            }
         }
         return exifImageMetaDataMap;
     }
@@ -104,8 +111,16 @@ public class ImageTrackingServiceImpl implements ImageTrackingService {
             LatLng latLng = new LatLng((Double) metadata.get(LATITUDE), (Double) metadata.get(LONGITUDE));
             result = GeocodingApi.reverseGeocode(mapsContext, latLng).await();
 
-        } catch (InterruptedException | ApiException e) {
-            throw new ImageTrackingServiceRunTimeException(e.getMessage(), e);
+        } catch (InterruptedException e) {
+            loggerService.saveLog(
+                    e.getClass().getName(),
+                    "Interrupted getting Lat/Long with Google API: " + e.getMessage(),
+                    Optional.ofNullable(LOGGER)
+            );
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (ApiException ex) {
+            throw new ImageTrackingServiceRunTimeException(ex.getMessage(), ex);
         }
         return result[0];
     }

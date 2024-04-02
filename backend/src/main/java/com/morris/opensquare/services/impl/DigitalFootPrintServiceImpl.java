@@ -25,8 +25,8 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -157,7 +157,7 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
     @Override
     public boolean isUrlValid(@NonNull String url) {
         try {
-            new URL(url).toURI();
+            new URI(url).toURL().toURI();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
             loggerService.saveLog(e.getClass().getName(), ERROR_VALIDATING_URL + REGEX_EMPTY + url + REGEX_EMPTY + e.getMessage(), Optional.of(LOGGER));
