@@ -27,14 +27,14 @@
   <p align="center">
     Opensource social media intelligence and OSINT
     <br />
-    <a href="https://james-armistead.atlassian.net/wiki/spaces/OD/pages"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/walimorris/opensquare"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://bitbucket.org/intelligence-opensent/opensentop/src/master/src/">View Demo</a>
+    <a href="https://github.com/walimorris/opensquare">View Demo</a>
     ·
-    <a href="https://bitbucket.org/intelligence-opensent/opensentop/jira?site=830279d9-2199-4a48-ac06-b1a6fb805f24&statuses=new&statuses=indeterminate&sort=-updated&page=1">Report Bug</a>
+    <a href="https://github.com/walimorris/opensquare">Report Bug</a>
     ·
-    <a href="https://bitbucket.org/intelligence-opensent/opensentop/jira?site=830279d9-2199-4a48-ac06-b1a6fb805f24&statuses=new&statuses=indeterminate&sort=-updated&page=1">Request Feature</a>
+    <a href="https://github.com/walimorris/opensquare">Request Feature</a>
   </p>
 </div>
 
