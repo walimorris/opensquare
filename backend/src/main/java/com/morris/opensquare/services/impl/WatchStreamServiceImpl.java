@@ -7,6 +7,7 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
+import com.morris.opensquare.services.WatchStreamService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class WatchStreamServiceImpl {
+public class WatchStreamServiceImpl implements WatchStreamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WatchStreamServiceImpl.class);
 
     private static final String DATABASE = "sample_restaurants";
@@ -37,24 +38,28 @@ public class WatchStreamServiceImpl {
         this.mongoTemplate = mongoTemplate;
     }
 
+    @Override
     public void watchEmailDomainChangeStream() {
         MongoCollection<Document> collection = getCollection(DISPOSABLE_EMAIL_DOMAINS_COLLECTION);
         List<Bson> pipeline = insertUpdateModifyOperationsPipeline();
         watchCollectionChangeStream(collection, pipeline);
     }
 
+    @Override
     public void watchMongoLoggerChangeStream() {
         MongoCollection<Document> collection = getCollection(MONGO_LOGGER_COLLECTION);
         List<Bson> pipeline = insertUpdateModifyOperationsPipeline();
         watchCollectionChangeStream(collection, pipeline);
     }
 
+    @Override
     public void watchGlobalNotificationsChangeStream() {
         MongoCollection<Document> collection = getCollection(GLOBAL_NOTIFICATIONS_COLLECTION);
         List<Bson> pipeline = insertUpdateModifyOperationsPipeline();
         watchCollectionChangeStream(collection, pipeline);
     }
 
+    @Override
     public void watchall() {
         watchEmailDomainChangeStream();
         watchMongoLoggerChangeStream();
