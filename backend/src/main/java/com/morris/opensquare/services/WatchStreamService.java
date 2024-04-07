@@ -1,5 +1,10 @@
 package com.morris.opensquare.services;
 
+/**
+ * The WatchStreamService utilizes MongoDB's {@link com.mongodb.client.ChangeStreamIterable}
+ * and Change Data Capture (CDC) functionality to watch various collections within the
+ * persistence layer.
+ */
 public interface WatchStreamService {
 
     /**
