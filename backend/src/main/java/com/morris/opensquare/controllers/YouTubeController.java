@@ -100,6 +100,14 @@ public class YouTubeController {
                 .body(results);
     }
 
+    @GetMapping("/en/autocomplete/search")
+    public ResponseEntity<List<YouTubeVideo>> autoCompleteSearch(@RequestParam String q) {
+        List<YouTubeVideo> results = youTubeService.autoCompleteSearch(q);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(results);
+    }
+
     /**
      * Conducts transcribe process and appends transcribe segments to {@link YouTubeVideo} and persists
      * video to collect.

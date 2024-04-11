@@ -201,6 +201,15 @@ public interface YouTubeService {
     List<YouTubeVideo> getYouTubeVideosFromVectorSearch(@NonNull String key, @NonNull String searchQuery);
 
     /**
+     * Uses MongoDB index to make autocomplete searches on queries.
+     *
+     * @param searchQuery partial query
+     *
+     * @return {@link List<YouTubeVideo>}
+     */
+    List<YouTubeVideo> autoCompleteSearch(@NonNull String searchQuery);
+
+    /**
      * Used within CSVHeaders to unwrap and marshall {@link YouTubeComment} in CSV files.
      * NOTE: The CSVHeader properties should read in the same order as they appear in the
      * actual CSV file.

@@ -18,6 +18,7 @@ import com.morris.opensquare.utils.Constants;
 import com.morris.opensquare.utils.ExternalServiceUtil;
 import com.morris.opensquare.utils.JsonValidationUtil;
 import com.morris.opensquare.utils.PythonScriptEngine;
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -36,9 +37,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
-import static com.mongodb.client.model.Aggregates.project;
-import static com.mongodb.client.model.Aggregates.vectorSearch;
+import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Projections.*;
+import static com.morris.opensquare.utils.Constants.INDEX;
 import static com.morris.opensquare.utils.Constants.REGEX_EMPTY;
 import static java.util.Arrays.asList;
 
@@ -71,6 +72,16 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String VIDEO_ID = "videoId";
     private static final String TRANSCRIPT_SEGMENTS = "transcriptSegments";
     private static final String TRANSCRIPT_EMBEDDINGS = "transcriptEmbeddings";
+    private static final String AUTO_COMPLETE_SEARCH_INDEX = "youtube_titles";
+    private static final String AUTO_COMPLETE_TITLE_PATH = "title";
+    private static final String SEARCH = "$search";
+    private static final String AUTO_COMPLETE = "autocomplete";
+    private static final String QUERY = "query";
+    private static final String PATH = "path";
+    private static final String FUZZY = "fuzzy";
+    private static final String MAX_EDITS = "maxEdits";
+    private static final String PREFIX_LENGTH = "prefixLength";
+    private static final String MAX_EXPANSIONS = "maxExpansions";
     private final ExternalServiceUtil externalServiceUtil;
     private final JsonValidationUtil jsonValidationUtil;
     private final LoggerService loggerService;
@@ -400,6 +411,39 @@ public class YouTubeServiceImpl implements YouTubeService {
             }
         }
         return videoResults;
+    }
+
+    @Override
+    public List<YouTubeVideo> autoCompleteSearch(@NonNull String searchQuery) {
+        List<YouTubeVideo> autoCompleteVideoResults = new ArrayList<>();
+        if (!searchQuery.isEmpty()) {
+            MongoDatabase db = mongoTemplate.getDb().withCodecRegistry(codecRegistry);
+            MongoCollection<YouTubeVideo> collection = db.getCollection(YOUTUBE_VIDEOS_COLLECTION, YouTubeVideo.class);
+
+            // define pipeline
+            Document aggregation = new Document(SEARCH, new Document(INDEX, AUTO_COMPLETE_SEARCH_INDEX)
+                    .append(AUTO_COMPLETE, new Document(QUERY, searchQuery)
+                            .append(PATH, AUTO_COMPLETE_TITLE_PATH)
+                            .append(FUZZY, new Document(MAX_EDITS, 1)
+                                    .append(PREFIX_LENGTH, 0)
+                                    .append(MAX_EXPANSIONS, 50))));
+
+            Bson limit = limit(20);
+
+            List<Bson> pipeline = asList(
+                    aggregation,
+                    limit,
+                    project(fields(
+                            excludeId(),
+                            include(TITLE))));
+
+            // run pipeline
+            collection.aggregate(pipeline).forEach(video -> {
+                LOGGER.info("{}", video);
+                autoCompleteVideoResults.add(video);
+            });
+        }
+        return autoCompleteVideoResults;
     }
 
     @Override
