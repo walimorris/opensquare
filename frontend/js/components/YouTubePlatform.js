@@ -5,7 +5,6 @@ import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import YouTubeCard from './YouTubeCard';
-import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Divider from "@mui/material/Divider";
@@ -14,10 +13,11 @@ import Typography from "@mui/material/Typography";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import PropTypes from 'prop-types';
 import YouTubeVideoCard from "./YouTubeVideoCard";
-import {Checkbox, FormControlLabel} from "@mui/material";
+import {Autocomplete, Checkbox, FormControlLabel} from "@mui/material";
 import * as React from 'react';
-import ChatDisplay from "./ChatDisplay";
 import ChatDisplayAnchor from "./ChatDisplayAnchor";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 
 const YouTubePlatform = ({isSelected}) => {
     const kafkaTask = "video-search";
@@ -30,6 +30,7 @@ const YouTubePlatform = ({isSelected}) => {
     // search
     const [searchQuery, setSearchQuery] = useState('');
     const [youTubeSearchResults, setYouTubeSearchResults] = useState([]);
+    const [youTubeAutoCompleteResults, setYouTubeAutoCompleteResults] = useState([]);
 
     // checkbox
     const [checked, setChecked] = React.useState(true);
@@ -141,8 +142,10 @@ const YouTubePlatform = ({isSelected}) => {
             .concat(message.substring(1, message.length).toLowerCase());
     }
 
-    function onChange(e) {
+    async function onChange(e) {
         setSearchQuery(e.target.value);
+        console.log(`query: ${searchQuery}`);
+        await handleAutoCompleteYouTubeSearch();
     }
 
     function getAxiosConfiguration() {
@@ -153,8 +156,12 @@ const YouTubePlatform = ({isSelected}) => {
     }
 
     useEffect(() => {
-        console.log(youTubeSearchResults.data);
-    }, [youTubeSearchResults.data]);
+        console.log(youTubeSearchResults);
+    }, [youTubeSearchResults]);
+
+    useEffect(() => {
+        console.log(youTubeAutoCompleteResults);
+    }, [youTubeAutoCompleteResults])
 
     const handleChange = (e) => {
         let isChecked = e.target.checked;
@@ -173,6 +180,25 @@ const YouTubePlatform = ({isSelected}) => {
                     axios.get(`/opensquare/api/youtube/en/transcripts/search?q=${searchQuery}`, getAxiosConfiguration())
                         .then(response => {
                             setYouTubeSearchResults(response.data);
+                            if (response.data !== null) {
+                                return response;
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                );
+            }, 1000);
+        });
+    }
+
+    async function handleAutoCompleteYouTubeSearch() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(
+                    axios.get(`/opensquare/api/youtube/en/autocomplete/search?q=${searchQuery}`, getAxiosConfiguration())
+                        .then(response => {
+                            setYouTubeAutoCompleteResults(response.data);
                             if (response.data !== null) {
                                 return response;
                             }
@@ -257,14 +283,15 @@ const YouTubePlatform = ({isSelected}) => {
                     component="form"
                     sx={{ p: '2px 4px', display: 'flex', width: '95%', marginLeft: '2.5%', marginTop: '5%', backgroundColor: 'tertiary' }}
                 >
-                    <InputBase
-                        fullWidth={true}
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder={searchHint}
-                        id={'youtubeSearch'}
-                        onChange={onChange}
-                        inputProps={{ 'aria-label': 'youtube video search' }}
-                    />
+                    <Stack spacing={1} sx={{ ml:1, flex:1 }}>
+                        <Autocomplete
+                            onInputChange={onChange}
+                            id={'youtubeSearch'}
+                            freeSolo
+                            options={youTubeAutoCompleteResults.map((option) => option.title)}
+                            renderInput={(params) => <TextField {...params} label={searchHint}/>}
+                            />
+                    </Stack>
                     <IconButton onClick={e => onSearchSubmit(e)} type="submit" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                     </IconButton>
