@@ -76,6 +76,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String AUTO_COMPLETE_TITLE_PATH = "title";
     private static final String SEARCH = "$search";
     private static final String AUTO_COMPLETE = "autocomplete";
+    private static final int AUTO_COMPLETE_RESULT_LIMIT = 10;
     private static final String QUERY = "query";
     private static final String PATH = "path";
     private static final String FUZZY = "fuzzy";
@@ -428,7 +429,12 @@ public class YouTubeServiceImpl implements YouTubeService {
                                     .append(PREFIX_LENGTH, 0)
                                     .append(MAX_EXPANSIONS, 50))));
 
-            Bson limit = limit(20);
+            /*
+            The results may max out as the persistence layer scales. In this case, it may look
+            cluttered to have 20 autocomplete results show in the UI. Example, Google limits 10
+            and we'll follow this convention.
+             */
+            Bson limit = limit(AUTO_COMPLETE_RESULT_LIMIT);
 
             List<Bson> pipeline = asList(
                     aggregation,
