@@ -77,6 +77,7 @@ const YouTubePlatform = ({isSelected}) => {
             queryElement.value = '';
             if (!checked) {
                 await handleVectorYouTubeSearch();
+                queryElement.value = '';
             } else {
                 // TODO: need to handle searches with kafka when video is not present in storage.
                 // because of long process of creating embeddings, transcript and segments.
