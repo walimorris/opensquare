@@ -50,15 +50,16 @@ public class EmailValidationServiceImpl implements EmailValidationService {
         return null;
     }
 
-    private boolean isValidEmail(String emailAddress) {
-        return EmailValidator.getInstance().isValid(emailAddress);
-    }
-
-    private String getEmailDomain(String emailAddress) {
+    @Override
+    public String getEmailDomain(String emailAddress) {
         if (isValidEmail(emailAddress)) {
             return emailAddress.split("@")[1];
         }
         return null;
+    }
+
+    private boolean isValidEmail(String emailAddress) {
+        return EmailValidator.getInstance().isValid(emailAddress);
     }
 
     private DisposableEmailDomain getDisposableEmailDomain(String domain) {

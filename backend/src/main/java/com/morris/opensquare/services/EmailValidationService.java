@@ -45,4 +45,13 @@ public interface EmailValidationService {
      * @return {@link DisposableEmailDomain}
      */
     DisposableEmailDomain findDisposableEmailDomain(String emailAddress);
+
+    /**
+     * Get domain name from email-address.
+     *
+     * @param emailAddress email address
+     *
+     * @return {@link String} email address domain
+     */
+    String getEmailDomain(String emailAddress);
 }
