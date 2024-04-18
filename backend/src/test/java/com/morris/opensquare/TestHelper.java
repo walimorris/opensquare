@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.api.services.customsearch.model.Result;
 import com.morris.opensquare.models.DropDownOptions;
 import com.morris.opensquare.models.digitalfootprints.NSLookupFootPrint;
+import com.morris.opensquare.models.notifications.GlobalNotification;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -70,6 +71,10 @@ public class TestHelper {
             }
             if (type == YouTubeTranscribeSegment.class) {
                 TypeReference<List<YouTubeTranscribeSegment>> reference = new TypeReference<>() {};
+                return objectMapper.readValue(new File(fileName), reference);
+            }
+            if (type == GlobalNotification.class) {
+                TypeReference<List<GlobalNotification>> reference = new TypeReference<>() {};
                 return objectMapper.readValue(new File(fileName), reference);
             }
         }

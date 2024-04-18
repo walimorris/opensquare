@@ -1,0 +1,16 @@
+[
+  {
+    "id": "65f8ec8a9d106d130961b9c4",
+    "expiration": "2024-04-22T22:48:59",
+    "message": "This is a test",
+    "sender": "Opensquare Team",
+    "owaspRef": null
+  },
+  {
+    "id": "65f8ec8a9d106d130961b9c2",
+    "expiration": "2024-04-22T22:49:33",
+    "message": "This is a test, 321...",
+    "sender": "Opensquare Team",
+    "owaspRef": null
+  }
+]

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN;
-import static com.morris.opensquare.utils.Constants.OPENSQUARE_JAVA_MONGODB_TIME_PATTERN;
 
 @Document("global_notifications")
 public class GlobalNotification implements Serializable {
@@ -27,7 +26,7 @@ public class GlobalNotification implements Serializable {
      * <br><br>
      * @see <a href="https://www.mongodb.com/docs/manual/tutorial/expire-data/#std-label-expire-data-atlas-ui">TTL DOCS</a>
      */
-    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = OPENSQUARE_JAVA_MONGODB_JSON_PARSE_TIME_PATTERN, shape = JsonFormat.Shape.STRING)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime expiration;
     private String message;
