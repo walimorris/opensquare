@@ -32,7 +32,7 @@ class OpensquareApplicationTests {
 				() -> Assertions.assertNotNull(applicationContext, "Application Context ready to fire."),
 				() -> Assertions.assertNotNull(appConfigs, "Application Configurations ready to fire."),
 				() -> Assertions.assertNotNull(sessionConfiguration, "Session Configurations ready to fire."),
-				() -> Assertions.assertNotNull(jacksonConfiguration, "Jackson Configurations read to fire."),
+				() -> Assertions.assertNotNull(jacksonConfiguration, "Jackson Configurations ready to fire."),
 				() -> Assertions.assertNotNull(kafkaProducerConfiguration, "Kafka Configurations ready to fire."),
 				() -> Assertions.assertNotNull(springMongoConfig, "SpringBoot/MongoDB Configurations ready to fire.")
 		);
