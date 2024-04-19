@@ -3,7 +3,9 @@ package com.morris.opensquare.controllers;
 import com.morris.opensquare.TestHelper;
 import com.morris.opensquare.models.notifications.GlobalNotification;
 import com.morris.opensquare.services.NotificationService;
+import jakarta.servlet.http.HttpSession;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.morris.opensquare.controllers.NotificationController.GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS;
+import static com.morris.opensquare.controllers.NotificationController.REEVALUATION_IN_MINUTES;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,6 +46,38 @@ class NotificationControllerTest {
     public static final String GLOBAL_NOTIFICATION_1 = "This is a test, 123...";
     public static final String POST_GLOBAL_NOTIFICATION_BROADCAST_REQUEST = "/opensquare/admin/api/notifications";
     public static final String GET_ALL_GLOBAL_NOTIFICATIONS_REQUEST = "/opensquare/admin/api/notifications/globalAll";
+
+    @Test
+    void shouldConductSessionContentEvaluationFalse() {
+        HttpSession httpSession = new MockHttpSession();
+
+        // add a time 5 minutes ago - 300,000 ms
+        Long past = System.currentTimeMillis() - 300000;
+        httpSession.setAttribute(GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS, past);
+
+        boolean evaluation = shouldConductSessionContentEvaluation(httpSession);
+        Assertions.assertFalse(evaluation);
+    }
+
+    @Test
+    void shouldConductSessionContentEvaluationTrue() {
+        HttpSession httpSession = new MockHttpSession();
+
+        // add a time 16 minutes ago - 960,000 ms
+        Long past = System.currentTimeMillis() - 960000;
+        httpSession.setAttribute(GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS, past);
+
+        boolean evaluation = shouldConductSessionContentEvaluation(httpSession);
+        Assertions.assertTrue(evaluation);
+    }
+
+    @Test
+    void shouldConductSessionContentEvaluationNull() {
+        HttpSession httpSession = new MockHttpSession();
+        boolean evaluation = shouldConductSessionContentEvaluation(httpSession);
+        Assertions.assertFalse(evaluation);
+    }
+
 
     @Test
     void postGlobalNotificationBroadcast() throws Exception {
@@ -75,5 +111,20 @@ class NotificationControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(notificationsListAsString));
+    }
+
+    private boolean shouldConductSessionContentEvaluation(HttpSession session) {
+        if (session.getAttribute(GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS) != null) {
+            long insertTime = (long) session.getAttribute(GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS);
+            long runningTime = System.currentTimeMillis() - insertTime;
+            long runningTimeInMinutes = (runningTime / 1000) / 60;
+            System.out.println("Global Notifications last evaluated minutes ago: " + runningTimeInMinutes);
+
+            if (runningTimeInMinutes >= REEVALUATION_IN_MINUTES) {
+                session.removeAttribute(GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS);
+                return true;
+            }
+        }
+        return false;
     }
 }

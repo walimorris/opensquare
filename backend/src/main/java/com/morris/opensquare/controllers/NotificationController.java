@@ -20,9 +20,9 @@ public class NotificationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationController.class);
     private final NotificationService notificationService;
 
-    private static final long REEVALUATION_IN_MINUTES = 15;
-    private static final String GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS = "global-notification-insert-time-millis";
-    private static final String GLOBAL_NOTIFICATIONS = "global-notifications";
+    public static final long REEVALUATION_IN_MINUTES = 15;
+    public static final String GLOBAL_NOTIFICATION_INSERT_TIME_MILLIS = "global-notification-insert-time-millis";
+    public static final String GLOBAL_NOTIFICATIONS = "global-notifications";
 
     @Autowired
     public NotificationController(NotificationService notificationService) {
