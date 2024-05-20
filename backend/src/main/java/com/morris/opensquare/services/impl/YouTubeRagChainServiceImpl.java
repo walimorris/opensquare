@@ -32,7 +32,7 @@ public class YouTubeRagChainServiceImpl implements RagChainService {
                 .build();
 
         return openAiService.processYouTubeRAGChain(
-                new YouTubeRagChainProperties.Builder()
+                YouTubeRagChainProperties.builder()
                         .mongodbUri(applicationPropertiesConfiguration.mongodbUri())
                         .openaiKey(applicationPropertiesConfiguration.openAI())
                         .vectorStore(embeddingStore)

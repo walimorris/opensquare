@@ -341,6 +341,10 @@
 			<artifactId>commons-imaging</artifactId>
 			<version>1.0-alpha3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 
         <!-- langchain4j -->
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
