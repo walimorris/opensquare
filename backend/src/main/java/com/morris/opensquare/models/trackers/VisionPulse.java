@@ -2,6 +2,8 @@ package com.morris.opensquare.models.trackers;
 
 import lombok.*;
 
+import java.util.Map;
+
 /**
  * Vision Pulse is intended to be used with OpenAI's Vision API to understand images. Image prompts
  * to Vision API should contain text, an imageUrl and optional metadata. This metadata can/should be
@@ -18,5 +20,5 @@ import lombok.*;
 public class VisionPulse {
     private String text;
     private String imageUrl;
-    private String metaData;
+    private Map<String, Object> metaData;
 }

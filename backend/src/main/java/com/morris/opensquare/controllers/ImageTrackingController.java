@@ -4,6 +4,8 @@ import com.morris.opensquare.models.trackers.VisionPulse;
 import com.morris.opensquare.services.ImageTrackingService;
 import com.morris.opensquare.services.impl.OpenAiServiceImpl;
 import org.apache.commons.imaging.ImageReadException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/opensquare/api/imageTracking")
 public class ImageTrackingController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageTrackingController.class);
     private final ImageTrackingService imageTrackingService;
     private final OpenAiServiceImpl openAiService;
 
@@ -37,11 +40,14 @@ public class ImageTrackingController {
     // Depending on the image type: options should be given. Possible meta scrape or user input for extra details
     // to append to the metadata field. These can help the model give more informed vision details.
     @GetMapping("/vision_pulse")
-    public ResponseEntity<String> visionPulse(@RequestParam String url, @RequestParam String q) {
+    public ResponseEntity<String> visionPulse(@RequestParam MultipartFile f, @RequestParam String q) throws IOException, ImageReadException {
+        Map<String, Object> metadata = imageTrackingService.getExifImageMetaData(f);
+        String base64EncodedString = imageTrackingService.base64partEncodedStr(f);
+
         VisionPulse visionPulse = VisionPulse.builder()
-                .imageUrl(url)
+                .imageUrl(base64EncodedString)
                 .text(q)
-                .metaData(null)
+                .metaData(metadata)
                 .build();
 
         String response = openAiService.processVisionPulse(visionPulse);

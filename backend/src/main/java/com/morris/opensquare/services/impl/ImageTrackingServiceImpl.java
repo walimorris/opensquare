@@ -14,7 +14,10 @@ import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
+import org.apache.commons.imaging.formats.tiff.TiffField;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
+import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
+import org.apache.commons.imaging.formats.tiff.taginfos.TagInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +25,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
+// TODO: Create functionality to allow persistence of updated image files. Example: an analyst
+// TODO: needs to track an image and only acquires small pieces of data at a time (a team has
+// TODO: found the GPS coordinates that weren't originally there) they can now add that metadata
+// TODO: to a file, persist that file and continue building pieces until they have enough to
+// TODO: give actionable insight. Appended data should follow an image. This data can come from
+// TODO: various *credible sources, but the intent is that it is built and persisted until it
+// TODO: (the image) can provide credible/actionable insight.
+
+//TODO: Feature: explore option to prompt AI about landmarks in close vicinity based on a image
 @Service
 public class ImageTrackingServiceImpl implements ImageTrackingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageTrackingServiceImpl.class);
@@ -76,9 +85,25 @@ public class ImageTrackingServiceImpl implements ImageTrackingService {
                 exifImageMetaDataMap.put(CONTENT_TYPE, imageMultiPartFile.getContentType());
                 exifImageMetaDataMap.put(LATITUDE, latitude);
                 exifImageMetaDataMap.put(LONGITUDE, longitude);
+
+                // let's collect remaining TIFF (Tag Image File Format) containing graphics info
+                appendTiffMetadata(exifImageMetaDataMap, jpegImageMetadata);
             }
         }
         return addLongLatProperties(exifImageMetaDataMap);
+    }
+
+    @Override
+    public String base64partEncodedStr(MultipartFile file) {
+        String encodedStr = null;
+        try {
+            byte[] sourceBytes = Base64.getEncoder().encode(file.getBytes());
+            String sourceStr = new String(sourceBytes);
+            encodedStr = "data:" + file.getContentType() + ";base64," + sourceStr;
+        } catch (IOException e) {
+            LOGGER.info("Error converting Multipart File to Base64 encoded String: {}", e.getMessage());
+        }
+        return encodedStr;
     }
 
     private Map<String, Object> addLongLatProperties(Map<String, Object> exifImageMetaDataMap) throws IOException {
@@ -123,5 +148,20 @@ public class ImageTrackingServiceImpl implements ImageTrackingService {
             throw new ImageTrackingServiceRunTimeException(ex.getMessage(), ex);
         }
         return result[0];
+    }
+
+    // TODO: Need to build a class to record all possible pieces of metadata in order to
+    // TODO: build comprehensible context to feed to large language model for interpretation.
+    // TODO: This class should be stored (along with the persisted image).
+    private static void appendTiffMetadata(Map<String, Object> exifMetaDataMap, JpegImageMetadata jpegImageMetadata) {
+        List<TagInfo> tiffTags = TiffTagConstants.ALL_TIFF_TAGS;
+        for (TagInfo tag : tiffTags) {
+            TiffField field = jpegImageMetadata.findEXIFValueWithExactMatch(tag);
+            if (field == null) {
+                System.out.println("No info for: " + tag.name);
+            } else {
+                exifMetaDataMap.put(tag.name, field.getValueDescription());
+            }
+        }
     }
 }

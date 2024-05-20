@@ -121,10 +121,13 @@ public class OpenAiServiceImpl implements OpenAiService {
                 .build();
 
         // TODO: add meta data content to this message to help the model make a more informed answer
-        // More informed answers can be possible with geolocation data, time, date, so on...if possible.
+        // TODO: More informed answers can be possible with geolocation data, time, date, so on...
         TextContent textContent = new TextContent(visionPulse.getText());
+
+        TextContent metadataTextContent = new TextContent("\nUse this data as extra context: " +
+                visionPulse.getMetaData().toString());
         ImageContent imageContent = new ImageContent(visionPulse.getImageUrl());
-        List<Content> chatContent = List.of(textContent, imageContent);
+        List<Content> chatContent = List.of(textContent, metadataTextContent, imageContent);
 
         // We create a user message to pass vision/text content
         UserMessage userMessage = new UserMessage(chatContent);
