@@ -111,7 +111,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     }
 
     @Override
-    public String processVisionChat(VisionPulse visionPulse) {
+    public String processVisionPulse(VisionPulse visionPulse) {
         // GPT-4o has Vision capabilities - we init this model
         ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
                 .modelName(GPT_4o)

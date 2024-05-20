@@ -35,5 +35,5 @@ public interface OpenAiService {
      *
      * @return {@link String} answer
      */
-    String processVisionChat(VisionPulse visionPulse);
+    String processVisionPulse(VisionPulse visionPulse);
 }
