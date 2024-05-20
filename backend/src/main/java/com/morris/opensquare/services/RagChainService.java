@@ -10,5 +10,5 @@ public interface RagChainService {
      *
      * @return {@link String} prompt response
      */
-    String promptResponse(String prompt);
+    String promptResponse(String prompt, String system);
 }

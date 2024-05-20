@@ -54,6 +54,15 @@ public class ApplicationPropertiesConfiguration {
     @Value("${secrets.mongodbUri}")
     private String mongodbUri;
 
+    @Value("${secrets.database}")
+    private String database;
+
+    @Value("${secrets.youtubeCollection}")
+    private String youtubeCollection;
+
+    @Value("${secrets.youtubeVectorIndex}")
+    private String youtubeVectorIndex;
+
     @Bean
     public String region() {
         return this.region;
@@ -106,4 +115,19 @@ public class ApplicationPropertiesConfiguration {
 
     @Bean
     public String mongodbUri() { return this.mongodbUri; }
+
+    @Bean
+    public String database() {
+        return database;
+    }
+
+    @Bean
+    public String youtubeCollection() {
+        return youtubeCollection;
+    }
+
+    @Bean
+    public String youtubeVectorIndex() {
+        return youtubeVectorIndex;
+    }
 }

@@ -1,31 +1,44 @@
 package com.morris.opensquare.services.impl;
 
+import com.mongodb.client.MongoClient;
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 import com.morris.opensquare.services.RagChainService;
-import com.morris.opensquare.utils.PythonScriptEngine;
+import dev.langchain4j.store.embedding.mongodb.MongoDbEmbeddingStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class YouTubeRagChainServiceImpl implements RagChainService {
-    private final PythonScriptEngine pythonScriptEngine;
+    private final OpenAiServiceImpl openAiService;
+    private final MongoClient mongoClient;
     private final ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
 
     @Autowired
-    public YouTubeRagChainServiceImpl(PythonScriptEngine pythonScriptEngine, ApplicationPropertiesConfiguration applicationPropertiesConfiguration) {
-        this.pythonScriptEngine = pythonScriptEngine;
+    public YouTubeRagChainServiceImpl(OpenAiServiceImpl openAiService, ApplicationPropertiesConfiguration applicationPropertiesConfiguration,
+                                      MongoClient mongoClient) {
+        this.openAiService = openAiService;
         this.applicationPropertiesConfiguration = applicationPropertiesConfiguration;
+        this.mongoClient = mongoClient;
     }
 
     @Override
-    public String promptResponse(String prompt) {
-        return pythonScriptEngine.processYouTubeRAGChain(
+    public String promptResponse(String prompt, String system) {
+        MongoDbEmbeddingStore embeddingStore = MongoDbEmbeddingStore.builder()
+                .fromClient(mongoClient)
+                .databaseName(applicationPropertiesConfiguration.database())
+                .collectionName(applicationPropertiesConfiguration.youtubeCollection())
+                .indexName(applicationPropertiesConfiguration.youtubeVectorIndex())
+                .build();
+
+        return openAiService.processYouTubeRAGChain(
                 new YouTubeRagChainProperties.Builder()
-                .mongodbUri(applicationPropertiesConfiguration.mongodbUri())
-                .openaiKey(applicationPropertiesConfiguration.openAI())
-                .prompt(prompt)
-                .build()
+                        .mongodbUri(applicationPropertiesConfiguration.mongodbUri())
+                        .openaiKey(applicationPropertiesConfiguration.openAI())
+                        .vectorStore(embeddingStore)
+                        .prompt(prompt)
+                        .system(system)
+                        .build()
         );
     }
 }

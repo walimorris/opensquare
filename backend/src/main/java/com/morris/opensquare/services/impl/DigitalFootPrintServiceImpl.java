@@ -161,6 +161,8 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
             loggerService.saveLog(e.getClass().getName(), ERROR_VALIDATING_URL + REGEX_EMPTY + url + REGEX_EMPTY + e.getMessage(), Optional.of(LOGGER));
+        } catch (IllegalArgumentException e) {
+            loggerService.saveLog(e.getClass().getName(), e.getMessage(), Optional.of(LOGGER));
         }
         return false;
     }

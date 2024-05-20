@@ -1,5 +1,7 @@
 package com.morris.opensquare.models.youtube;
 
+import dev.langchain4j.store.embedding.mongodb.MongoDbEmbeddingStore;
+
 /**
  * YouTubeRagChainProperties object carries various properties required to create
  * a RAG chain prompt response. MongoDB vector storage is used as the RAG chain
@@ -10,14 +12,18 @@ package com.morris.opensquare.models.youtube;
 public class YouTubeRagChainProperties {
     private String mongodbUri;
     private String openaiKey;
+    private MongoDbEmbeddingStore vectorStore;
     private String prompt;
+    private String system;
 
     public YouTubeRagChainProperties() {}
 
     public YouTubeRagChainProperties(Builder builder) {
         this.mongodbUri = builder.mongodbUri;
         this.openaiKey = builder.openaiKey;
+        this.vectorStore = builder.vectorStore;
         this.prompt = builder.prompt;
+        this.system = builder.system;
     }
 
     public String getMongodbUri() {
@@ -44,10 +50,28 @@ public class YouTubeRagChainProperties {
         this.prompt = prompt;
     }
 
+    public MongoDbEmbeddingStore getVectorStore() {
+        return vectorStore;
+    }
+
+    public void setVectorStore(MongoDbEmbeddingStore vectorStore) {
+        this.vectorStore = vectorStore;
+    }
+
+    public String getSystem() {
+        return this.system;
+    }
+
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
     public static class Builder {
         private String mongodbUri;
         private String openaiKey;
         private String prompt;
+        private MongoDbEmbeddingStore vectorStore;
+        private String system;
 
         public Builder() {
             // nothing to complete inside Builder
@@ -65,6 +89,16 @@ public class YouTubeRagChainProperties {
 
         public Builder prompt(String prompt) {
             this.prompt = prompt;
+            return this;
+        }
+
+        public Builder vectorStore(MongoDbEmbeddingStore vectorStore) {
+            this.vectorStore = vectorStore;
+            return this;
+        }
+
+        public Builder system(String system) {
+            this.system = system;
             return this;
         }
 

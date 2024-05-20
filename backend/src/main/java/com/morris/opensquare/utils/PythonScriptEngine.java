@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
  * same data.
  */
 @Component("pythonScriptEngine")
+@Deprecated
 public class PythonScriptEngine {
     private static final Logger LOGGER = LoggerFactory.getLogger(PythonScriptEngine.class);
 

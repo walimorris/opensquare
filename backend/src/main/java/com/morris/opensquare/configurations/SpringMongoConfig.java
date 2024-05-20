@@ -1,10 +1,13 @@
 package com.morris.opensquare.configurations;
 
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -15,8 +18,16 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-@Configuration
+@Configuration("classpath:secrets.properties")
 public class SpringMongoConfig {
+
+    @Value("${secrets.mongodbUri}")
+    private String mongodbUri;
+
+    @Bean
+    public MongoClient mongoClient() {
+        return MongoClients.create(mongodbUri);
+    }
 
     /**
      * By default, MongoDB saves documents with a _class field in the document. This bean
