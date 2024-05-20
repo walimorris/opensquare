@@ -44,7 +44,7 @@ public class ImageTrackingController {
                 .metaData(null)
                 .build();
 
-        String response = openAiService.processVisionChat(visionPulse);
+        String response = openAiService.processVisionPulse(visionPulse);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
