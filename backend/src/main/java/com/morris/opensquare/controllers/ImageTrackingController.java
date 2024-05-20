@@ -1,14 +1,13 @@
 package com.morris.opensquare.controllers;
 
+import com.morris.opensquare.models.trackers.VisionPulse;
 import com.morris.opensquare.services.ImageTrackingService;
+import com.morris.opensquare.services.impl.OpenAiServiceImpl;
 import org.apache.commons.imaging.ImageReadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,10 +17,12 @@ import java.util.Map;
 @RequestMapping("/opensquare/api/imageTracking")
 public class ImageTrackingController {
     private final ImageTrackingService imageTrackingService;
+    private final OpenAiServiceImpl openAiService;
 
     @Autowired
-    public ImageTrackingController(ImageTrackingService imageTrackingService) {
+    public ImageTrackingController(ImageTrackingService imageTrackingService, OpenAiServiceImpl openAiService) {
         this.imageTrackingService = imageTrackingService;
+        this.openAiService = openAiService;
     }
 
     @PostMapping("/scan")
@@ -30,5 +31,22 @@ public class ImageTrackingController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(result);
+    }
+
+    // TODO: possible uploads should be urls, base64, using byte[] streams from multiple-part uploads (see above)
+    // Depending on the image type: options should be given. Possible meta scrape or user input for extra details
+    // to append to the metadata field. These can help the model give more informed vision details.
+    @GetMapping("/vision_pulse")
+    public ResponseEntity<String> visionPulse(@RequestParam String url, @RequestParam String q) {
+        VisionPulse visionPulse = VisionPulse.builder()
+                .imageUrl(url)
+                .text(q)
+                .metaData(null)
+                .build();
+
+        String response = openAiService.processVisionChat(visionPulse);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
     }
 }

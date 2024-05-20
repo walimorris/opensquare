@@ -1,5 +1,6 @@
 package com.morris.opensquare.services;
 
+import com.morris.opensquare.models.trackers.VisionPulse;
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 
 import java.util.List;
@@ -25,4 +26,14 @@ public interface OpenAiService {
      * @return {@link List<Float>} embeddings
      */
     List<Float> processOpenAiAda002TextEmbedding(String key, String text);
+
+    /**
+     * Process a Vision request to OpenAI model, requesting information about given image with possible
+     * metadata as extra context for more accurate or detailed answers.
+     *
+     * @param visionPulse {@link VisionPulse} contains text, image, and image metadata
+     *
+     * @return {@link String} answer
+     */
+    String processVisionChat(VisionPulse visionPulse);
 }
