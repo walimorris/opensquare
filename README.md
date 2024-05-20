@@ -103,10 +103,12 @@ Gen AI allows us to accelerate the speed at which we can provide actionable insi
 Not only can they contain embedded metadata, telling more about what an image is, how it was produced, and who produced it, but 
 we can possibly get information about an image just by examining it visually. Imagine, we want to get information about an image
 based on its metadata (Exif, Tiff, etc...) and make informed conclusions, OpenAI can help us with that.
+###
 [![](http://img.youtube.com/vi/nX_inqaAzOI/0.jpg)](https://github.com/walimorris/opensquare/assets/48896622/1494b9eb-0bf8-427a-aa63-9c8f036e5cc3)
 
 There are various usecases for this: another one being the ability to speed up information retrieval by querying for landmarks 
 nearby an image or simply persisting an image and following the story by piecing together and embedding metadata as we receive it.  
+###
 [![](http://img.youtube.com/vi/nX_inqaAzOI/0.jpg)](https://github.com/walimorris/opensquare/assets/48896622/34fc3751-9654-4ab2-b8cf-cc08cc43e275)
 
 Along with other features, OpenSquare provides [Digit Footprint](https://en.wikipedia.org/wiki/Digital_footprint) targeting 
