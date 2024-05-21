@@ -104,19 +104,14 @@ Not only can they contain embedded metadata, telling more about what an image is
 we can possibly get information about an image just by examining it visually. Imagine, we want to get information about an image
 based on its metadata (Exif, Tiff, etc...) and make informed conclusions, OpenAI can help us with that.
 ###
-<div align="center">
-  <video width="650" height="450" controls>
-  <source src="demo/video_pulse_demo1.webm" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-</div>
+[![](http://img.youtube.com/vi/nX_inqaAzOI/0.jpg)](https://www.dropbox.com/scl/fi/j2zcankyfb427md3d29vx/video_pulse_long_1.mov?rlkey=x0pot0wkm91onlh8s1c4i6ssr&st=un9u2yz1&dl=0)
 
 There are various usecases for this: another one being the ability to speed up information retrieval by querying for landmarks 
 nearby an image or simply persisting an image and following the story by piecing together and embedding metadata as we receive it.  
 ###
 <div align="center">
   <video width="650" height="450" controls>
-  <source src="demo/video_pulse_demo2.webm" type="video/mp4">
+  <source src="https://raw.githubusercontent.com/walimorris/opensquare/master/demo/video_pulse_demo2.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 </div>
