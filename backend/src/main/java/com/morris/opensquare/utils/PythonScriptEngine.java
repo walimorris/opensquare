@@ -63,8 +63,7 @@ public class PythonScriptEngine {
             ProcessBuilder processBuilder = new ProcessBuilder(
                     PYTHON, resolvedScript,
                     properties.getMongodbUri(),
-                    properties.getOpenaiKey(),
-                    properties.getPrompt()
+                    properties.getOpenaiKey()
             );
             processBuilder.redirectErrorStream(true);
 

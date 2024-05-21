@@ -23,7 +23,7 @@ public class YouTubeRagChainServiceImpl implements RagChainService {
     }
 
     @Override
-    public String promptResponse(String prompt, String system) {
+    public String promptResponse(String prompt) {
         MongoDbEmbeddingStore embeddingStore = MongoDbEmbeddingStore.builder()
                 .fromClient(mongoClient)
                 .databaseName(applicationPropertiesConfiguration.database())
@@ -37,7 +37,6 @@ public class YouTubeRagChainServiceImpl implements RagChainService {
                         .openaiKey(applicationPropertiesConfiguration.openAI())
                         .vectorStore(embeddingStore)
                         .prompt(prompt)
-                        .system(system)
                         .build()
         );
     }

@@ -1,6 +1,7 @@
 package com.morris.opensquare.services.impl;
 
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
+import com.morris.opensquare.models.chat.Viki;
 import com.morris.opensquare.models.trackers.VisionPulse;
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 import com.morris.opensquare.services.OpenAiService;
@@ -10,14 +11,14 @@ import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.input.Prompt;
-import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +41,6 @@ public class OpenAiServiceImpl implements OpenAiService {
     public OpenAiServiceImpl(ApplicationPropertiesConfiguration configuration) {
         this.configuration = configuration;
     }
-
 
     @Override
     public String processYouTubeRAGChain(YouTubeRagChainProperties youTubeRagChainProperties) {
@@ -61,7 +59,7 @@ public class OpenAiServiceImpl implements OpenAiService {
                 .embeddingStore(youTubeRagChainProperties.getVectorStore())
                 .build();
 
-        // Create a prompt template giving the context and question (embed the question for relevant answers)
+        // Create a prompt template given the context and question (embed the question for relevant answers query)
         String question = youTubeRagChainProperties.getPrompt();
         Embedding questionEmbedding = embeddingModel.embed(question).content();
         List<EmbeddingMatch<TextSegment>> relevantEmbeddings = youTubeRagChainProperties.getVectorStore()
@@ -72,27 +70,21 @@ public class OpenAiServiceImpl implements OpenAiService {
                 .map(match -> match.embedded().text())
                 .collect(Collectors.joining("\n\n"));
 
-        Map<String, String> promptVariables = new HashMap<>();
-        promptVariables.put("question", question);
-        promptVariables.put("context", context);
-
-        PromptTemplate promptTemplate = PromptTemplate.from(
-                        """
-                        Answer the question based only on the following context, your name is Viki: \
-                        {{context}}
-                        
-                        Question: {{question}}
-                        """
-        );
-        Prompt prompt = promptTemplate.apply(promptVariables);
-
-        // given the prompt with the added context and user question, we can now prompt our model
+        // given the prompt with the added context and user question, we can now build our model
         ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
                 .apiKey(youTubeRagChainProperties.getOpenaiKey())
                 .modelName(GPT_4o)
                 .timeout(Duration.ofSeconds(60))
                 .build();
-        return chatLanguageModel.generate(prompt.toUserMessage()).content().text();
+
+        // using our AI system interface build the prompt
+        Viki viki = AiServices.builder(Viki.class)
+                .chatLanguageModel(chatLanguageModel)
+                .contentRetriever(retriever)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
+                .build();
+
+        return viki.ragChatOpenAi(1, context, question);
     }
 
     @Override

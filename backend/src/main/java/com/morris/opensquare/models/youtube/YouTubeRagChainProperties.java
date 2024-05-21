@@ -26,9 +26,6 @@ public class YouTubeRagChainProperties {
     /* MongoDbEmbeddingStore provides properties for MongoDB connection and configurations */
     private MongoDbEmbeddingStore vectorStore;
 
-    /* User prompt in chain */
+    /* user message */
     private String prompt;
-
-    /* AI system settings */
-    private String system;
 }

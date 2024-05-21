@@ -3,12 +3,11 @@ package com.morris.opensquare.services;
 public interface RagChainService {
 
     /**
-     * Get prompt response using langchain openai.
-     * @see <a href="https://python.langchain.com/docs/integrations/vectorstores/mongodb_atlas">Langchain Integration Docs</a>
+     * Generate prompt response with given user message prompt.
      *
-     * @param prompt {@link String} user prompt
+     * @param prompt {@link String} user message
      *
      * @return {@link String} prompt response
      */
-    String promptResponse(String prompt, String system);
+    String promptResponse(String prompt);
 }
