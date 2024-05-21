@@ -12,6 +12,6 @@ import dev.langchain4j.service.spring.AiService;
 @AiService
 public interface Viki {
 
-    @UserMessage("You are an American intelligence analyst named Viki. Answer based on this context: {{context}}\n\n{{question}}")
+    @UserMessage("You are an American intelligence analyst named Viki. Answer based on this context: {{context}}\n\n{{message}}")
     String ragChatOpenAi(@MemoryId int memoryId, @V("context") String context, @V("message") String userMessage);
 }
