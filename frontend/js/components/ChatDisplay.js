@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { quantum } from "ldrs";
 
 export default function ChatDisplay() {
     const theme = createTheme();
@@ -14,8 +15,10 @@ export default function ChatDisplay() {
     const [isAnchorOpen, setIsAnchorOpen] = useState(true); // State to track if anchor is open
     const [messages, setMessages] = useState([]);
     const [initialPromptRendered, setInitialPromptRendered] = useState(false);
+    const [showCradle, setShowCradle] = useState(false);
 
     const CHAT_BOT_DISPLAY = 'chatbox-display';
+    quantum.register();
 
     /**
      * Each message is serialized into a plain JavaScript object before storing them in localStorage.
@@ -128,13 +131,16 @@ export default function ChatDisplay() {
     async function handleChatPrompt(prompt) {
         try {
             // TODO: Need to configure an Id for each session chat for chat memory
+            setShowCradle(true);
             const response = await axios.get(`/opensquare/api/rag/youtube/chat?prompt=${prompt}&id=1`, getAxiosConfiguration());
             if (response.data !== null) {
-                console.log(response.data)
+                console.log(response.data);
+                setShowCradle(false);
                 return response.data;
             }
         } catch (error) {
             console.log(error);
+            setShowCradle(false);
         }
     }
 
@@ -156,6 +162,11 @@ export default function ChatDisplay() {
                     {messages.map((message, index) => (
                         <div key={index}>{message}</div> // Wrap each message in a <div>
                     ))}
+                    { showCradle && <l-quantum
+                        size="45"
+                        speed="1.75"
+                        color="black">
+                    </l-quantum>}
                 </Paper>
                 <ThemeProvider theme={theme}>
                     <form style={{ display: "flex", justifyContent: "center", width: "95%", margin: `${theme.spacing(0)} auto` }} noValidate autoComplete="off">

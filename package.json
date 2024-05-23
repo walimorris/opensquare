@@ -26,6 +26,7 @@
     "css-loader": "^5.2.7",
     "dayjs": "^1.11.9",
     "js-cookie": "^3.0.5",
+    "ldrs": "^1.0.1",
     "prop-types": "^15.8.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",

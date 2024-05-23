@@ -96,30 +96,16 @@ the quality of our human existence through deep public analysis and data-driven 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+
 ## Features
 
-### What's in an Image?
-Gen AI allows us to accelerate the speed at which we can provide actionable insight. Images can provide a wealth of information. 
-Not only can they contain embedded metadata, telling more about what an image is, how it was produced, and who produced it, but 
-we can possibly get information about an image just by examining it visually. Imagine, we want to get information about an image
-based on its metadata (Exif, Tiff, etc...) and make informed conclusions, OpenAI can help us with that.
-###
+## Watch Retrieval Augmented Generation (RAG) Demo
+
 <div align="center">
-  <video width="650" height="450" controls>
-    <source src="demo/video_pulse_demo1.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+    <iframe src="https://player.vimeo.com/video/949702850?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" allowfullscreen></iframe>
 </div>
 
-There are various usecases for this: another one being the ability to speed up information retrieval by querying for landmarks 
-nearby an image or simply persisting an image and following the story by piecing together and embedding metadata as we receive it.  
-###
-<div align="center">
-  <video width="650" height="450" controls>
-  <source src="https://raw.githubusercontent.com/walimorris/opensquare/master/demo/video_pulse_demo2.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
-</div>
 
 Along with other features, OpenSquare provides [Digit Footprint](https://en.wikipedia.org/wiki/Digital_footprint) targeting 
 tools, some using well-known OSINT methods such as [Backlinks](https://en.wikipedia.org/wiki/Backlink), [NSLookup](https://en.wikipedia.org/wiki/Nslookup), 
