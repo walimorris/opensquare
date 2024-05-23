@@ -102,9 +102,7 @@ the quality of our human existence through deep public analysis and data-driven 
 
 ## Watch Retrieval Augmented Generation (RAG) Demo
 
-<div align="center">
-    <iframe src="https://player.vimeo.com/video/949702850?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" allowfullscreen></iframe>
-</div>
+[![Watch the video](http://img.youtube.com/vi/nX_inqaAzOI/0.jpg)](https://vimeo.com/949702850)
 
 
 Along with other features, OpenSquare provides [Digit Footprint](https://en.wikipedia.org/wiki/Digital_footprint) targeting 
