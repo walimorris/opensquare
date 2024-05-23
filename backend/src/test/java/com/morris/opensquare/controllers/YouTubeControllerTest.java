@@ -8,7 +8,7 @@ import com.morris.opensquare.TestHelper;
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
 import com.morris.opensquare.models.youtube.YouTubeTranscribeSegment;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
-import com.morris.opensquare.services.YouTubeService;
+import com.morris.opensquare.services.impl.YouTubeServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class YouTubeControllerTest {
 
     @MockBean
-    private YouTubeService youTubeService;
+    private YouTubeServiceImpl youTubeService;
 
     @MockBean
     private ApplicationPropertiesConfiguration applicationPropertiesConfiguration;

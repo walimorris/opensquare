@@ -21,8 +21,8 @@ public class YouTubeRagChainController {
     }
 
     @GetMapping("/chat")
-    public ResponseEntity<String> getPromptResponse(@RequestParam String prompt) {
-        String promptResponse = ragChainService.promptResponse(prompt);
+    public ResponseEntity<String> getPromptResponse(@RequestParam String prompt, @RequestParam int id) {
+        String promptResponse = ragChainService.promptResponse(prompt, id);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(promptResponse);

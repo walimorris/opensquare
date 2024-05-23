@@ -4,6 +4,7 @@ import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
 import com.morris.opensquare.models.chat.Viki;
 import com.morris.opensquare.models.trackers.VisionPulse;
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
+import com.morris.opensquare.models.youtube.YouTubeVideo;
 import com.morris.opensquare.services.OpenAiService;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.message.Content;
@@ -11,7 +12,6 @@ import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -19,7 +19,7 @@ import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
-import dev.langchain4j.store.embedding.EmbeddingMatch;
+import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,48 +27,52 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OpenAiServiceImpl implements OpenAiService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenAiServiceImpl.class);
 
     private final ApplicationPropertiesConfiguration configuration;
+    private final YouTubeServiceImpl youTubeService;
 
     private static final String GPT_4o = "gpt-4o";
 
     @Autowired
-    public OpenAiServiceImpl(ApplicationPropertiesConfiguration configuration) {
+    public OpenAiServiceImpl(ApplicationPropertiesConfiguration configuration, YouTubeServiceImpl youTubeService) {
         this.configuration = configuration;
+        this.youTubeService = youTubeService;
     }
 
     @Override
     public String processYouTubeRAGChain(YouTubeRagChainProperties youTubeRagChainProperties) {
-        // need to initialize the vector store
+
+        // We will use initialize and use the ADA_002 to create embeddings on transcripts
         EmbeddingModel embeddingModel = new OpenAiEmbeddingModel.OpenAiEmbeddingModelBuilder()
                 .modelName(OpenAiEmbeddingModelName.TEXT_EMBEDDING_ADA_002)
                 .apiKey(youTubeRagChainProperties.getOpenaiKey())
                 .maxRetries(2)
                 .build();
 
-        // MongoDB is our vector store, YoutubeRAGChainProperties hold a reference to this store.
-        // We will use langchain4j conversational retrieval chain to execute questions based on
-        // the content in our mongodb vector database (embedding store)
+        InMemoryEmbeddingStore<TextSegment> inMemoryEmbeddingStore = new InMemoryEmbeddingStore<>();
+
+        // we can use youtube service to get most relevant search results in MDB vector
+        List<YouTubeVideo> videosSearchResult = youTubeService.getYouTubeVideosFromVectorSearch(
+                youTubeRagChainProperties.getOpenaiKey(), youTubeRagChainProperties.getPrompt()
+        );
+
+        videosSearchResult.forEach(youTubeVideo -> {
+            TextSegment textSegment = TextSegment.from(youTubeVideo.getTranscript());
+            Embedding embedding = embeddingModel.embed(textSegment).content();
+            inMemoryEmbeddingStore.add(embedding, textSegment);
+        });
+
+        // use our embedding model and in memory store to as retriever for optimal answer
         EmbeddingStoreContentRetriever retriever = EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(embeddingModel)
-                .embeddingStore(youTubeRagChainProperties.getVectorStore())
+                .embeddingStore(inMemoryEmbeddingStore)
                 .build();
 
-        // Create a prompt template given the context and question (embed the question for relevant answers query)
         String question = youTubeRagChainProperties.getPrompt();
-        Embedding questionEmbedding = embeddingModel.embed(question).content();
-        List<EmbeddingMatch<TextSegment>> relevantEmbeddings = youTubeRagChainProperties.getVectorStore()
-                .findRelevant(questionEmbedding, 10, 0.7);
-
-        // context gives our model the most relevant data to answer questions
-        String context = relevantEmbeddings.stream()
-                .map(match -> match.embedded().text())
-                .collect(Collectors.joining("\n\n"));
 
         // given the prompt with the added context and user question, we can now build our model
         ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
@@ -81,25 +85,9 @@ public class OpenAiServiceImpl implements OpenAiService {
         Viki viki = AiServices.builder(Viki.class)
                 .chatLanguageModel(chatLanguageModel)
                 .contentRetriever(retriever)
-                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
                 .build();
 
-        return viki.ragChatOpenAi(1, context, question);
-    }
-
-    @Override
-    public List<Float> processOpenAiAda002TextEmbedding(String key, String text) {
-
-        // Create the embedding model used to vectorize the input text. This vectorization
-        // process is used to perform similarity searches in RAG
-        EmbeddingModel embeddingModel = new OpenAiEmbeddingModel.OpenAiEmbeddingModelBuilder()
-                .modelName(OpenAiEmbeddingModelName.TEXT_EMBEDDING_ADA_002)
-                .apiKey(key)
-                .maxRetries(2)
-                .build();
-
-        // Now we get this embeddings in vector form and return that vector
-        return embeddingModel.embed(text).content().vectorAsList();
+        return viki.ragChatOpenAiDefault(1, question);
     }
 
     @Override
@@ -112,8 +100,6 @@ public class OpenAiServiceImpl implements OpenAiService {
                 .maxRetries(2)
                 .build();
 
-        // TODO: add meta data content to this message to help the model make a more informed answer
-        // TODO: More informed answers can be possible with geolocation data, time, date, so on...
         TextContent textContent = new TextContent(visionPulse.getText());
 
         TextContent metadataTextContent = new TextContent("\nUse this data as extra context: " +

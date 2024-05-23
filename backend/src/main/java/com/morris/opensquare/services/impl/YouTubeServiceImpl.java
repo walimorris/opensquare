@@ -18,6 +18,9 @@ import com.morris.opensquare.utils.Constants;
 import com.morris.opensquare.utils.ExternalServiceUtil;
 import com.morris.opensquare.utils.JsonValidationUtil;
 import com.morris.opensquare.utils.PythonScriptEngine;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
@@ -53,7 +56,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String SNIPPET_CONTENT_DETAILS_STATISTICS = "snippet,contentDetails,statistics";
     private static final String YOUTUBE_URL_WITH_VIDEO_PARAM = "https://www.youtube.com/watch?v=";
     private static final String YOUTUBE_VECTOR_SEARCH_INDEX = "youtube_vector_search";
-    private static final String YOUTUBE_VECTOR_SEARCH_PATH = "transcriptEmbeddings";
+    private static final String YOUTUBE_VECTOR_SEARCH_PATH = "embedding";
     private static final String YOUTUBE_VIDEOS_COLLECTION = "youtube_videos";
     private static final String YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA = "backend/src/main/resources/schemas/YouTubeVideo.json";
     private static final String SCORE = "score";
@@ -71,7 +74,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     private static final String CHANNEL_ID = "channelId";
     private static final String VIDEO_ID = "videoId";
     private static final String TRANSCRIPT_SEGMENTS = "transcriptSegments";
-    private static final String TRANSCRIPT_EMBEDDINGS = "transcriptEmbeddings";
+    private static final String TRANSCRIPT_EMBEDDINGS = "embedding";
     private static final String AUTO_COMPLETE_SEARCH_INDEX = "youtube_titles";
     private static final String AUTO_COMPLETE_TITLE_PATH = "title";
     private static final String SEARCH = "$search";
@@ -174,7 +177,7 @@ public class YouTubeServiceImpl implements YouTubeService {
             VideoContentDetails contentDetails = video.getContentDetails();
             VideoStatistics statistics = video.getStatistics();
             String transcript = getContinuousTranscriptFromYouTubeTranscribeSegments(transcriptSegments);
-            List<Double> embeddings = getTextEmbeddingsAda002(openaiKey, transcript);
+            List<Double> embeddings = processOpenAiAda002TextEmbedding(openaiKey, transcript);
 
             // handle null stat values
             long viewCount = statistics.getViewCount() == null ? 0 : statistics.getViewCount().longValue();
@@ -196,7 +199,7 @@ public class YouTubeServiceImpl implements YouTubeService {
                     .channelId(snippet.getChannelId())
                     .videoId(videoId)
                     .transcriptSegments(transcriptSegments)
-                    .transcriptEmbeddings(embeddings)
+                    .embedding(embeddings)
                     .build();
 
             if (jsonValidationUtil.isValidJsonSchema(YOUTUBE_VIDEO_JSON_VALIDATION_SCHEMA, videoResult, YouTubeVideo.class)) {
@@ -369,7 +372,7 @@ public class YouTubeServiceImpl implements YouTubeService {
     public List<YouTubeVideo> getYouTubeVideosFromVectorSearch(@NonNull String key, @NonNull String searchQuery) {
         List<YouTubeVideo> videoResults = new ArrayList<>();
         if (!searchQuery.isEmpty()) {
-            List<Double> searchQueryEmbeddings = getTextEmbeddingsAda002(key, searchQuery);
+            List<Double> searchQueryEmbeddings = processOpenAiAda002TextEmbedding(key, searchQuery);
             if (!searchQueryEmbeddings.isEmpty()) {
                 MongoDatabase db = mongoTemplate.getDb().withCodecRegistry(codecRegistry);
                 MongoCollection<YouTubeVideo> collection = db.getCollection(YOUTUBE_VIDEOS_COLLECTION, YouTubeVideo.class);
@@ -459,6 +462,23 @@ public class YouTubeServiceImpl implements YouTubeService {
     }
 
     @Override
+    public List<Double> processOpenAiAda002TextEmbedding(String key, String text) {
+
+        // Create the embedding model used to vectorize the input text. This vectorization
+        // process is used to perform similarity searches in RAG
+        EmbeddingModel embeddingModel = new OpenAiEmbeddingModel.OpenAiEmbeddingModelBuilder()
+                .modelName(OpenAiEmbeddingModelName.TEXT_EMBEDDING_ADA_002)
+                .apiKey(key)
+                .maxRetries(2)
+                .build();
+
+        // Now we get this embeddings in vector form and return that vector
+        List<Float> langchain4jVector = embeddingModel.embed(text).content().vectorAsList();
+        return langchain4jVector.stream().mapToDouble(f -> f).boxed().toList();
+    }
+
+    @Override
+    @Deprecated
     public List<Double> getTextEmbeddingsAda002(String key, String text) {
         return pythonScriptEngine.processPythonOpenAiAda002TextEmbeddingScript(key, text);
     }

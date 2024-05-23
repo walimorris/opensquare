@@ -28,4 +28,7 @@ public class YouTubeRagChainProperties {
 
     /* user message */
     private String prompt;
+
+    /* unique id for chat memory */
+    private int memoryId;
 }

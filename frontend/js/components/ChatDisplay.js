@@ -79,8 +79,8 @@ export default function ChatDisplay() {
 
     function getAxiosConfiguration() {
         return {
-            timeout: 6000,
-            signal: AbortSignal.timeout(6000)
+            timeout: 60000,
+            signal: AbortSignal.timeout(60000)
         };
     }
 
@@ -127,7 +127,8 @@ export default function ChatDisplay() {
 
     async function handleChatPrompt(prompt) {
         try {
-            const response = await axios.get(`/opensquare/api/rag/youtube/chat?prompt=${prompt}`, getAxiosConfiguration());
+            // TODO: Need to configure an Id for each session chat for chat memory
+            const response = await axios.get(`/opensquare/api/rag/youtube/chat?prompt=${prompt}&id=1`, getAxiosConfiguration());
             if (response.data !== null) {
                 console.log(response.data)
                 return response.data;

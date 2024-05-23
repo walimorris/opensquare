@@ -182,13 +182,31 @@ public interface YouTubeService {
 
     /**
      * Gets embeddings from openai text-embedding-ada-002 model.
+     * <br><br>
+     * Use {@link #processOpenAiAda002TextEmbedding(String, String)}
      *
      * @param key {@link String} openai key
      * @param text {@link String} text to embed
      *
+     *
      * @return {@link List<Double>}
      */
+    @Deprecated
     List<Double> getTextEmbeddingsAda002(String key, String text);
+
+    /**
+     * Convert given text into vector embeddings representation.
+     * <br><br>
+     * Currently, landchain4j returns vector as List of Floats.
+     * Although MongoDB requires a List of Doubles. This conversion
+     * needs to occur in this method.
+     *
+     * @param key {@link String} OpenAI API key
+     * @param text {@link String} text to embed
+     *
+     * @return {@link List<Float>} embeddings
+     */
+    List<Double> processOpenAiAda002TextEmbedding(String key, String text);
 
     /**
      * Get YouTube videos from vector index search on stored {@link YouTubeVideo}.

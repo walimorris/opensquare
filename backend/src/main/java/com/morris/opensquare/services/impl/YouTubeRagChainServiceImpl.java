@@ -16,14 +16,14 @@ public class YouTubeRagChainServiceImpl implements RagChainService {
 
     @Autowired
     public YouTubeRagChainServiceImpl(OpenAiServiceImpl openAiService, ApplicationPropertiesConfiguration applicationPropertiesConfiguration,
-                                      MongoClient mongoClient) {
+                                      MongoClient mongoClient, YouTubeServiceImpl youTubeService) {
         this.openAiService = openAiService;
         this.applicationPropertiesConfiguration = applicationPropertiesConfiguration;
         this.mongoClient = mongoClient;
     }
 
     @Override
-    public String promptResponse(String prompt) {
+    public String promptResponse(String prompt, int id) {
         MongoDbEmbeddingStore embeddingStore = MongoDbEmbeddingStore.builder()
                 .fromClient(mongoClient)
                 .databaseName(applicationPropertiesConfiguration.database())
@@ -37,6 +37,7 @@ public class YouTubeRagChainServiceImpl implements RagChainService {
                         .openaiKey(applicationPropertiesConfiguration.openAI())
                         .vectorStore(embeddingStore)
                         .prompt(prompt)
+                        .memoryId(id)
                         .build()
         );
     }

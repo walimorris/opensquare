@@ -26,7 +26,7 @@ vector_store = MongoDBAtlasVectorSearch.from_connection_string(
     connection_string=MONGODB_URI,
     namespace=DB_NAME + "." + COLLECTION_NAME,
     embedding=embeddings,
-    embedding_key="transcriptEmbeddings",
+    embedding_key="embedding",
     index_name=ATLAS_VECTOR_SEARCH_INDEX_NAME,
     text_key="transcript"
 )

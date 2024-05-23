@@ -249,7 +249,7 @@ class YouTubeVideoTest {
                 .channelId(YOUTUBE_VIDEO_CHANNEL_ID_1)
                 .videoId(YOUTUBE_VIDEO_VIDEO_ID_1)
                 .transcriptSegments(segments)
-                .transcriptEmbeddings(embeddings)
+                .embedding(embeddings)
                 .build();
 
         assertAll(
