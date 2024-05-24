@@ -1,12 +1,13 @@
 package com.morris.opensquare.services.impl;
 
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
+import com.morris.opensquare.models.ai.VisionPulse;
 import com.morris.opensquare.models.chat.Viki;
-import com.morris.opensquare.models.trackers.VisionPulse;
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 import com.morris.opensquare.models.youtube.YouTubeVideo;
 import com.morris.opensquare.services.OpenAiService;
 import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.data.image.Image;
 import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.TextContent;
@@ -17,6 +18,8 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
+import dev.langchain4j.model.openai.OpenAiImageModel;
+import dev.langchain4j.model.output.Response;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
@@ -28,6 +31,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.List;
 
+import static dev.ai4j.openai4j.image.ImageModel.DALL_E_QUALITY_HD;
+
 @Service
 public class OpenAiServiceImpl implements OpenAiService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenAiServiceImpl.class);
@@ -36,6 +41,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     private final YouTubeServiceImpl youTubeService;
 
     private static final String GPT_4o = "gpt-4o";
+    private static final String DALL_E_2 = "dall-e-2";
 
     @Autowired
     public OpenAiServiceImpl(ApplicationPropertiesConfiguration configuration, YouTubeServiceImpl youTubeService) {
@@ -110,5 +116,21 @@ public class OpenAiServiceImpl implements OpenAiService {
         // We create a user message to pass vision/text content
         UserMessage userMessage = new UserMessage(chatContent);
         return chatLanguageModel.generate(userMessage).content().text();
+    }
+
+    @Override
+    public String generateImage(VisionPulse visionPulse) {
+        OpenAiImageModel imageModel = OpenAiImageModel.builder()
+                .apiKey(configuration.openAI())
+                .modelName(DALL_E_2)
+                .quality(DALL_E_QUALITY_HD)
+                .build();
+
+        Image image = Image.builder()
+                .base64Data(visionPulse.getImageUrl())
+                .build();
+
+        Response<Image> response = imageModel.edit(image, visionPulse.getText());
+        return response.content().url().toString();
     }
 }

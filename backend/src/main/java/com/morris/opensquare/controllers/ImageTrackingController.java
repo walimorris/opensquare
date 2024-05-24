@@ -1,6 +1,6 @@
 package com.morris.opensquare.controllers;
 
-import com.morris.opensquare.models.trackers.VisionPulse;
+import com.morris.opensquare.models.ai.VisionPulse;
 import com.morris.opensquare.services.ImageTrackingService;
 import com.morris.opensquare.services.impl.OpenAiServiceImpl;
 import org.apache.commons.imaging.ImageReadException;
@@ -51,6 +51,21 @@ public class ImageTrackingController {
                 .build();
 
         String response = openAiService.processVisionPulse(visionPulse);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    @GetMapping("/generate_vision_pulse")
+    public ResponseEntity<String> generateVisionPulse(@RequestParam MultipartFile f, @RequestParam String q) {
+        String base64EncodedString = imageTrackingService.base64partEncodedStr(f);
+
+        VisionPulse visionPulse = VisionPulse.builder()
+                .imageUrl(base64EncodedString)
+                .text(q)
+                .build();
+
+        String response = openAiService.generateImage(visionPulse);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);

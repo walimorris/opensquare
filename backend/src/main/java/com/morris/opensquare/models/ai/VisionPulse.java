@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.trackers;
+package com.morris.opensquare.models.ai;
 
 import lombok.*;
 
