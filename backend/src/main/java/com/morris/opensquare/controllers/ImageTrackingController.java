@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -57,7 +58,7 @@ public class ImageTrackingController {
     }
 
     @GetMapping("/generate_vision_pulse")
-    public ResponseEntity<String> generateVisionPulse(@RequestParam MultipartFile f, @RequestParam String q) {
+    public ResponseEntity<URI> generateVisionPulse(@RequestParam MultipartFile f, @RequestParam String q) {
         String base64EncodedString = imageTrackingService.base64partEncodedStr(f);
 
         VisionPulse visionPulse = VisionPulse.builder()
@@ -65,7 +66,18 @@ public class ImageTrackingController {
                 .text(q)
                 .build();
 
-        String response = openAiService.generateImage(visionPulse);
+        URI response = openAiService.generateImageFromInputImage(visionPulse);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    @GetMapping("/generate_vision_pulse_from_prompt")
+    public ResponseEntity<URI> generateVisionPulseFromPrompt(@RequestParam String q) {
+        VisionPulse visionPulse = VisionPulse.builder()
+                .text(q)
+                .build();
+        URI response = openAiService.generateImageFromPrompt(visionPulse);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);

@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class OpenAiServiceImpl implements OpenAiService {
 
     private static final String GPT_4o = "gpt-4o";
     private static final String DALL_E_2 = "dall-e-2";
+    private static final String DALL_E_3 = "dall-e-3";
 
     @Autowired
     public OpenAiServiceImpl(ApplicationPropertiesConfiguration configuration, YouTubeServiceImpl youTubeService) {
@@ -119,7 +121,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     }
 
     @Override
-    public String generateImage(VisionPulse visionPulse) {
+    public URI generateImageFromInputImage(VisionPulse visionPulse) {
         OpenAiImageModel imageModel = OpenAiImageModel.builder()
                 .apiKey(configuration.openAI())
                 .modelName(DALL_E_2)
@@ -131,6 +133,16 @@ public class OpenAiServiceImpl implements OpenAiService {
                 .build();
 
         Response<Image> response = imageModel.edit(image, visionPulse.getText());
-        return response.content().url().toString();
+        return response.content().url();
+    }
+
+    @Override
+    public URI generateImageFromPrompt(VisionPulse visionPulse) {
+        OpenAiImageModel imageModel = OpenAiImageModel.builder()
+                .apiKey(configuration.openAI())
+                .modelName(DALL_E_3)
+                .quality(DALL_E_QUALITY_HD)
+                .build();
+        return imageModel.generate(visionPulse.getText()).content().url();
     }
 }

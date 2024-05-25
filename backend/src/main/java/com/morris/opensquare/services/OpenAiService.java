@@ -3,6 +3,8 @@ package com.morris.opensquare.services;
 import com.morris.opensquare.models.ai.VisionPulse;
 import com.morris.opensquare.models.youtube.YouTubeRagChainProperties;
 
+import java.net.URI;
+
 public interface OpenAiService {
 
     /**
@@ -34,7 +36,16 @@ public interface OpenAiService {
      *
      * @param visionPulse {@link VisionPulse}
      *
-     * @return {@link String} Base64Encoded String
+     * @return {@link URI}
      */
-    public String generateImage(VisionPulse visionPulse);
+    URI generateImageFromInputImage(VisionPulse visionPulse);
+
+    /**
+     * Generates Image from prompt.
+     *
+     * @param visionPulse {@link VisionPulse}
+     *
+     * @return {@link URI}
+     */
+    URI generateImageFromPrompt(VisionPulse visionPulse);
 }
