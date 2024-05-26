@@ -11,7 +11,7 @@ export default function GenerateCard() {
     return (
         <Card sx={{ width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
-                sx={{ height: 140 }}
+                sx={{ height: 235 }}
                 image="/images/osint-image.png"
                 title="ai-generate"
             />
