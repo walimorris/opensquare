@@ -34,6 +34,7 @@ import BackLinks from './BackLinks';
 import YouTubePlatform from "./YouTubePlatform";
 import EmailLookup from "./EmailLookup";
 import NotificationChip from "./NotificationChip";
+import Generate from "./Generate";
 
 function Copyright(props) {
     return (
@@ -113,6 +114,7 @@ export default function Dashboard(props) {
     const [renderNslookup, setRenderNslookup] = React.useState(false);
     const [renderBacklinks, setRenderBacklinks] = React.useState(false);
     const [renderEmailLookup, setRenderEmailLookup] = React.useState(false);
+    const [renderGenerate, setRenderGenerate] = React.useState(false);
 
     // platforms
     const [renderYouTubePlatform, setRenderYouTubePlatform] = React.useState(false);
@@ -155,6 +157,7 @@ export default function Dashboard(props) {
             setRenderBacklinks(false);
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
+            setRenderGenerate(false);
         } else if (childData === 'Whois') {
             // remove non-whois items
             setRenderChart(false);
@@ -164,6 +167,7 @@ export default function Dashboard(props) {
             setRenderBacklinks(false);
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
+            setRenderGenerate(false);
 
             // render whois items
             setRenderWhois(true);
@@ -176,6 +180,7 @@ export default function Dashboard(props) {
             setRenderBacklinks(false);
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
+            setRenderGenerate(false);
 
 
             // render nslookup items
@@ -189,6 +194,7 @@ export default function Dashboard(props) {
             setRenderNslookup(false);
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
+            setRenderGenerate(false);
 
 
             // render backlinks items
@@ -202,6 +208,7 @@ export default function Dashboard(props) {
             setRenderNslookup(false);
             setRenderBacklinks(false);
             setRenderYouTubePlatform(false);
+            setRenderGenerate(false);
 
 
             // render email lookup items
@@ -215,8 +222,22 @@ export default function Dashboard(props) {
             setRenderNslookup(false);
             setRenderBacklinks(false);
             setRenderEmailLookup(false);
+            setRenderGenerate(false);
 
             setRenderYouTubePlatform(true);
+        } else if (childData === 'Generate') {
+            // remove non-email lookup items
+            setRenderChart(false);
+            setRenderOrders(false);
+            setRenderMostAnalyzed(false);
+            setRenderWhois(false);
+            setRenderNslookup(false);
+            setRenderBacklinks(false);
+            setRenderEmailLookup(false);
+            setRenderYouTubePlatform(false);
+
+            // render generate view
+            setRenderGenerate(true);
         }
     }
 
@@ -388,6 +409,11 @@ export default function Dashboard(props) {
                             { renderYouTubePlatform && <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <YouTubePlatform isSelected={true} />
+                                </Paper>
+                            </Grid> }
+                            { renderGenerate && <Grid item xs={12}>
+                                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                                    <Generate />
                                 </Paper>
                             </Grid> }
                         </Grid>

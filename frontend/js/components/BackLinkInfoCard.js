@@ -11,8 +11,8 @@ export default function BackLinkInfoCard() {
     return (
         <Card sx={{ width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
-                sx={{ height: 140 }}
-                image="/images/backlink-chain.png"
+                sx={{ height: 235 }}
+                image="/images/backlink-chain-updated.png"
                 title="backlinks"
             />
             <CardContent>

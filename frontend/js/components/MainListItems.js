@@ -137,6 +137,12 @@ export default function MainListItems(props) {
                     </ListItemButton>
                 </List>
             </Collapse>
+            <ListItemButton onClick={handleTrigger}>
+                <ListItemIcon>
+                    <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Generate" />
+            </ListItemButton>
         </React.Fragment>
     )
 }

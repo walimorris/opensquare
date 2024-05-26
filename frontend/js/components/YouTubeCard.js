@@ -11,8 +11,8 @@ export default function YouTubeCard() {
     return (
         <Card sx={{ width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
-                sx={{ height: 140}}
-                image="/images/youtube.png"
+                sx={{ height: 235}}
+                image="/images/youtube-updated.png"
                 title="YouTube Platform"
             />
             <CardContent>

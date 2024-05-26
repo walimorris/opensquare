@@ -11,8 +11,8 @@ export default function EmailLookupCard() {
     return (
         <Card sx={{ width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
-                sx={{ height: 140 }}
-                image="/images/disposable-email.jpeg"
+                sx={{ height: 235 }}
+                image="/images/disposable-email-updated.png"
                 title="emaillookup"
             />
             <CardContent>

@@ -97,6 +97,7 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
         JSONObject whoisJson = new JSONObject();
         if (command != null) {
             String s;
+            List<String> argsCommand = getArgsCommandList(command);
             BufferedReader bufferedReader = fileService.processBufferedReader(command);
             Thread.sleep(2000);
 
@@ -187,6 +188,10 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
 
         Search searchResult = list.execute();
         return getGoogleResultsWrapperList(searchResult.getItems());
+    }
+
+    private List<String> getArgsCommandList(String command) {
+        return List.of(command.split(" "));
     }
 
     private List<GoogleResultWrapper> getGoogleResultsWrapperList(List<Result> googleSearchResults) {

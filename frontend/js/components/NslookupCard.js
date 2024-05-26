@@ -11,8 +11,8 @@ export default function NslookupCard() {
     return (
         <Card sx={{ width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
-                sx={{ height: 140 }}
-                image="/images/nslookup.png"
+                sx={{ height: 235 }}
+                image="/images/nslookup-updated.png"
                 title="nslookup"
             />
             <CardContent>

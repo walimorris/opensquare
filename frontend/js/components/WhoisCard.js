@@ -11,8 +11,8 @@ export default function WhoisCard() {
     return (
         <Card sx={{ width: '60%', marginTop: '2%', marginLeft: 'auto', marginRight: 'auto'}}>
             <CardMedia
-                sx={{ height: 140 }}
-                image="/images/whois.png"
+                sx={{ height: 235 }}
+                image="/images/whois-updated.png"
                 title="whois"
             />
             <CardContent>

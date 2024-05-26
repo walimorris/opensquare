@@ -46,6 +46,19 @@ const greetings = [
     "Yo!"
 ];
 
+const generate_with_ai = [
+    'With the explosion of Generative Artificial Intelligence (GenAI) brings with it the breakneck speed of information ' +
+    'retrieval, generation, and creation. Opensquare utilizes these novel tools through application ' +
+    'programming interfaces to use Large Language Models (LLMs), like OpenAI\'s ChatGPT and Dall-e. Utilizing ' +
+    'GenAI comes with a handful of implications such as: receiving factual information, safely handling sensitive data, ' +
+    'the ways such powerful tools will be used, to name a few. Opensquare sees the value in such tools when conducting ' +
+    'online investigations and opensource intelligence initiatives. We strive to train our AI systems to generate the most ' +
+    'factual information. Although, you as a user should be aware that all information should be validated. We provide useful ' +
+    'tools that can help you generate reports, images and secondary documentation to reduce the time it takes to produce information ' +
+    'resulting in decision advantage. In this case, Generative AI can immensely improve your productivity and insight. We hope ' +
+    'that you find this tool useful in your research or daily activity. '
+];
+
 export default {
     backlinkInfo,
     emailLookupInfo,
@@ -53,5 +66,6 @@ export default {
     whoisInfo,
     youtubeInfo_1,
     youtubeInfo_2,
-    greetings
+    greetings,
+    generate_with_ai
 }
