@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +42,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public BufferedReader processBufferedReader(@NonNull String command) {
+    public BufferedReader processBufferedReader(@NonNull List<String> command) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             Process process = processBuilder.start();

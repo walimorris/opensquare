@@ -75,7 +75,7 @@ class DigitalFootPrintServiceImplTest {
         if (googleWhoisBufferedReader != null) {
             // test whois command output on linux os
             when(identityGenerator.whichOS()).thenReturn(OS.LINUX);
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + GOOGLE_DOMAIN)).thenReturn(googleWhoisBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + GOOGLE_DOMAIN))).thenReturn(googleWhoisBufferedReader);
             JSONObject googleWhoIsJson = digitalFootPrintService.getWhoIsJSON(GOOGLE_DOMAIN);
 
             assertAll(
@@ -96,10 +96,10 @@ class DigitalFootPrintServiceImplTest {
             // test whois command output from thick whois command on MAC OS X
             when(identityGenerator.whichOS()).thenReturn(OS.MAC_OS_X);
             // hard-coded thin whois command
-            when(fileService.processBufferedReader(WHO_IS_THIN_COMMAND + GOOGLE_DOMAIN))
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_THIN_COMMAND + GOOGLE_DOMAIN)))
                     .thenReturn(googleWhoisThinBufferedReader);
             // hard-coded thick whois command with whois server from the google-thin whois output in test resource
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + "-h " + MARK_MONITOR_SERVER + GOOGLE_DOMAIN))
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + "-h " + MARK_MONITOR_SERVER + GOOGLE_DOMAIN)))
                     .thenReturn(googleWhoisThickBufferedReader);
             JSONObject googleWhoIsJson = digitalFootPrintService.getWhoIsJSON(GOOGLE_DOMAIN);
 
@@ -118,7 +118,7 @@ class DigitalFootPrintServiceImplTest {
         if (yahooWhoisBufferedReader != null) {
             // test whois command output on linux os
             when(identityGenerator.whichOS()).thenReturn(OS.LINUX);
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + YAHOO_DOMAIN)).thenReturn(yahooWhoisBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + YAHOO_DOMAIN))).thenReturn(yahooWhoisBufferedReader);
             JSONObject yahooWhoIsJson = digitalFootPrintService.getWhoIsJSON(YAHOO_DOMAIN);
 
             assertAll(
@@ -139,10 +139,10 @@ class DigitalFootPrintServiceImplTest {
             // test whois command output from thick whois command on MAC OS X
             when(identityGenerator.whichOS()).thenReturn(OS.MAC_OS_X);
             // hard-coded thin whois command
-            when(fileService.processBufferedReader(WHO_IS_THIN_COMMAND + YAHOO_DOMAIN))
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_THIN_COMMAND + YAHOO_DOMAIN)))
                     .thenReturn(yahooWhoisThinBufferedReader);
             // hard-coded thick whois command with whois server from the google-thin whois output in test resource
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + "-h " + MARK_MONITOR_SERVER + YAHOO_DOMAIN))
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + "-h " + MARK_MONITOR_SERVER + YAHOO_DOMAIN)))
                     .thenReturn(yahooWhoisThickBufferedReader);
             JSONObject yahooWhoIsJson = digitalFootPrintService.getWhoIsJSON(YAHOO_DOMAIN);
 
@@ -161,7 +161,7 @@ class DigitalFootPrintServiceImplTest {
         if (vkWhoisBufferedReader != null) {
             // test whois command output on linux os
             when(identityGenerator.whichOS()).thenReturn(OS.LINUX);
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + VKONTAKTE_DOMAIN)).thenReturn(vkWhoisBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + VKONTAKTE_DOMAIN))).thenReturn(vkWhoisBufferedReader);
             JSONObject vkontakteWhoIsJson = digitalFootPrintService.getWhoIsJSON(VKONTAKTE_DOMAIN);
 
             assertAll(
@@ -182,10 +182,10 @@ class DigitalFootPrintServiceImplTest {
             // test whois command output from thick whois command on MAC OS X
             when(identityGenerator.whichOS()).thenReturn(OS.MAC_OS_X);
             // hard-coded thin whois command
-            when(fileService.processBufferedReader(WHO_IS_THIN_COMMAND + VKONTAKTE_DOMAIN))
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_THIN_COMMAND + VKONTAKTE_DOMAIN)))
                     .thenReturn(vkWhoisThinBufferedReader);
             // hard-coded thick whois command with whois server from the google-thin whois output in test resource
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + "-h " + NIC_RU_SERVER + VKONTAKTE_DOMAIN))
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + "-h " + NIC_RU_SERVER + VKONTAKTE_DOMAIN)))
                     .thenReturn(vkWhoisThickBufferedReader);
             JSONObject vkWhoIsJson = digitalFootPrintService.getWhoIsJSON(VKONTAKTE_DOMAIN);
 
@@ -202,7 +202,7 @@ class DigitalFootPrintServiceImplTest {
         BufferedReader googleNslookupBufferedReader = TestHelper.getBufferedReaderFromTxtFile(GOOGLE_NSLOOKUP_RESULT);
 
         if (googleNslookupBufferedReader != null) {
-            when(fileService.processBufferedReader(NSLOOKUP_COMMAND + GOOGLE_DOMAIN)).thenReturn(googleNslookupBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(NSLOOKUP_COMMAND + GOOGLE_DOMAIN))).thenReturn(googleNslookupBufferedReader);
             JSONArray googleNslookupJsonArray = digitalFootPrintService.getNSLookupJSON(GOOGLE_DOMAIN);
 
             assertAll(
@@ -218,7 +218,7 @@ class DigitalFootPrintServiceImplTest {
         BufferedReader yahooNslookupBufferedReader = TestHelper.getBufferedReaderFromTxtFile(YAHOO_NSLOOKUP_RESULT);
 
         if (yahooNslookupBufferedReader != null) {
-            when(fileService.processBufferedReader(NSLOOKUP_COMMAND + YAHOO_DOMAIN)).thenReturn(yahooNslookupBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(NSLOOKUP_COMMAND + YAHOO_DOMAIN))).thenReturn(yahooNslookupBufferedReader);
             JSONArray yahooNslookupJsonArray = digitalFootPrintService.getNSLookupJSON(YAHOO_DOMAIN);
 
             assertAll(
@@ -234,7 +234,7 @@ class DigitalFootPrintServiceImplTest {
         BufferedReader vkNSLookupBufferedReader = TestHelper.getBufferedReaderFromTxtFile(VK_NSLOOKUP_RESULT);
 
         if (vkNSLookupBufferedReader != null) {
-            when(fileService.processBufferedReader(NSLOOKUP_COMMAND + VKONTAKTE_DOMAIN)).thenReturn(vkNSLookupBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(NSLOOKUP_COMMAND + VKONTAKTE_DOMAIN))).thenReturn(vkNSLookupBufferedReader);
             JSONArray vkNSlookupJsonArray = digitalFootPrintService.getNSLookupJSON(VKONTAKTE_DOMAIN);
 
             assertAll(
@@ -251,8 +251,8 @@ class DigitalFootPrintServiceImplTest {
         BufferedReader yahooNslookupBufferedReader = TestHelper.getBufferedReaderFromTxtFile(YAHOO_NSLOOKUP_RESULT);
 
         if (googleNslookupBufferedReader != null && yahooNslookupBufferedReader != null) {
-            when(fileService.processBufferedReader(NSLOOKUP_COMMAND + GOOGLE_DOMAIN)).thenReturn(googleNslookupBufferedReader);
-            when(fileService.processBufferedReader(NSLOOKUP_COMMAND + YAHOO_DOMAIN)).thenReturn(yahooNslookupBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(NSLOOKUP_COMMAND + GOOGLE_DOMAIN))).thenReturn(googleNslookupBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(NSLOOKUP_COMMAND + YAHOO_DOMAIN))).thenReturn(yahooNslookupBufferedReader);
 
             JSONArray yahooNsLookupJson = digitalFootPrintService.getNSLookupJSON(YAHOO_DOMAIN);
             JSONArray googleNsLookupJson = digitalFootPrintService.getNSLookupJSON(GOOGLE_DOMAIN);
@@ -283,9 +283,9 @@ class DigitalFootPrintServiceImplTest {
             // test whois command output on linux os
             when(identityGenerator.whichOS()).thenReturn(OS.LINUX);
 
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + GOOGLE_DOMAIN)).thenReturn(googleWhoisBufferedReader);
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + YAHOO_DOMAIN)).thenReturn(yahooWhoisBufferedReader);
-            when(fileService.processBufferedReader(WHO_IS_COMMAND + VKONTAKTE_DOMAIN)).thenReturn(vkWhoisBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + GOOGLE_DOMAIN))).thenReturn(googleWhoisBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + YAHOO_DOMAIN))).thenReturn(yahooWhoisBufferedReader);
+            when(fileService.processBufferedReader(getArgsCommandList(WHO_IS_COMMAND + VKONTAKTE_DOMAIN))).thenReturn(vkWhoisBufferedReader);
 
             JSONObject googleObject = digitalFootPrintService.getWhoIsJSON(GOOGLE_DOMAIN);
             JSONObject yahooObject = digitalFootPrintService.getWhoIsJSON(YAHOO_DOMAIN);
@@ -333,4 +333,7 @@ class DigitalFootPrintServiceImplTest {
         assertFalse(isValidUrlFalse_2);
     }
 
+    private List<String> getArgsCommandList(String command) {
+        return List.of(command.split(" "));
+    }
 }

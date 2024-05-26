@@ -5,6 +5,7 @@ import org.springframework.lang.NonNull;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.util.List;
 
 public interface FileService {
 
@@ -29,8 +30,8 @@ public interface FileService {
     /**
      * Get BufferedReader from process execution.
      *
-     * @param command process command
+     * @param command {@link List} process command
      * @return {@link BufferedReader}
      */
-    BufferedReader processBufferedReader(@NonNull String command);
+    BufferedReader processBufferedReader(@NonNull List<String> command);
 }

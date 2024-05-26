@@ -67,7 +67,8 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
     public JSONArray getNSLookupJSON(@NonNull String domain) throws IOException, InterruptedException {
         JSONArray nsLookupJSONArray = new JSONArray();
         String s;
-        BufferedReader bufferedReader = fileService.processBufferedReader(NSLOOKUP_COMMAND + domain);
+        List<String> args = getArgsCommandList(NSLOOKUP_COMMAND + domain);
+        BufferedReader bufferedReader = fileService.processBufferedReader(args);
         Thread.sleep(2000);
         int line = 0;
         JSONObject nsLookupJSONObject = new JSONObject();
@@ -93,11 +94,10 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
     @Override
     public JSONObject getWhoIsJSON(@NonNull String domain) throws IOException, InterruptedException {
         OS os = identityGenerator.whichOS();
-        String command = getWhoisCommandBasedOnOperatingSystem(domain, os);
+        List<String> command = getWhoisCommandBasedOnOperatingSystem(domain, os);
         JSONObject whoisJson = new JSONObject();
         if (command != null) {
             String s;
-            List<String> argsCommand = getArgsCommandList(command);
             BufferedReader bufferedReader = fileService.processBufferedReader(command);
             Thread.sleep(2000);
 
@@ -282,10 +282,10 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
      * @throws InterruptedException
      * @throws IOException
      */
-    private String getWhoisCommandBasedOnOperatingSystem(String domain, OS os) throws InterruptedException, IOException {
+    private List<String> getWhoisCommandBasedOnOperatingSystem(String domain, OS os) throws InterruptedException, IOException {
         // get os and parse whois output
         if (os.equals(OS.LINUX)) {
-            return WHO_IS_COMMAND + domain;
+            return getArgsCommandList(WHO_IS_COMMAND + domain);
         }
         String thinWhoisQuery = queryThinWhoisServerForRegistrarWhoisServer(domain);
         if (thinWhoisQuery != null) {
@@ -296,7 +296,7 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
                     .append(REGEX_EMPTY)
                     .append(domain);
 
-            return command.toString();
+            return getArgsCommandList(command.toString());
         }
         return null;
     }
@@ -316,7 +316,7 @@ public class DigitalFootPrintServiceImpl implements DigitalFootPrintService {
      * @throws IOException
      */
     private String queryThinWhoisServerForRegistrarWhoisServer(String domain) throws InterruptedException, IOException {
-        String command = WHO_IS_THIN_COMMAND + domain;
+        List<String> command = getArgsCommandList(WHO_IS_THIN_COMMAND + domain);
         BufferedReader bufferedReader = fileService.processBufferedReader(command);
         Thread.sleep(2000);
         String s;
