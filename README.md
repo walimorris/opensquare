@@ -111,17 +111,17 @@ dashboard workspaces and use output from one tool as input for another.
 
 <div align="center">
   <a href="https://github.com/walimorris/opensquare">
-    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-backlinks.png" alt="Logo" width="650" height="450">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-baclinks-updated.png" alt="Logo" width="650" height="450">
   </a>
 </div>
 <div align="center">
   <a href="https://github.com/walimorris/opensquare">
-    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-whois.png" alt="Logo" width="650" height="450">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-whois-2.png" alt="Logo" width="650" height="450">
   </a>
 </div>
 <div align="center">
   <a href="https://github.com/walimorris/opensquare">
-    <img src="backend/src/main/resources/images/backlink-snapshot.png" alt="Logo" width="650" height="450">
+    <img src="backend/src/main/resources/images/digitalfootprint-snapshot-backlinks-2.png" alt="Logo" width="650" height="450">
   </a>
 </div>
 

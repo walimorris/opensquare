@@ -13,12 +13,15 @@ import { styled } from '@mui/material/styles';
 import axios from "axios";
 import {useEffect} from "react";
 import WhoisCard from "./WhoisCard";
+import { dotPulse } from "ldrs";
 
 export default function Whois() {
     const [whois, setWhois] = React.useState({});
+    const [showPulse, setShowPulse] = React.useState(false);
+    dotPulse.register();
 
     const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#d8ecf3',
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#f3f3f3',
         ...theme.typography.body2,
         padding: theme.spacing(5),
         color: theme.palette.text.secondary,
@@ -26,7 +29,7 @@ export default function Whois() {
         maxWidth: '100%',
         palette:{
             background: {
-                tertiary: '#d8ecf3'
+                tertiary: '#bfbfbf'
             },
             text: {
                 primary: '#fff'
@@ -46,13 +49,19 @@ export default function Whois() {
     }, [whois]);
 
     async function handleWhoisDomainSearch(query) {
-        await axios.get(`/opensquare/api/footprints/whois?domain=${query}`, getAxiosConfiguration())
-            .then((response) => {
+        try {
+            setWhois({});
+            setShowPulse(true);
+            const response = await axios.get(`/opensquare/api/footprints/whois?domain=${query}`, getAxiosConfiguration());
+            if (response.data !== null) {
+                setShowPulse(false);
                 setWhois(response.data)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+                return response.data;
+            }
+        } catch (error) {
+            console.log(error);
+            setShowPulse(false);
+        }
     }
 
     async function handleSearch(e){
@@ -102,6 +111,13 @@ export default function Whois() {
                     </IconButton>
                 </Paper>
                 <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                    <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '4vh'}}>
+                        { showPulse && <l-dot-pulse
+                            size="100"
+                            speed="1.3"
+                            color="black">
+                        </l-dot-pulse>}
+                    </div>
                     {whois['domainName'] !== undefined && <Item
                         sx={{
                             my: 1,

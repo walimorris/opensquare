@@ -8,7 +8,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import axios from "axios";
 import {useEffect, useState} from "react";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import GenerateCard from "./GenerateCard";
 import { quantum } from "ldrs";
