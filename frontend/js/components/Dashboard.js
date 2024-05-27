@@ -35,6 +35,7 @@ import YouTubePlatform from "./YouTubePlatform";
 import EmailLookup from "./EmailLookup";
 import NotificationChip from "./NotificationChip";
 import Generate from "./Generate";
+import Reports from "./Reports";
 
 function Copyright(props) {
     return (
@@ -115,6 +116,7 @@ export default function Dashboard(props) {
     const [renderBacklinks, setRenderBacklinks] = React.useState(false);
     const [renderEmailLookup, setRenderEmailLookup] = React.useState(false);
     const [renderGenerate, setRenderGenerate] = React.useState(false);
+    const [renderReports, setRenderReports] = React.useState(false);
 
     // platforms
     const [renderYouTubePlatform, setRenderYouTubePlatform] = React.useState(false);
@@ -158,6 +160,7 @@ export default function Dashboard(props) {
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
             setRenderGenerate(false);
+            setRenderReports(false);
         } else if (childData === 'Whois') {
             // remove non-whois items
             setRenderChart(false);
@@ -168,6 +171,7 @@ export default function Dashboard(props) {
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
             setRenderGenerate(false);
+            setRenderReports(false);
 
             // render whois items
             setRenderWhois(true);
@@ -181,6 +185,7 @@ export default function Dashboard(props) {
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
             setRenderGenerate(false);
+            setRenderReports(false);
 
 
             // render nslookup items
@@ -195,6 +200,7 @@ export default function Dashboard(props) {
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
             setRenderGenerate(false);
+            setRenderReports(false);
 
 
             // render backlinks items
@@ -209,6 +215,7 @@ export default function Dashboard(props) {
             setRenderBacklinks(false);
             setRenderYouTubePlatform(false);
             setRenderGenerate(false);
+            setRenderReports(false);
 
 
             // render email lookup items
@@ -223,6 +230,7 @@ export default function Dashboard(props) {
             setRenderBacklinks(false);
             setRenderEmailLookup(false);
             setRenderGenerate(false);
+            setRenderReports(false);
 
             setRenderYouTubePlatform(true);
         } else if (childData === 'Generate') {
@@ -235,9 +243,23 @@ export default function Dashboard(props) {
             setRenderBacklinks(false);
             setRenderEmailLookup(false);
             setRenderYouTubePlatform(false);
+            setRenderReports(false);
 
             // render generate view
             setRenderGenerate(true);
+        } else if (childData === 'Reports') {
+            // remove non-email lookup items
+            setRenderChart(false);
+            setRenderOrders(false);
+            setRenderMostAnalyzed(false);
+            setRenderWhois(false);
+            setRenderNslookup(false);
+            setRenderBacklinks(false);
+            setRenderYouTubePlatform(false);
+            setRenderGenerate(false);
+
+            // render generate view
+            setRenderReports(true);
         }
     }
 
@@ -329,7 +351,7 @@ export default function Dashboard(props) {
                     <List component="nav">
                         <MainListItem handleToggleAll={handleToggleAll} />
                         <Divider sx={{ my: 1 }} />
-                        <SecondaryListItems />
+                        <SecondaryListItems handleToggleAll={handleToggleAll} />
                         <Divider sx={{ my: 1 }} />
                         <TertiaryListItems userDetails={props.userDetails}/>
                     </List>
@@ -414,6 +436,12 @@ export default function Dashboard(props) {
                             { renderGenerate && <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <Generate />
+                                </Paper>
+                            </Grid> }
+                            {/* secondary list items */}
+                            { renderReports && <Grid item xs={12}>
+                                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                                    <Reports />
                                 </Paper>
                             </Grid> }
                         </Grid>

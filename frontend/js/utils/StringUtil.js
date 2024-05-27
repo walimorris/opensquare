@@ -59,6 +59,12 @@ const generate_with_ai = [
     'that you find this tool useful in your research or daily activity. '
 ];
 
+const reports = [
+    'Building reports is crucial to getting the right information in the hands of policymakers. Opensquare provides a tool that ' +
+    'allows users to increase the speed and development of reports that provide decision advantage and actionable insights. With ' +
+    'this tool you can use AI generated text and images with the data you\'ve collected.'
+];
+
 export default {
     backlinkInfo,
     emailLookupInfo,
@@ -67,5 +73,6 @@ export default {
     youtubeInfo_1,
     youtubeInfo_2,
     greetings,
-    generate_with_ai
+    generate_with_ai,
+    reports
 }
