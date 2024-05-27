@@ -125,6 +125,17 @@ dashboard workspaces and use output from one tool as input for another.
   </a>
 </div>
 
+### Experiment Generating Reports with GenAI
+Experiment with generating reports and documents with GenAI. Use the information and images you've collected to generate 
+reports that result in decision advantage. Ask our AI system to generate images for you based on the information context 
+and summarize key details. Increase productivity and drastically reduce the speed to delivering key insights to decision
+makers using click-and-point and draggable interfaces.
+<div align="center">
+  <a href="https://github.com/walimorris/opensquare">
+    <img src="backend/src/main/resources/images/generate-reports.png" alt="generate-reports" width="650" height="450">
+  </a>
+</div>
+
 ### Video Transcription with OpenAI's Whisper
 Opensquare utilizes [Whisper](https://github.com/openai/whisper): a general-purpose speech recognition model.  It is trained on a large dataset of diverse audio and is also a
 multitasking model that can perform multilingual speech recognition, speech translation, and language identification.
