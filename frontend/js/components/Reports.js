@@ -13,6 +13,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import {FileUploader} from "react-drag-drop-files";
+import axios from "axios";
+import {useState} from "react";
+import {quantum} from "ldrs";
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -167,7 +171,12 @@ ColorlibStepIcon.propTypes = {
 };
 
 export default function Reports() {
+    const [showCradle, setShowCradle] = useState(false);
     const steps = ['Select Files and Documents', 'Select/Generate Images', 'Create Document'];
+    const fileTypes = ['JPEG', 'PNG', 'GIF', 'PDF'];
+    const [file, setFile] = React.useState(null);
+
+    quantum.register();
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#f3f3f3',
@@ -186,10 +195,38 @@ export default function Reports() {
         }
     }));
 
+    const handleFileChange = (file) => {
+        setFile(file);
+        let formData = new FormData();
+        formData.append("file", file[0]);
+        setTimeout(() => {
+            handleFileUpload(formData);
+        }, 1000)
+    };
+
+    async function handleFileUpload(formData) {
+        try {
+            setShowCradle(true);
+            const response = await axios.post(`/opensquare/api/reports/uploadDocument`, formData, getAxiosConfiguration());
+
+            if (response.data !== null) {
+                console.log(response.data);
+                setShowCradle(false);
+                return response.data;
+            }
+        } catch (error) {
+            console.log(error);
+            setShowCradle(false);
+        }
+    }
+
     function getAxiosConfiguration() {
         return {
             timeout: 6000,
-            signal: AbortSignal.timeout(6000)
+            signal: AbortSignal.timeout(6000),
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
         };
     }
 
@@ -206,6 +243,21 @@ export default function Reports() {
                         ))}
                     </Stepper>
                 </Stack>
+                { showCradle && <l-quantum
+                    size="45"
+                    speed="1.75"
+                    color="black">
+                </l-quantum>}
+                <div className="file-loader">
+                    <h1>Hello To Drag & Drop Files</h1>
+                    <FileUploader
+                        multiple={true}
+                        handleChange={handleFileChange}
+                        name="file"
+                        types={fileTypes}
+                    />
+                    <p>{file ? `File name: ${file[0].name}` : "no files uploaded yet"}</p>
+                </div>
             </Grid>
         </React.Fragment>
     );

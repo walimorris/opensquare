@@ -93,19 +93,6 @@ public class ImageTrackingServiceImpl implements ImageTrackingService {
         return addLongLatProperties(exifImageMetaDataMap);
     }
 
-    @Override
-    public String base64partEncodedStr(MultipartFile file) {
-        String encodedStr = null;
-        try {
-            byte[] sourceBytes = Base64.getEncoder().encode(file.getBytes());
-            String sourceStr = new String(sourceBytes);
-            encodedStr = "data:" + file.getContentType() + ";base64," + sourceStr;
-        } catch (IOException e) {
-            LOGGER.info("Error converting Multipart File to Base64 encoded String: {}", e.getMessage());
-        }
-        return encodedStr;
-    }
-
     private Map<String, Object> addLongLatProperties(Map<String, Object> exifImageMetaDataMap) throws IOException {
         if (exifImageMetaDataMap.containsKey(LATITUDE) && exifImageMetaDataMap.containsKey(LONGITUDE)) {
             GeocodingResult result = locateFromLatLong(exifImageMetaDataMap);

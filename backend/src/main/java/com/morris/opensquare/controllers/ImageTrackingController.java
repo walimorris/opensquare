@@ -3,6 +3,7 @@ package com.morris.opensquare.controllers;
 import com.morris.opensquare.models.ai.VisionPulse;
 import com.morris.opensquare.services.ImageTrackingService;
 import com.morris.opensquare.services.impl.OpenAiServiceImpl;
+import com.morris.opensquare.utils.FileUtil;
 import org.apache.commons.imaging.ImageReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class ImageTrackingController {
     @GetMapping("/vision_pulse")
     public ResponseEntity<String> visionPulse(@RequestParam MultipartFile f, @RequestParam String q) throws IOException, ImageReadException {
         Map<String, Object> metadata = imageTrackingService.getExifImageMetaData(f);
-        String base64EncodedString = imageTrackingService.base64partEncodedStr(f);
+        String base64EncodedString = FileUtil.base64partEncodedStr(f);
 
         VisionPulse visionPulse = VisionPulse.builder()
                 .imageUrl(base64EncodedString)
@@ -59,7 +60,7 @@ public class ImageTrackingController {
 
     @GetMapping("/generate_vision_pulse")
     public ResponseEntity<URI> generateVisionPulse(@RequestParam MultipartFile f, @RequestParam String q) {
-        String base64EncodedString = imageTrackingService.base64partEncodedStr(f);
+        String base64EncodedString = FileUtil.base64partEncodedStr(f);
 
         VisionPulse visionPulse = VisionPulse.builder()
                 .imageUrl(base64EncodedString)
