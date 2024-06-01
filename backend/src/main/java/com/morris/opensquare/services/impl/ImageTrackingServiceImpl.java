@@ -6,7 +6,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.morris.opensquare.configurations.ApplicationPropertiesConfiguration;
-import com.morris.opensquare.models.OpensquareMultipartFile;
+import com.morris.opensquare.models.documents.OpensquareMultipartFile;
 import com.morris.opensquare.models.exceptions.ImageTrackingServiceRunTimeException;
 import com.morris.opensquare.services.ImageTrackingService;
 import com.morris.opensquare.services.loggers.LoggerService;

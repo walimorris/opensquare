@@ -1,8 +1,7 @@
 package com.morris.opensquare.controllers;
 
-import com.morris.opensquare.models.documents.PdfDocument;
+import com.morris.opensquare.models.documents.Document;
 import com.morris.opensquare.services.impl.DocumentServiceImpl;
-import com.morris.opensquare.utils.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +23,16 @@ public class ReportsController {
     }
 
     @PostMapping(value = "/uploadDocument", produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadDocument(@RequestPart MultipartFile file) {
-        PdfDocument pdfDocument = documentService.readPdfDocument(file);
-        String base64encodedStr = FileUtil.base64partEncodedStr(file);
-        LOGGER.info("File: {}", pdfDocument.toString());
+    public ResponseEntity<Document> uploadDocument(@RequestPart MultipartFile file, @RequestParam boolean save) {
+        Document document;
+        if (save) {
+            document = documentService.readAndSaveDocument(file);
+        } else {
+            document = documentService.readDocument(file);
+        }
+        LOGGER.info("File: {}", document.toString());
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body("ok");
+                .body(document);
     }
 }

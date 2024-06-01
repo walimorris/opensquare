@@ -4,10 +4,6 @@ import Paper from "@mui/material/Paper";
 import { styled } from '@mui/material/styles';
 import ReportsCard from "./ReportsCard";
 import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import Check from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -17,6 +13,7 @@ import {FileUploader} from "react-drag-drop-files";
 import axios from "axios";
 import {useState} from "react";
 import {quantum} from "ldrs";
+import OStepper from "./OStepper";
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -140,13 +137,13 @@ function ColorlibStepIcon(props) {
     const { active, completed, className } = props;
 
     const icons = {
-        1: <SettingsIcon />,
+        1: <SettingsIcon  />,
         2: <GroupAddIcon />,
         3: <VideoLabelIcon />,
     };
 
     return (
-        <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+        <ColorlibStepIconRoot ownerState={{ }} className={className}>
             {icons[String(props.icon)]}
         </ColorlibStepIconRoot>
     );
@@ -234,15 +231,7 @@ export default function Reports() {
         <React.Fragment>
             <Grid item xs={12} justifyContent='center' alignItems='center'>
                 <ReportsCard />
-                <Stack sx={{ width: '100%', marginTop: '10%' }} spacing={4}>
-                    <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Stack>
+                <OStepper />
                 { showCradle && <l-quantum
                     size="45"
                     speed="1.75"
