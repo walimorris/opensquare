@@ -9,6 +9,8 @@ import org.bson.BsonBinary;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @Builder
@@ -18,8 +20,10 @@ public class Document {
 
     @BsonId
     private ObjectId id;
+    private String userId;
     private String fileName;
     private long fileSize;
     private BsonBinary binary;
     private FileType fileType;
+    private Map<String, String> metadata;
 }

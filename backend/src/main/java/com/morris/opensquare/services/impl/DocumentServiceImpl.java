@@ -6,12 +6,15 @@ import com.morris.opensquare.repositories.DocumentRepository;
 import com.morris.opensquare.services.DocumentService;
 import com.morris.opensquare.utils.FileUtil;
 import org.bson.BsonBinary;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -26,12 +29,14 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document readDocument(MultipartFile multipartFile) {
+    public Document readDocument(Principal principal, MultipartFile multipartFile) {
+        // TODO: handle duplications
         BsonBinary base64BsonBinary = FileUtil.base64ToBsonBinary(multipartFile);
         String[] fileTypeParts = Objects.requireNonNull(multipartFile.getContentType()).split("\\.");
         String fileType = fileTypeParts[fileTypeParts.length - 1];
         return Document.builder()
                 .fileName(multipartFile.getName())
+                .userId(principal.getName())
                 .fileSize(multipartFile.getSize())
                 .binary(base64BsonBinary)
                 .fileType(FileType.valueOf(fileType))
@@ -39,8 +44,18 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document readAndSaveDocument(MultipartFile multipartFile) {
-        Document document = readDocument(multipartFile);
+    public Document readAndSaveDocument(Principal principal, MultipartFile multipartFile) {
+        Document document = readDocument(principal, multipartFile);
         return documentRepository.save(document);
+    }
+
+    @Override
+    public List<Document> getAllDocumentsForUser(Principal principal) {
+        return documentRepository.getDocumentsByUserId(principal.getName());
+    }
+
+    @Override
+    public Document getDocumentByDocumentIdAndUserId(Principal principal, ObjectId documentId) {
+        return documentRepository.getDocumentByDocumentIdAndUserId(documentId, principal.getName());
     }
 }
