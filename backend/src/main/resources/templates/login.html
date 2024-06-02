@@ -1,38 +1,97 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Login - Opensquare</title>
-    <link rel="stylesheet" href="main.css">
-    <style type="text/css">
-        body div {
+    <meta charset="UTF-8">
+    <title>Login - Open Square</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #000, #fff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
             text-align: center;
         }
-        label, input[type=text], input[type=password] {
-            display: inline-block;
-            width: 150px;
-            margin: 5px;
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #000;
         }
-        input[type=submit] {
-            width: 60px;
-            margin: 10px;
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .form-group input {
+            width: calc(100% - 20px);
             padding: 10px;
+            padding-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 16px;
             text-align: center;
+        }
+        .form-group label {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            padding: 0 5px;
+            background: #fff;
+            color: #aaa;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            color: #000;
+        }
+        .login-container input[type="submit"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            background: #000;
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-container input[type="submit"]:hover {
+            background: #444;
+        }
+        .login-container .message {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #000;
         }
     </style>
 </head>
 <body>
-<div>
-    <div>
-        <h2>Login Form</h2>
-    </div>
-    <div>
-        <form th:action="@{/auth/login}" method="post">
-            <div><label>Username: </label> <input type="text" name="username" /></div>
-            <div><label>Password: </label><input type="password" name="password" /></div>
-            <div><input type="submit" value="Login" /></div>
-        </form>
-    </div>
+<div class="login-container">
+    <h2>Login Form</h2>
+    <form th:action="@{/auth/login}" method="post">
+        <div class="form-group">
+            <input type="email" id="email" name="username" required placeholder=" ">
+            <label for="email">Email:</label>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" name="password" required placeholder=" ">
+            <label for="password">Password:</label>
+        </div>
+        <input type="submit" value="Login">
+    </form>
 </div>
 </body>
 </html>
