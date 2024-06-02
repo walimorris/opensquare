@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="ISO-8859-1">
     <title>Login - Opensquare</title>
@@ -26,14 +26,8 @@
     <div>
         <h2>Login Form</h2>
     </div>
-    <div th:if="${param.error}">
-        <h3>Invalid username and password.</h3>
-    </div>
-    <div th:if="${param.logout}">
-        <h3>You have been logged out.</h3>
-    </div>
     <div>
-        <form th:action="@{/login}" method="post">
+        <form th:action="@{/auth/login}" method="post">
             <div><label>Username: </label> <input type="text" name="username" /></div>
             <div><label>Password: </label><input type="password" name="password" /></div>
             <div><input type="submit" value="Login" /></div>
