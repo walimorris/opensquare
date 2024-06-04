@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.authentication;
+package com.morris.opensquare.models.security;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +10,6 @@ import lombok.ToString;
 @ToString
 @Builder
 public class AuthRequest {
-    private String username;
+    private String userName;
     private String password;
 }

@@ -1,6 +1,6 @@
 package com.morris.opensquare.configurations;
 
-import com.morris.opensquare.models.authentication.JwtTokenFilter;
+import com.morris.opensquare.models.security.JwtTokenFilter;
 import com.morris.opensquare.services.OpensquareUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/signup").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form.loginPage("/login").permitAll())
@@ -42,7 +42,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, AuthenticationManagerBuilder auth) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Open Square</title>
+    <title>Signup - Open Square</title>
     <style>
         body {
             background: linear-gradient(to bottom, #000, #fff);
@@ -13,7 +13,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        .login-container {
+        .signup-container {
             background: #fff;
             border-radius: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -22,7 +22,7 @@
             width: 100%;
             text-align: center;
         }
-        .login-container h2 {
+        .signup-container h2 {
             margin-bottom: 20px;
             font-size: 24px;
             color: #000;
@@ -57,7 +57,7 @@
             font-size: 12px;
             color: #000;
         }
-        .login-container input[type="submit"] {
+        .signup-container input[type="submit"] {
             width: calc(100% - 20px);
             padding: 10px;
             background: #000;
@@ -68,25 +68,25 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        .login-container input[type="submit"]:hover {
+        .signup-container input[type="submit"]:hover {
             background: #444;
         }
-        .login-container .message {
+        .signup-container .message {
             margin-top: 20px;
             font-size: 14px;
             color: #000;
         }
-        .login-container .signup-link {
+        .login-container .login-link {
             margin-top: 20px;
             font-size: 14px;
             color: #000;
         }
-        .login-container .signup-link a {
+        .login-container .login-link a {
             color: #000;
             text-decoration: none;
             font-weight: bold;
         }
-        .login-container .signup-link a:hover {
+        .login-container .login-link a:hover {
             text-decoration: underline;
         }
         .error-message {
@@ -96,9 +96,17 @@
     </style>
 </head>
 <body>
-<div class="login-container">
-    <h2>Login Form</h2>
-    <form th:action="@{/auth/login}" method="post">
+<div class="signup-container">
+    <h2>Signup Form</h2>
+    <form th:action="@{/auth/signup}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <input type="text" id="firstName" name="firstName" required placeholder=" ">
+            <label for="firstName">First Name:</label>
+        </div>
+        <div class="form-group">
+            <input type="text" id="lastName" name="lastName" required placeholder=" ">
+            <label for="lastName">Last Name:</label>
+        </div>
         <div class="form-group">
             <input type="text" id="userName" name="userName" required placeholder=" ">
             <label for="userName">Username:</label>
@@ -107,9 +115,25 @@
             <input type="password" id="password" name="password" required placeholder=" ">
             <label for="password">Password:</label>
         </div>
-        <input type="submit" value="Login">
-        <div class="signup-link">
-            Don't have an account? <a th:href="@{/signup}">Sign up</a>
+        <div class="form-group">
+            <input type="email" id="emailAddress" name="emailAddress" required placeholder=" ">
+            <label for="emailAddress">Email Address:</label>
+        </div>
+        <div class="form-group">
+            <input type="text" id="organization" name="organization" required placeholder=" ">
+            <label for="organization">Organization:</label>
+        </div>
+        <div class="form-group">
+            <input type="text" id="ageGroup" name="ageGroup" required placeholder=" ">
+            <label for="ageGroup">Age Group:</label>
+        </div>
+        <div class="form-group">
+            <input type="file" id="image" name="image" required placeholder=" ">
+            <label for="image">Image:</label>
+        </div>
+        <input type="submit" value="Signup">
+        <div class="login-link">
+            Already have an account? <a th:href="@{/login}">Sign In</a>
         </div>
         <div th:if="${error}" class="error-message" th:text="${error}"></div>
     </form>

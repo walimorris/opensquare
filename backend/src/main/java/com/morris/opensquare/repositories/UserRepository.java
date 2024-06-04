@@ -1,6 +1,6 @@
 package com.morris.opensquare.repositories;
 
-import com.morris.opensquare.models.authentication.UserDetails;
+import com.morris.opensquare.models.security.UserDetails;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

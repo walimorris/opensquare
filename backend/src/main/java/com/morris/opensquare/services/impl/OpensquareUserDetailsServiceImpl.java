@@ -1,5 +1,6 @@
 package com.morris.opensquare.services.impl;
 
+import com.morris.opensquare.models.security.UserDetails;
 import com.morris.opensquare.repositories.UserRepository;
 import com.morris.opensquare.services.OpensquareUserDetailsService;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class OpensquareUserDetailsServiceImpl implements OpensquareUserDetailsSe
 
     @Override
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.morris.opensquare.models.authentication.UserDetails userDetails = userRepository.findByUserName(username)
+        com.morris.opensquare.models.security.UserDetails userDetails = userRepository.findByUserName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         return User.builder()
@@ -30,5 +31,10 @@ public class OpensquareUserDetailsServiceImpl implements OpensquareUserDetailsSe
                 .password(userDetails.getPassword())
                 .roles(userDetails.getRoles().toArray(new String[0]))
                 .build();
+    }
+
+    @Override
+    public UserDetails save(UserDetails userDetails) {
+        return userRepository.save(userDetails);
     }
 }

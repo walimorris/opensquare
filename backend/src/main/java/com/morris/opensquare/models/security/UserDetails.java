@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.authentication;
+package com.morris.opensquare.models.security;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @Document("users")
 public class UserDetails {
@@ -32,4 +34,5 @@ public class UserDetails {
     private String organization;
     private String ageGroup;
     private List<String> roles;
+    private String image;
 }

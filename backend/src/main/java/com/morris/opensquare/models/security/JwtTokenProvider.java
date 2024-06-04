@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.authentication;
+package com.morris.opensquare.models.security;
 
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;

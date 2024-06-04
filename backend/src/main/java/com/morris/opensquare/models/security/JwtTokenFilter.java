@@ -1,4 +1,4 @@
-package com.morris.opensquare.models.authentication;
+package com.morris.opensquare.models.security;
 
 import com.morris.opensquare.services.OpensquareUserDetailsService;
 import jakarta.servlet.FilterChain;
