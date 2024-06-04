@@ -48,7 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@ModelAttribute AuthRequest request, Model model) {
+    public ModelAndView login(@ModelAttribute AuthRequest request) {
         LOGGER.info("login info: {}", request.toString());
         try {
             // Note the password is checked inside authenticate
@@ -63,14 +63,15 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
             // add user details and token to model and redirect to homepage
-            ModelAndView modelAndView = new ModelAndView("redirect:/");
+            ModelAndView modelAndView = new ModelAndView(new RedirectView("/", true));
             modelAndView.addObject("userDetails", userDetails);
             modelAndView.addObject("token", token);
             return modelAndView;
         } catch (AuthenticationException e) {
             // express errors
-            model.addAttribute("error", "Invalid username or password");
-            return new ModelAndView("login");
+            ModelAndView modelAndView = new ModelAndView("login");
+            modelAndView.addObject("error", "Invalid username or password");
+            return modelAndView;
         }
     }
 
