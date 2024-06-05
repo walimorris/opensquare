@@ -84,7 +84,7 @@ class DropDownOptionsTest {
 
     @Test
     void builderPatternValid() {
-        DropDownOptions dropDownOptionsBuilder = new DropDownOptions.Builder()
+        DropDownOptions dropDownOptionsBuilder = DropDownOptions.builder()
                 .ages(List.of(AGE_RANGE_1, AGE_RANGE_2, AGE_RANGE_3, AGE_RANGE_4))
                 .professions(List.of(PROFESSION_1, PROFESSION_2, PROFESSION_3))
                 .organizations(List.of(ORG_1, ORG_2, ORG_3))

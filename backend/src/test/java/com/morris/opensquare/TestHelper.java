@@ -143,7 +143,7 @@ public class TestHelper {
     }
 
     public static DropDownOptions getDropDownOptions() {
-        return new DropDownOptions.Builder()
+        return DropDownOptions.builder()
                 .ages(getAgeRanges())
                 .professions(getProfessions())
                 .organizations(getOrganizations())

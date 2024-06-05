@@ -17,6 +17,7 @@ public class SignupRequest {
     private String password;
     private String emailAddress;
     private String organization;
+    private String profession;
     private String ageGroup;
     private MultipartFile image;
 }

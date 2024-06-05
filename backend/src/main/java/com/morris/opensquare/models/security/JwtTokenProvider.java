@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
@@ -21,6 +22,7 @@ public class JwtTokenProvider {
 
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
+    private long refreshInMilliseconds = 3 * 60 * 60 * 1000;
     private Key key;
 
     @PostConstruct
@@ -42,6 +44,44 @@ public class JwtTokenProvider {
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String createRefreshToken(String username) {
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createTokenWithPayload(String username, Map<String, Object> payload) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + validityInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .addClaims(payload) // Include userDetails in the token payload
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKeyResolver(new SigningKeyResolverAdapter() {
+                    @Override
+                    public byte[] resolveSigningKeyBytes(JwsHeader header, Claims claims) {
+                        return secretKey.getBytes();
+                    }
+                })
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public boolean validateToken(String token) throws Exception {
@@ -70,6 +110,11 @@ public class JwtTokenProvider {
         return null;
     }
 
+    /**
+     * Creates a random secret key with {@link SecureRandom}.
+     *
+     * @return {@link String} random key
+     */
     public String secretKeyGenerator() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] key = new byte[32];

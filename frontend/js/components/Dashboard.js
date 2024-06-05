@@ -125,6 +125,18 @@ export default function Dashboard(props) {
     const notifications = props.globalNotifications;
     const [showNotifications, setShowNotifications] = React.useState(false);
 
+    // user details
+    const userDetails = {
+        username: props.userDetails['username'],
+        email: props.userDetails['email'],
+        firstName: props.userDetails['firstName'],
+        org: props.userDetails['organization'],
+        prof: props.userDetails['profession'],
+        ageRange: props.userDetails['ageRange'],
+        image: props.userDetails['image'] // Base64 string of the image
+    };
+    console.log(userDetails);
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -315,7 +327,7 @@ export default function Dashboard(props) {
                         </Typography>
                         <Stack direction="row" spacing={1} sx={{marginRight: '65%'}}>
                             <Chip
-                                avatar={<Avatar alt="W" src="/images/professional_me.jpeg" />}
+                                avatar={<Avatar alt="W" src={`${userDetails.image}`} />}
                                 label="Avatar"
                                 variant="outlined"
                             />

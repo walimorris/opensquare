@@ -20,9 +20,4 @@ public class WebController {
     public String signup() {
         return "signup";
     }
-
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
 }

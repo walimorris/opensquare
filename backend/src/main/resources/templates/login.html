@@ -98,7 +98,7 @@
 <body>
 <div class="login-container">
     <h2>Login Form</h2>
-    <form th:action="@{/auth/login}" method="post">
+    <form id="login-form" th:action="@{/opensquare/auth/login}" method="post">
         <div class="form-group">
             <input type="text" id="userName" name="userName" required placeholder=" ">
             <label for="userName">Username:</label>
@@ -114,5 +114,45 @@
         <div th:if="${error}" class="error-message" th:text="${error}"></div>
     </form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const userName = document.getElementById('userName').value;
+            const password = document.getElementById('password').value;
+
+            const credentials = {
+                userName,
+                password
+            };
+
+            try {
+                const response = await fetch('http://localhost:8081/opensquare/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(credentials)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const { token, userDetails } = data;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                    window.location.href = "/";
+                } else {
+                    // Handle non-OK response
+                    const errorData = await response.json();
+                    console.error('Login failed', errorData);
+                    document.querySelector('.error-message').textContent = 'Login failed. Please try again.';
+                }
+            } catch (error) {
+                console.error('Login failed', error);
+                document.querySelector('.error-message').textContent = 'Login failed. Please try again.';
+            }
+        });
+    });
+</script>
 </body>
 </html>

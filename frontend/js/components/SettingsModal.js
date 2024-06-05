@@ -62,13 +62,37 @@ export default function SettingsModal(props) {
 
     // user detail values
     const [username, setUserName] = useState(props.userDetails['username']);
-    const [userId, setUserId] = useState(props.userDetails['userId']);
-    const [createdAt, setCreatedAt] = useState(props.userDetails['createdAt']);
     const [email, setEmail] = useState(props.userDetails['email']);
     const [preferredName, setPreferredName] = useState(props.userDetails['firstName']);
     const [org, setOrg] = useState(props.userDetails['organization']);
     const [prof, setProf] = useState(props.userDetails['profession'])
     const [ageRange, setAgeRange] = useState(props.userDetails['ageRange']);
+
+    const [organizations, setOrganizations] = useState([]);
+    const [professions, setProfessions] = useState([]);
+    const [ages, setAges] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+            try {
+                const organizationsResponse = await axios.get('/opensquare/api/dropdowns/organizations', config);
+                setOrganizations(organizationsResponse.data);
+                const professionsResponse = await axios.get('/opensquare/api/dropdowns/professions', config);
+                setProfessions(professionsResponse.data);
+                const agesResponse = await axios.get('/opensquare/api/dropdowns/age_ranges', config);
+                setAges(agesResponse.data);
+            } catch (error) {
+                console.error('Error fetching dropdown options:', error);
+            }
+        }
+        fetchData();
+    }, []);
 
     /**
      * Setting user details initial state allows client to validate user values before
@@ -83,19 +107,12 @@ export default function SettingsModal(props) {
      */
     const userDetails = {
         username: props.userDetails['username'],
-        userId: props.userDetails['userId'],
-        createdAt: props.userDetails['createdAt'],
         email: props.userDetails['email'],
         firstName: props.userDetails['firstName'],
         org: props.userDetails['organization'],
         prof: props.userDetails['profession'],
         ageRange: props.userDetails['ageRange']
     };
-
-    // drop down values
-    const [organizations, setOrganizations] = useState([]);
-    const [professions, setProfessions] = useState([]);
-    const [ages, setAges] = useState([]);
 
     // handle modal open/close
     const handleOpen = () => setOpen(true);
@@ -125,36 +142,6 @@ export default function SettingsModal(props) {
     const handleOrgChange = (e) => setOrg(e.target.value);
     const handleProfChange = (e) => setProf(e.target.value);
 
-    let organizationsConfig = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: '/opensquare/api/dropdowns/organizations',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: ''
-    };
-
-    let professionsConfig = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: '/opensquare/api/dropdowns/professions',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: ''
-    }
-
-    let agesConfig = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: '/opensquare/api/dropdowns/age_ranges',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: ''
-    }
-
     useEffect(() => {
         setEmail(props.userDetails['email'])
     }, [props]);
@@ -177,14 +164,6 @@ export default function SettingsModal(props) {
 
     useEffect(() => {
         setUserName(props.userDetails['username'])
-    }, [props])
-
-    useEffect(() => {
-        setCreatedAt(props.userDetails['createdAt'])
-    }, [props])
-
-    useEffect(() => {
-        setUserId(props.userDetails['userId'])
     }, [props])
 
     useEffect(() => {
@@ -253,48 +232,6 @@ export default function SettingsModal(props) {
         }
         return userDetailsUpdateObject;
     }
-
-    useEffect(() => {
-        async function fetchOrganizations() {
-            await axios.request(organizationsConfig)
-                .then((response) => {
-                    console.log(response.data);
-                    setOrganizations(response.data);
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-        fetchOrganizations();
-    }, []);
-
-    useEffect(() => {
-        async function fetchProfessions() {
-            await axios.request(professionsConfig)
-                .then((response) => {
-                    console.log(response.data);
-                    setProfessions(response.data);
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-        fetchProfessions();
-    }, []);
-
-    useEffect(() => {
-        async function fetchAges() {
-            await axios.request(agesConfig)
-                .then((response) => {
-                    console.log(response.data);
-                    setAges(response.data);
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-        fetchAges();
-    }, []);
 
     return (
         <div>

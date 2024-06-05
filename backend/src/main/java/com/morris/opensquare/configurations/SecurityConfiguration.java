@@ -31,10 +31,19 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/signup", "/login", "/logout").permitAll()
+                        .requestMatchers(
+                                "/opensquare/auth/**",
+                                "/login",
+                                "/signup",
+                                "/logout",
+                                "/images/**",
+                                "/built/bundle.js",
+                                "/"
+                        ).permitAll()
+                        .requestMatchers("/opensquare/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**", "/signup", "/login"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/opensquare/auth/**", "/signup", "/login"))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login -> login
                         .loginPage("/login")

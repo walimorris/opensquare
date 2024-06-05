@@ -1,35 +1,30 @@
 package com.morris.opensquare.controllers;
 
-import com.morris.opensquare.models.security.AuthRequest;
-import com.morris.opensquare.models.security.JwtTokenProvider;
-import com.morris.opensquare.models.security.Roles;
-import com.morris.opensquare.models.security.SignupRequest;
+import com.morris.opensquare.models.security.*;
 import com.morris.opensquare.services.OpensquareUserDetailsService;
 import com.morris.opensquare.utils.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/opensquare/auth")
 public class AuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
@@ -48,30 +43,57 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@ModelAttribute AuthRequest request) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         LOGGER.info("login info: {}", request.toString());
         try {
-            // Note the password is checked inside authenticate
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // Generate JWT
             UserDetails userDetails = opensquareUserDetailsService.loadUserByUsername(request.getUserName());
-            String token = jwtTokenProvider.createToken(userDetails.getUsername(), userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+            String token = jwtTokenProvider.createToken(userDetails.getUsername(), userDetails.getRoles());
+            String refreshToken = jwtTokenProvider.createRefreshToken(request.getUserName());
 
-            // add user details and token to model and redirect to homepage
-            ModelAndView modelAndView = new ModelAndView(new RedirectView("/", true));
-            modelAndView.addObject("userDetails", userDetails);
-            modelAndView.addObject("token", token);
-            return modelAndView;
+            Map<String, Object> response = new HashMap<>();
+            response.put("userDetails", userDetails);
+            response.put("token", token);
+            response.put("refreshToken", refreshToken);
+            return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            // express errors
-            ModelAndView modelAndView = new ModelAndView("login");
-            modelAndView.addObject("error", "Invalid username or password");
-            return modelAndView;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            return ResponseEntity.badRequest().body("Refresh token is missing");
+        }
+
+        try {
+            if (jwtTokenProvider.validateToken(refreshToken)) {
+                String username = jwtTokenProvider.getUsername(refreshToken);
+                UserDetails userDetails = opensquareUserDetailsService.loadUserByUsername(username);
+
+                if (userDetails == null) {
+                    return ResponseEntity.status(403).body("Invalid refresh token");
+                }
+
+                String newAccessToken = jwtTokenProvider.createToken(username, userDetails.getRoles());
+                String newRefreshToken = jwtTokenProvider.createRefreshToken(username);
+
+                return ResponseEntity.ok(Map.of(
+                        "accessToken", newAccessToken,
+                        "refreshToken", newRefreshToken,
+                        "userDetails", userDetails
+                ));
+            } else {
+                return ResponseEntity.status(403).body("Invalid refresh token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(403).body("Invalid refresh token");
         }
     }
 
@@ -85,21 +107,24 @@ public class AuthController {
             LOGGER.error("Image is null: {}", e.getMessage());
         }
         LOGGER.info(imageBase64EncodedStr);
-        com.morris.opensquare.models.security.UserDetails userDetails = com.morris.opensquare.models.security.UserDetails.builder()
+        UserDetails userDetails = com.morris.opensquare.models.security.UserDetails.builder()
                 .firstName(signupRequest.getFirstName())
                 .lastName(signupRequest.getLastName())
-                .userName(signupRequest.getUserName())
+                .username(signupRequest.getUserName())
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .emailAddress(signupRequest.getEmailAddress())
                 .organization(signupRequest.getOrganization())
                 .ageGroup(signupRequest.getAgeGroup())
                 .roles(List.of(Roles.ROLE_USER))
                 .image(imageBase64EncodedStr)
+                .accountNonLocked(true)
+                .accountNonExpired(true)
+                .credentialsNonExpired(true)
+                .enabled(true)
                 .build();
 
         try {
-            com.morris.opensquare.models.security.UserDetails userDetailsResult =
-                    opensquareUserDetailsService.save(userDetails);
+            UserDetails userDetailsResult = opensquareUserDetailsService.save(userDetails);
             // success signup, redirect to login
             return new ModelAndView(new RedirectView("/login"));
         } catch (Exception e) {
