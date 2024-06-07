@@ -34,6 +34,16 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final OpensquareUserDetailsService opensquareUserDetailsService;
 
+    private static final String USER_DETAILS = "userDetails";
+    private static final String ACCESS_TOKEN = "accessToken";
+    private static final String REFRESH_TOKEN = "refreshToken";
+    private static final String ERROR = "error";
+    private static final String ERROR_REFRESH_TOKEN = "Invalid refresh token";
+    private static final String ERROR_JWT_TOKEN = "Invalid or expired jwt token";
+    private static final String ERROR_LOGIN = "Invalid username or password";
+    private static final String MISSING_REFRESH_TOKEN = "Missing refresh token";
+
+
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder,
                           JwtTokenProvider jwtTokenProvider, OpensquareUserDetailsService userDetailsService) {
@@ -45,7 +55,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
-        LOGGER.info("login info: {}", request.toString());
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())
@@ -57,15 +66,15 @@ public class AuthController {
             String refreshToken = jwtTokenProvider.createRefreshToken(request.getUserName());
 
             Map<String, Object> response = new HashMap<>();
-            response.put("userDetails", userDetails);
-            response.put("accessToken", token);
-            response.put("refreshToken", refreshToken);
+            response.put(USER_DETAILS, userDetails);
+            response.put(ACCESS_TOKEN, token);
+            response.put(REFRESH_TOKEN, refreshToken);
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
         } catch (AuthenticationException e) {
             Map<String, Object> errorResponse = Map.of(
-                    "error", "Invalid username or password"
+                    ERROR, ERROR_LOGIN
             );
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -75,33 +84,31 @@ public class AuthController {
 
     @PostMapping("/refresh_token")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
-        String refreshToken = request.get("refreshToken");
+        String refreshToken = request.get(REFRESH_TOKEN);
         if (refreshToken == null || refreshToken.isEmpty()) {
             return ResponseEntity.badRequest()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body("Refresh token is missing");
+                    .body(MISSING_REFRESH_TOKEN);
         }
-
         try {
             if (jwtTokenProvider.validateToken(refreshToken)) {
                 String username = jwtTokenProvider.getUsername(refreshToken);
                 UserDetails userDetails = opensquareUserDetailsService.loadUserByUsername(username);
-
                 if (userDetails == null) {
-                    return ResponseEntity.status(403).body("Invalid refresh token");
+                    return ResponseEntity
+                            .status(403)
+                            .body(ERROR_REFRESH_TOKEN);
                 }
-
                 String newAccessToken = jwtTokenProvider.createToken(username, userDetails.getRoles());
                 String newRefreshToken = jwtTokenProvider.createRefreshToken(username);
-
                 return ResponseEntity.ok(Map.of(
-                        "accessToken", newAccessToken,
-                        "refreshToken", newRefreshToken,
-                        "userDetails", userDetails
+                        ACCESS_TOKEN, newAccessToken,
+                        REFRESH_TOKEN, newRefreshToken,
+                        USER_DETAILS, userDetails
                 ));
             } else {
                 Map<String, Object> errorResponse = Map.of(
-                        "error", "Invalid refresh token"
+                        ERROR, ERROR_REFRESH_TOKEN
                 );
                 return ResponseEntity.status(403)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +116,7 @@ public class AuthController {
             }
         } catch (Exception e) {
             Map<String, Object> errorResponse = Map.of(
-                    "error", "Invalid refresh token"
+                    ERROR, ERROR_REFRESH_TOKEN
             );
             return ResponseEntity.status(403)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +133,12 @@ public class AuthController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(true);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired jwt token");
+            Map<String, Object> errorResponse = Map.of(
+                    ERROR, ERROR_JWT_TOKEN
+            );
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(errorResponse);
         }
     }
 
@@ -162,7 +174,7 @@ public class AuthController {
             return new ModelAndView(new RedirectView("/login"));
         } catch (Exception e) {
             // handle and return error message
-            model.addAttribute("error", "signup failed: " + e.getMessage());
+            model.addAttribute(ERROR, "signup failed: " + e.getMessage());
             return new ModelAndView("signup");
         }
     }
