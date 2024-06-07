@@ -34,13 +34,16 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final OpensquareUserDetailsService opensquareUserDetailsService;
 
+    private static final String SIGNUP_VIEW = "signup";
     private static final String USER_DETAILS = "userDetails";
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String ERROR = "error";
+    private static final String ERROR_UNKNOWN = "Unknown error";
     private static final String ERROR_REFRESH_TOKEN = "Invalid refresh token";
     private static final String ERROR_JWT_TOKEN = "Invalid or expired jwt token";
     private static final String ERROR_LOGIN = "Invalid username or password";
+    private static final String ERROR_SIGNUP = "Failed signup";
     private static final String MISSING_REFRESH_TOKEN = "Missing refresh token";
 
 
@@ -132,19 +135,15 @@ public class AuthController {
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(true);
-        } else {
-            Map<String, Object> errorResponse = Map.of(
-                    ERROR, ERROR_JWT_TOKEN
-            );
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(errorResponse);
         }
+        Map<String, Object> errorResponse = Map.of(ERROR, ERROR_JWT_TOKEN);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errorResponse);
     }
 
     @PostMapping("/signup")
     public ModelAndView signup(@ModelAttribute SignupRequest signupRequest, Model model) {
-        LOGGER.info("User Details: {}", signupRequest.toString());
         String imageBase64EncodedStr = null;
         try {
             imageBase64EncodedStr = FileUtil.base64partEncodedStr(signupRequest.getImage());
@@ -170,12 +169,14 @@ public class AuthController {
 
         try {
             UserDetails userDetailsResult = opensquareUserDetailsService.save(userDetails);
-            // success signup, redirect to login
-            return new ModelAndView(new RedirectView("/login"));
+            if (userDetailsResult.isEnabled()) {
+                return new ModelAndView(new RedirectView("/login"));
+            }
         } catch (Exception e) {
-            // handle and return error message
-            model.addAttribute(ERROR, "signup failed: " + e.getMessage());
-            return new ModelAndView("signup");
+            model.addAttribute(ERROR, ERROR_SIGNUP + ": " + e.getMessage());
+            return new ModelAndView(SIGNUP_VIEW);
         }
+        model.addAttribute(ERROR, ERROR_UNKNOWN);
+        return new ModelAndView(SIGNUP_VIEW);
     }
 }
