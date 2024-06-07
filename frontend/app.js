@@ -10,28 +10,95 @@ import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 const App = () => {
     const [userDetails, setUserDetails] = useState(JSON.parse(localStorage.getItem('userDetails')) || {});
     const [globalNotifications, setGlobalNotifications] = useState({});
-    const [validated, setValidated] = useState('');
+    const [validated, setValidated] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        validateToken();
-        if (token && validated === 'valid') {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            fetchGlobalNotifications();
-            fetchUserDetails();
-        } else {
-            window.location.href = "/login";
-        }
+        const validateAndSetToken = async () => {
+            const accessToken = localStorage.getItem('accessToken');
+            if (accessToken) {
+                const isValid = await validateToken(accessToken);
+                setValidated(isValid);
+            } else {
+                window.location.href = "/login";
+                console.log("No accessToken found");
+            }
+        };
+        validateAndSetToken();
     }, []);
 
-    const validateToken = async () => {
+    useEffect(() => {
+        if (validated) {
+            const accessToken = localStorage.getItem('accessToken');
+            axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+            fetchGlobalNotifications();
+            fetchUserDetails();
+        }
+    }, [validated]);
+
+    const validateToken = async (accessToken) => {
         try {
-            const validationResponse = await axios.get("/opensquare/auth/opensquare/auth/validate_token");
-            setValidated(validationResponse.data);
+            const validationResponse = await fetchWithToken("/opensquare/auth/validate_token", accessToken);
+            console.log(validationResponse)
+            setValidated(true);
         } catch (error) {
             console.log(error);
         }
     };
+
+    const fetchWithToken = async (url, token, options = {}) => {
+
+        if (!token) {
+            window.location.href = "/login";
+        }
+
+        const response = await axios.get(url, {
+            ...options,
+            headers: {
+                ...options.headers,
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        if (response.status === 401) {
+            console.log(response);
+            token = await refreshToken();
+            if (token) {
+                return axios.get(url, {
+                    ...options,
+                    headers: {
+                        ...options.headers,
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            } else {
+                return response;
+            }
+        }
+    }
+
+    const refreshToken = async () => {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            const response = await axios.post("/opensquare/auth/refresh-token", {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ refreshToken })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('refreshToken', data.refreshToken);
+                return data.accessToken;
+            } else {
+                throw new Error("Unable to refresh token");
+            }
+        } catch (error) {
+            console.error("Token refresh failed", error);
+            window.location.href = "/login";
+        }
+    }
 
     const fetchGlobalNotifications = async () => {
         try {

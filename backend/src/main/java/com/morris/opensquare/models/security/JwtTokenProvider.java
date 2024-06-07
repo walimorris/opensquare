@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
-    private long refreshInMilliseconds = 3 * 60 * 60 * 1000;
+    private final long refreshInMilliseconds = 3 * 60 * 60 * 1000;
     private Key key;
 
     @PostConstruct
@@ -84,12 +84,12 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    public boolean validateToken(String token) throws Exception {
+    public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            throw new Exception("Expired or invalid JWT token");
+            return false;
         }
     }
 

@@ -74,7 +74,7 @@ export default function SettingsModal(props) {
 
     useEffect(() => {
         async function fetchData() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('accessToken');
             const config = {
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -111,13 +111,17 @@
         <div class="signup-link">
             Don't have an account? <a th:href="@{/signup}">Sign up</a>
         </div>
-        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+        <div class="error-message"></div>
     </form>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent the default form submission
+        const loginForm = document.getElementById('login-form');
+        const errorMessageElement = document.querySelector('.error-message');
+
+        loginForm.addEventListener('submit', async function(event) {
+            // TODO: check for any logged in user
+            event.preventDefault();
 
             const userName = document.getElementById('userName').value;
             const password = document.getElementById('password').value;
@@ -137,19 +141,26 @@
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    const { token, userDetails } = data;
-                    localStorage.setItem('token', token);
+                    const { accessToken, refreshToken, userDetails } = data;
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('refreshToken', refreshToken)
                     localStorage.setItem('userDetails', JSON.stringify(userDetails));
                     window.location.href = "/";
                 } else {
                     // Handle non-OK response
                     const errorData = await response.json();
                     console.error('Login failed', errorData);
-                    document.querySelector('.error-message').textContent = 'Login failed. Please try again.';
+                    if (errorMessageElement) {
+                        errorMessageElement.textContent = errorData.error || 'Login failed. Please try again.';
+                    }
+                    loginForm.reset();
                 }
             } catch (error) {
                 console.error('Login failed', error);
-                document.querySelector('.error-message').textContent = 'Login failed. Please try again.';
+                if (errorMessageElement) {
+                    errorMessageElement.textContent = 'Login failed. Please try again.';
+                }
+                loginForm.reset();
             }
         });
     });

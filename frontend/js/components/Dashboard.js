@@ -128,11 +128,11 @@ export default function Dashboard(props) {
     // user details
     const userDetails = {
         username: props.userDetails['username'],
-        email: props.userDetails['email'],
+        email: props.userDetails['emailAddress'],
         firstName: props.userDetails['firstName'],
         org: props.userDetails['organization'],
         prof: props.userDetails['profession'],
-        ageRange: props.userDetails['ageRange'],
+        ageRange: props.userDetails['ageGroup'],
         image: props.userDetails['image'] // Base64 string of the image
     };
     console.log(userDetails);
@@ -281,7 +281,10 @@ export default function Dashboard(props) {
 
 
     const handleLogout = () => {
-        window.location.href = '/logout';
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userDetails');
+        window.location.href = '/login';
     }
 
     function notificationsLabel(count) {

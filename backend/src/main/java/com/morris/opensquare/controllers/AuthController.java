@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,19 +58,28 @@ public class AuthController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("userDetails", userDetails);
-            response.put("token", token);
+            response.put("accessToken", token);
             response.put("refreshToken", refreshToken);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            Map<String, Object> errorResponse = Map.of(
+                    "error", "Invalid username or password"
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
         }
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh_token")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
         if (refreshToken == null || refreshToken.isEmpty()) {
-            return ResponseEntity.badRequest().body("Refresh token is missing");
+            return ResponseEntity.badRequest()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("Refresh token is missing");
         }
 
         try {
@@ -90,10 +100,33 @@ public class AuthController {
                         "userDetails", userDetails
                 ));
             } else {
-                return ResponseEntity.status(403).body("Invalid refresh token");
+                Map<String, Object> errorResponse = Map.of(
+                        "error", "Invalid refresh token"
+                );
+                return ResponseEntity.status(403)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(errorResponse);
             }
         } catch (Exception e) {
-            return ResponseEntity.status(403).body("Invalid refresh token");
+            Map<String, Object> errorResponse = Map.of(
+                    "error", "Invalid refresh token"
+            );
+            return ResponseEntity.status(403)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
+        }
+    }
+
+    @GetMapping("/validate_token")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String tokenHeader) {
+        String token = tokenHeader.substring(7);
+        boolean isValid = jwtTokenProvider.validateToken(token);
+        if (isValid) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(true);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired jwt token");
         }
     }
 
