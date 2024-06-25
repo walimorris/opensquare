@@ -194,17 +194,28 @@ export default function Reports() {
 
     const handleFileChange = (file) => {
         setFile(file);
-        let formData = new FormData();
-        formData.append("file", file[0]);
-        setTimeout(() => {
-            handleFileUpload(formData);
-        }, 1000)
-    };
+        const reader = new FileReader();
 
-    async function handleFileUpload(formData) {
+        reader.onloadend = () => {
+            const base64File = reader.result.split(',')[1]; // Get the base64 string without the prefix
+            const payload = {
+                file: base64File,
+                filename: file[0].name,
+                save: false
+            };
+            setTimeout(() => {
+                handleFileUpload(payload);
+            }, 1000)
+        };
+        reader.readAsDataURL(file[0]);
+    }
+
+    async function handleFileUpload(payload) {
         try {
             setShowCradle(true);
-            const response = await axios.post(`/opensquare/api/reports/uploadDocument`, formData, getAxiosConfiguration());
+            const config = getAxiosConfiguration();
+            console.log('Axios Config:', config);
+            const response = await axios.post(`/opensquare/api/reports/uploadDocument`, payload, config);
 
             if (response.data !== null) {
                 console.log(response.data);
@@ -212,18 +223,15 @@ export default function Reports() {
                 return response.data;
             }
         } catch (error) {
-            console.log(error);
+            console.log('Upload Error:', error);
             setShowCradle(false);
         }
     }
 
     function getAxiosConfiguration() {
         return {
-            timeout: 6000,
-            signal: AbortSignal.timeout(6000),
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
+            timeout: 60000,
+            signal: AbortSignal.timeout(60000)
         };
     }
 
